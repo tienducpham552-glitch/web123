@@ -16,6 +16,9 @@
 
     <!-- Thêm Font Awesome để dùng icon cho đẹp -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Thư viện Marked.js để convert Markdown sang HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
 
@@ -464,6 +467,7 @@
 	    font-size: 14px;
 	    line-height: 1.4;
 	    word-wrap: break-word;
+	    overflow-wrap: break-word;
 		}
 	
 	.chat-bubble.user {
@@ -475,7 +479,74 @@
 	.chat-bubble.bot {
 	    background: #e8f5e9;
 	    margin-right: auto;
+	    text-align: left;
 		}
+	
+	/* Style cho markdown content trong chat bubble */
+	.chat-bubble p {
+	    margin: 0.5em 0;
+	}
+	
+	.chat-bubble p:first-child {
+	    margin-top: 0;
+	}
+	
+	.chat-bubble p:last-child {
+	    margin-bottom: 0;
+	}
+	
+	.chat-bubble ul, .chat-bubble ol {
+	    margin: 0.5em 0;
+	    padding-left: 1.5em;
+	    list-style-position: inside;
+	}
+	
+	.chat-bubble li {
+	    margin: 0.3em 0;
+	}
+	
+	.chat-bubble h1, .chat-bubble h2, .chat-bubble h3,
+	.chat-bubble h4, .chat-bubble h5, .chat-bubble h6 {
+	    margin: 0.8em 0 0.4em 0;
+	    font-size: 1.1em;
+	    font-weight: 600;
+	}
+	
+	.chat-bubble code {
+	    background: rgba(0,0,0,0.05);
+	    padding: 2px 5px;
+	    border-radius: 3px;
+	    font-family: 'Courier New', monospace;
+	    font-size: 0.9em;
+	}
+	
+	.chat-bubble pre {
+	    background: rgba(0,0,0,0.05);
+	    padding: 10px;
+	    border-radius: 5px;
+	    overflow-x: auto;
+	    margin: 0.5em 0;
+	}
+	
+	.chat-bubble pre code {
+	    background: none;
+	    padding: 0;
+	}
+	
+	.chat-bubble strong {
+	    font-weight: 600;
+	}
+	
+	.chat-bubble em {
+	    font-style: italic;
+	}
+	
+	.chat-bubble blockquote {
+	    border-left: 3px solid var(--primary-blue);
+	    padding-left: 10px;
+	    margin: 0.5em 0;
+	    color: #555;
+	}
 
     </style>
 </head>
@@ -686,7 +757,7 @@
 
     <!-- SCRIPT GỌI API GEMINI -->
     <script>
-		const apiUrl = "https://innerly.hongnt-hnue.workers.dev/";
+		const apiUrl = "https://innerly.hnue.online/core.php/";
 
 	let conversationHistory = [];
 	
@@ -752,7 +823,8 @@
 	
 	  const botBubble = document.createElement("div");
 	  botBubble.className = "chat-bubble bot";
-	  botBubble.innerText = reply;
+	  // Convert markdown sang HTML
+	  botBubble.innerHTML = marked.parse(reply);
 	  chatBox.appendChild(botBubble);
 	
 	  conversationHistory.push({ role: "assistant", text: reply });
@@ -775,9 +847,10 @@
 	
 	  const reply = await callAI(prompt);
 	  const parts = reply.split("|");
-	
+
 	  title.innerText = (parts[0] || "Cảm xúc đặc biệt").trim();
-	  def.innerText = (parts[1] || reply).trim();
+	  // Convert markdown sang HTML
+	  def.innerHTML = marked.parse((parts[1] || reply).trim());
 	  box.style.display = "block";
 	}
 	
@@ -787,9 +860,10 @@
 	  const text = document.getElementById("activityText");
 	
 	  const prompt = `Gợi ý 1 hoạt động nhỏ trong 5 phút để giúp học sinh cảm thấy tốt hơn khi đang ${mood}.`;
-	
+
 	  const reply = await callAI(prompt);
-	  text.innerText = reply;
+	  // Convert markdown sang HTML
+	  text.innerHTML = marked.parse(reply);
 	  box.style.display = "block";
 	}
 	
