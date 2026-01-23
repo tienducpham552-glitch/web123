@@ -38,80 +38,34 @@
             transition: background-color 0.3s ease;
         }
 
-        /* --- PHẦN MỚI: TỐI ƯU HÓA CHI TIẾT CHO TỪNG THIẾT BỊ --- */
+        /* --- CÁC TÍNH NĂNG CHỈ DÀNH CHO PC (HIỆU ỨNG CHUỘT) --- */
+        /* Class .pc-mode sẽ do JS thêm vào nếu phát hiện không phải điện thoại */
         
-        /* 1. GIAO DIỆN PC (Màn hình lớn & Chuột) */
         body.pc-mode .container {
-            max-width: 1200px; /* Mở rộng không gian hiển thị */
+            max-width: 1200px; /* PC màn to nên mở rộng hơn */
         }
+
         body.pc-mode .card {
-            cursor: pointer; /* Con trỏ tay khi di vào thẻ */
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
+
         body.pc-mode .card:hover {
-            transform: translateY(-10px); /* Hiệu ứng nổi lên cao hơn */
+            transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
+
         body.pc-mode .chat-cta-btn:hover {
-            transform: scale(1.05); /* Nút rung nhẹ mời gọi */
-        }
-        body.pc-mode .nav-links a {
-            font-size: 1.1rem; /* Menu to rõ hơn */
+            transform: scale(1.05);
+            background-color: #357abd;
         }
 
-        /* 2. GIAO DIỆN MOBILE (Màn hình nhỏ & Cảm ứng) */
-        body.mobile-mode .container {
-            padding: 0 15px; /* Tiết kiệm lề màn hình */
-        }
-        body.mobile-mode .hero {
-            padding: 40px 0; /* Thu gọn phần đầu cho đỡ chiếm chỗ */
-        }
-        body.mobile-mode .hero h1 {
-            font-size: 2rem; /* Chữ tiêu đề vừa vặn màn hình dọc */
-        }
-        body.mobile-mode .section-title {
-            font-size: 1.6rem;
-            margin-bottom: 25px;
-        }
-        /* Nút bấm trên điện thoại cần to để dễ chạm */
-        body.mobile-mode .chat-cta-btn,
-        body.mobile-mode .chat-btn {
-            width: 100%;
-            display: block;
-            text-align: center;
-            padding: 15px;
-            margin-top: 10px;
-        }
-        body.mobile-mode .card {
-            margin-bottom: 15px; /* Tách các thẻ rõ ràng hơn */
-        }
-        /* Menu trên mobile */
-        body.mobile-mode nav {
-            flex-direction: column;
-            gap: 10px;
-        }
-        body.mobile-mode .nav-links {
-            width: 100%;
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            text-align: center;
-        }
-        body.mobile-mode .nav-links a {
-            display: block;
-            margin: 0;
-            padding: 5px 0;
-            border-bottom: 1px dashed #eee;
-        }
-        body.mobile-mode .nav-links a:last-child {
-            border-bottom: none;
+        body.pc-mode .nav-links a:hover {
+            color: var(--primary-blue);
         }
 
-        /* --------------------------------------------------------- */
-
+        /* --- QUY TẮC BỐ CỤC CHUNG (LAYOUT) --- */
+        
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -149,10 +103,6 @@
             margin-left: 20px;
             font-weight: 500;
             transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-blue);
         }
 
         .nav-links a.ai-link {
@@ -484,10 +434,45 @@
             border-color: var(--primary-yellow);
         }
 
-        /* --- RESPONSIVE CSS (Dự phòng cho JS) --- */
+        /* --- RESPONSIVE CSS (Điều chỉnh khi màn hình nhỏ) --- */
         @media (max-width: 768px) {
             .mission-content, .footer-grid, .journey-grid, .ai-features-grid {
                 grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 1.8rem; }
+            
+            /* --- MENU MOBILE --- */
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links { 
+                display: flex; 
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                width: 100%;
+                background: #fff;
+                padding: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            }
+            .nav-links a {
+                margin: 0;
+                padding: 10px 0;
+                border-bottom: 1px dashed #eee;
+            }
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+            /* ------------------ */
+
+            .logo { font-size: 1.2rem; }
+            
+            /* Tăng kích thước nút trên mobile cho dễ bấm */
+            .chat-cta-btn {
+                width: 100%;
+                padding: 15px;
             }
         }
     </style>
@@ -517,7 +502,7 @@
             <h2>Bộ sản phẩm cân bằng cảm xúc học đường<br>Nơi mỗi cảm xúc của tuổi teen đều được trân trọng và lắng nghe</h2>
             
             <div class="hero-img-placeholder">
-                <!-- Giữ nguyên tên file ảnh theo yêu cầu cũ -->
+                <!-- Tên file giữ nguyên khoảng trắng theo server của bạn -->
                 <img src="Anh mo dau.png" alt="Học sinh trải nghiệm Innerly">
             </div>
         </div>
@@ -586,8 +571,11 @@
         </div>
     </section>
 
+    <!-- AI SECTION: GỒM LỜI MỜI SANG CHAT VÀ CÁC CÔNG CỤ MINI -->
     <section id="ai-bot" class="ai-section">
         <div class="container">
+            
+            <!-- 1. BANNER DẪN SANG TRANG CHAT RIÊNG -->
             <div class="chat-cta-box">
                 <i class="fas fa-robot" style="font-size: 3rem; color: var(--primary-yellow); margin-bottom: 20px;"></i>
                 <h2 style="color: var(--primary-blue); margin-bottom: 15px;">Góc Tâm Sự INNERLY AI</h2>
@@ -599,31 +587,36 @@
                 </a>
             </div>
 
+            <!-- 2. CÁC CÔNG CỤ AI NHỎ (GIỮ NGUYÊN TẠI TRANG CHỦ) -->
             <div class="ai-header">
                 <h3 style="color: var(--primary-blue);">Các công cụ cảm xúc khác</h3>
             </div>
 
             <div class="ai-features-grid">
-                <!-- Tool 1 -->
+                <!-- Tool 1: Từ Điển Cảm Xúc -->
                 <div class="ai-feature-card">
                     <h3><i class="fas fa-book-open"></i> Từ Điển Cảm Xúc ✨</h3>
                     <p class="text-sm mb-4" style="color:#666; font-size:0.9rem;">Cảm xúc của bạn khó gọi tên? Hãy mô tả nó, AI sẽ đặt cho bạn một cái tên thật hay.</p>
+                    
                     <div class="input-group">
                         <input type="text" id="emotionDesc" placeholder="VD: Vừa vui mà lại vừa lo...">
                     </div>
+                    
                     <button onclick="defineEmotion()" id="btnDefine" class="chat-btn secondary" style="width:100%; justify-content:center;">
                         <i class="fas fa-magic"></i> Đặt tên cảm xúc
                     </button>
+
                     <div id="resultDefine" class="mt-4 hidden" style="margin-top:15px; background:#f0f8ff; padding:15px; border-radius:8px; display:none;">
                         <strong id="emotionTitle" style="color:var(--primary-blue); display:block; font-size:1.1rem;"></strong>
                         <p id="emotionDef" style="font-size:0.9rem; margin-top:5px;"></p>
                     </div>
                 </div>
 
-                <!-- Tool 2 -->
+                <!-- Tool 2: Gợi Ý Hoạt Động -->
                 <div class="ai-feature-card">
                     <h3><i class="fas fa-lightbulb"></i> Gợi Ý Giải Tỏa ✨</h3>
                     <p class="text-sm mb-4" style="color:#666; font-size:0.9rem;">Bạn đang cảm thấy thế nào? Innerly sẽ gợi ý một việc làm nhỏ để bạn thấy khá hơn.</p>
+                    
                     <div class="input-group">
                         <select id="moodSelect">
                             <option value="Căng thẳng">Căng thẳng / Stress</option>
@@ -633,9 +626,11 @@
                             <option value="Mệt mỏi">Mệt mỏi / Cạn năng lượng</option>
                         </select>
                     </div>
+                    
                     <button onclick="suggestActivity()" id="btnSuggest" class="chat-btn secondary" style="width:100%; justify-content:center;">
                         <i class="fas fa-hand-sparkles"></i> Tìm hoạt động
                     </button>
+
                     <div id="resultSuggest" class="mt-4 hidden" style="margin-top:15px; background:#fff8e1; padding:15px; border-radius:8px; display:none;">
                         <strong style="color:var(--primary-yellow); display:block;">💡 Gợi ý cho bạn:</strong>
                         <p id="activityText" style="font-size:0.9rem; margin-top:5px;"></p>
@@ -651,6 +646,7 @@
             <div class="history-content">
                 <h3>Lịch Sử</h3>
                 <p>INNERLY là một bộ sản phẩm giúp tụi mình hiểu cảm xúc của chính mình hơn, nhất là những lúc áp lực học hành hay rối bời không biết nói với ai. Chỉ từ những công cụ rất nhỏ, INNERLY giúp xả bớt cảm xúc, bình tĩnh lại và cảm thấy mình không hề cô đơn trong quá trình lớn lên.</p>
+                
                 <h3 style="margin-top: 20px;">Thành tựu hiện tại</h3>
                 <p>Từ những ý tưởng rất nhỏ xoay quanh cảm xúc học đường, INNERLY đã dần hình thành một bộ sản phẩm hoàn chỉnh, được thiết kế riêng cho tuổi teen. Chúng tôi đã xây dựng thành công bộ sản phẩm cân bằng cảm xúc học đường INNERLY, bao gồm landing page, hộp ghi cảm xúc, bộ thẻ cảm xúc, stress ball và các vật dụng hỗ trợ đi kèm.</p>
                 <p style="margin-top: 10px;"><em>"Quan trọng hơn cả, INNERLY không chỉ là một bộ sản phẩm, mà đang dần trở thành một không gian tinh thần an toàn, nơi cảm xúc của tuổi teen được nhìn nhận nghiêm túc và tôn trọng."</em></p>
@@ -680,30 +676,25 @@
         const apiKey = "AIzaSyCtYRhJL5k3c038h22vMEUju_jhf9G6Tjg"; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        // --- DEVICE DETECTION (PHÁT HIỆN THIẾT BỊ) ---
+        // --- PHÁT HIỆN THIẾT BỊ (CHỈ KIỂM TRA LOẠI MÁY, KHÔNG KIỂM TRA KÍCH THƯỚC) ---
         function checkDevice() {
-            // Kiểm tra UserAgent hoặc độ rộng màn hình (<= 768px coi là mobile)
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            // Chỉ coi là Mobile nếu User Agent xác nhận là điện thoại
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const body = document.body;
 
             if (isMobile) {
-                // Thêm class 'mobile-mode' vào body để CSS nhận diện
-                body.classList.add('mobile-mode');
-                body.classList.remove('pc-mode');
-                console.log("Đang chạy trên giao diện: MOBILE");
+                // Đây là điện thoại thật -> Tắt hiệu ứng chuột, tối ưu cảm ứng
+                body.classList.add('mobile-device');
+                console.log("Thiết bị: MOBILE (Tắt hover)");
             } else {
-                // Thêm class 'pc-mode' vào body để CSS nhận diện
+                // Đây là PC (hoặc tablet lớn) -> Bật hiệu ứng chuột (hover)
                 body.classList.add('pc-mode');
-                body.classList.remove('mobile-mode');
-                console.log("Đang chạy trên giao diện: PC");
+                console.log("Thiết bị: PC (Bật hover)");
             }
         }
-
-        // Chạy kiểm tra khi tải trang và khi thay đổi kích thước màn hình
         window.addEventListener('load', checkDevice);
-        window.addEventListener('resize', checkDevice);
 
-        // 1. TỪ ĐIỂN CẢM XÚC (Giữ nguyên)
+        // --- CÁC HÀM AI GIỮ NGUYÊN ---
         async function defineEmotion() {
             const input = document.getElementById('emotionDesc').value.trim();
             const btn = document.getElementById('btnDefine');
@@ -746,7 +737,6 @@
             }
         }
 
-        // 2. GỢI Ý HOẠT ĐỘNG (Giữ nguyên)
         async function suggestActivity() {
             const mood = document.getElementById('moodSelect').value;
             const btn = document.getElementById('btnSuggest');
