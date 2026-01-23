@@ -167,6 +167,7 @@
 <body>
 
     <div class="header">
+        <!-- Đảm bảo đường dẫn này đúng là index.html -->
         <a href="index.html"><i class="fas fa-arrow-left"></i> Quay lại</a>
         <h2><i class="fas fa-robot" style="color: #F5A623;"></i> Góc Tâm Sự Innerly</h2>
         <button class="settings-btn" id="openSettingsBtn" title="Cài đặt API Key"><i class="fas fa-cog"></i></button>
@@ -207,14 +208,14 @@
     
     <script>
         // CẤU HÌNH API
-        // Để trống để hệ thống tự điền hoặc người dùng tự nhập
-        const DEFAULT_KEY = ""; 
-        // Sử dụng model 2.5 flash preview được hỗ trợ
+        // QUAN TRỌNG: Đặt tên biến là apiKey để hệ thống tự động nhận diện
+        const apiKey = ""; 
+        // QUAN TRỌNG: Sử dụng đúng model gemini-2.5-flash-preview-09-2025 cho môi trường này
         const MODEL_NAME = "gemini-2.5-flash-preview-09-2025";
         
-        // Lấy Key từ bộ nhớ máy người dùng, nếu không có thì dùng Key mặc định
+        // Lấy Key từ bộ nhớ máy người dùng, hoặc dùng apiKey mặc định
         function getApiKey() {
-            return localStorage.getItem('innerly_custom_key') || DEFAULT_KEY;
+            return localStorage.getItem('innerly_custom_key') || apiKey;
         }
 
         // Context trò chuyện
@@ -318,10 +319,10 @@
                 if (loader) loader.remove();
                 
                 if (error.message === "KEY_ERROR" || error.message === "KEY_MISSING") {
-                    addBubble("⚠️ Bạn chưa nhập Key hoặc Key bị lỗi. Hãy bấm nút ⚙️ (Cài đặt) để nhập Key mới nhé!", 'ai');
+                    addBubble("⚠️ Bạn chưa nhập Key. Hãy bấm nút ⚙️ (Cài đặt) để nhập Key nhé!", 'ai');
                     openModal(); 
                 } else if (error.message === "MODEL_ERROR") {
-                    addBubble("⚠️ Lỗi phiên bản AI (404). Vui lòng kiểm tra lại cấu hình model.", 'ai');
+                    addBubble("⚠️ Lỗi phiên bản AI (404). Có vẻ model này không được hỗ trợ ở đây.", 'ai');
                 } else {
                     addBubble(`Có lỗi xảy ra (${error.message}). Bạn thử lại sau nhé! 📶`, 'ai');
                 }
