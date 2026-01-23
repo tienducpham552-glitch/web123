@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
-        /* --- THIẾT LẬP CƠ BẢN (RESET & VARIABLES) --- */
+        /* --- THIẾT LẬP BIẾN MÀU SẮC --- */
         :root {
             --primary-blue: #4A90E2; 
             --primary-yellow: #F5A623; 
@@ -21,9 +21,9 @@
             --text-light: #666;
             --white: #fff;
             --ai-bg: #F0F4F8;
-            --purple-accent: #9B59B6;
         }
 
+        /* --- THIẾT LẬP CHUNG --- */
         * {
             margin: 0;
             padding: 0;
@@ -31,19 +31,25 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             line-height: 1.6;
             color: var(--text-dark);
             background-color: #f9f9f9;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            width: 100%;
         }
 
-        /* --- HEADER & NAVIGATION --- */
+        /* --- HEADER & NAVIGATION (TỰ ĐỘNG THÍCH ỨNG) --- */
         header {
             background: var(--white);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -57,6 +63,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* Tự xuống dòng nếu menu quá dài */
         }
 
         .logo {
@@ -70,8 +77,9 @@
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 25px;
             align-items: center;
+            transition: all 0.3s ease;
         }
 
         .nav-links a {
@@ -79,6 +87,7 @@
             color: var(--text-dark);
             font-weight: 600;
             transition: color 0.3s;
+            white-space: nowrap;
         }
 
         .nav-links a:hover {
@@ -89,46 +98,42 @@
             color: var(--primary-blue);
             font-weight: bold;
             border: 2px solid var(--primary-blue);
-            padding: 8px 25px;
+            padding: 8px 20px;
             border-radius: 30px;
-            transition: all 0.3s ease;
         }
 
         .nav-links a.ai-link:hover {
             background: var(--primary-blue);
             color: white;
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
         }
 
         /* --- HERO SECTION --- */
         .hero {
             background: linear-gradient(135deg, var(--soft-mint) 0%, #ffffff 100%);
-            padding: 80px 0;
+            padding: clamp(40px, 8vw, 80px) 0;
             text-align: center;
         }
 
         .hero h1 {
             color: var(--primary-blue);
-            font-size: 3.5rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 20px;
             font-weight: 800;
         }
 
         .hero h2 {
-            font-size: 1.4rem;
+            font-size: clamp(1rem, 2vw, 1.4rem);
             color: var(--text-light);
-            font-weight: normal;
             margin-bottom: 40px;
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.8;
         }
 
         .hero-img-container {
             width: 100%;
             max-width: 900px;
-            height: 500px;
+            aspect-ratio: 16 / 9;
             background-color: #ddd;
             margin: 0 auto;
             border-radius: 25px;
@@ -140,75 +145,71 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
-        }
-
-        .hero-img-container:hover img {
-            transform: scale(1.03);
         }
 
         /* --- SECTIONS --- */
         .section-padding {
-            padding: 100px 0;
+            padding: clamp(50px, 10vw, 100px) 0;
         }
 
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 60px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: clamp(30px, 5vw, 60px);
             color: var(--primary-blue);
             text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: 700;
         }
 
-        /* --- MISSION --- */
-        .mission {
-            background-color: var(--white);
+        /* --- MISSION (FLEXBOX TỰ ĐỘNG) --- */
+        .mission-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: flex-start;
         }
 
-        .mission-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+        .mission-text {
+            flex: 1;
+            min-width: 300px; /* Xuống dòng nếu nhỏ hơn 300px */
         }
 
         .mission-text p {
             margin-bottom: 25px;
             text-align: justify;
             font-size: 1.1rem;
-            color: #444;
         }
 
-        /* --- JOURNEY --- */
+        /* --- JOURNEY (GRID TỰ ĐỘNG CHỈNH CỘT) --- */
         .journey {
             background-color: var(--soft-mint);
         }
 
         .journey-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            /* Tự động tính toán số cột dựa trên độ rộng: tối thiểu 260px mỗi cột */
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 30px;
         }
 
         .card {
             background: var(--white);
-            padding: 35px 25px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-top: 8px solid var(--primary-blue);
             display: flex;
             flex-direction: column;
             text-align: center;
-            align-items: center;
             height: 100%;
+            transition: all 0.3s ease;
         }
 
+        /* Chỉ bật hiệu ứng hover nếu không phải thiết bị cảm ứng (xử lý qua JS pc-mode) */
         body.pc-mode .card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .card:nth-child(2) { border-top-color: var(--primary-yellow); }
@@ -217,221 +218,108 @@
 
         .card img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        .card h3 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            color: #2c3e50;
-        }
-
-        .quote {
-            font-style: italic;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-            display: block;
-            font-weight: 600;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-content p {
-            font-size: 0.95rem;
-            color: #555;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .card-content strong {
-            display: block;
-            margin-top: 15px;
-            color: var(--text-dark);
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
+        .card h3 { margin-bottom: 15px; font-size: 1.4rem; }
+        .quote { font-style: italic; color: var(--primary-blue); margin-bottom: 15px; font-weight: 600; min-height: 3em; display: flex; align-items: center; justify-content: center; }
 
         /* --- AI SECTION --- */
-        .ai-section {
-            background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
-        }
-
         .chat-cta-box {
             background: white;
-            padding: 60px;
+            padding: clamp(30px, 5vw, 60px);
             border-radius: 30px;
             text-align: center;
             border: 3px dashed var(--primary-blue);
-            margin-bottom: 80px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            margin-bottom: 60px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
         }
 
         .chat-cta-btn {
             display: inline-block;
             background-color: var(--primary-blue);
             color: white;
-            padding: 20px 50px;
-            font-size: 1.3rem;
-            border-radius: 60px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
-            transition: all 0.3s ease;
-            margin-top: 30px;
-            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.4);
-        }
-
-        .chat-cta-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.6);
+            transition: all 0.3s;
+            margin-top: 20px;
         }
         
         .ai-features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
         }
 
         .ai-feature-card {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             border: 1px solid #eee;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-            transition: border-color 0.3s;
-        }
-
-        .ai-feature-card:hover {
-            border-color: var(--primary-blue);
-        }
-
-        .ai-feature-card h3 {
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.4rem;
-        }
-
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary-blue);
         }
 
         .chat-btn {
             background-color: var(--primary-blue);
             color: white;
             border: none;
-            padding: 15px 35px;
-            font-size: 1.1rem;
+            padding: 15px;
             border-radius: 50px;
             cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
             width: 100%;
-            transition: background 0.3s;
+            font-weight: bold;
         }
-        
-        .chat-btn.secondary { background-color: var(--primary-yellow); }
-        .chat-btn.secondary:hover { background-color: #e09612; }
 
-        /* --- HISTORY --- */
+        /* --- HISTORY & FOOTER --- */
         .history-content {
             background: #fff;
-            padding: 50px;
+            padding: clamp(25px, 5vw, 50px);
             border-radius: 25px;
             border-left: 10px solid var(--primary-yellow);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        .history-content h3 {
-            margin-bottom: 25px;
-            color: #2c3e50;
-            font-size: 1.8rem;
-        }
-
-        .history-content p {
-            font-size: 1.15rem;
-            color: #444;
-            margin-bottom: 20px;
-            text-align: justify;
-        }
-
-        /* --- FOOTER --- */
         footer {
             background: #2c3e50;
             color: var(--white);
-            padding: 80px 0;
+            padding: 60px 0;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-        }
-
-        .footer-item h4 {
-            color: var(--primary-yellow);
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            padding-bottom: 15px;
-            display: inline-block;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
         }
 
         .footer-item img {
             width: 100%;
-            height: 300px;
+            height: 250px;
             object-fit: cover;
             border-radius: 15px;
-            margin-bottom: 25px;
-            border: 4px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
         }
 
-        /* --- RESPONSIVE MOBILE (< 768px) --- */
-        @media (max-width: 992px) {
-            .journey-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
+        /* --- MEDIA QUERIES (CHO CÁC ĐIỀU CHỈNH KHÔNG TỰ ĐỘNG ĐƯỢC) --- */
         @media (max-width: 768px) {
-            .mission-content, .footer-grid, .ai-features-grid, .journey-grid {
-                grid-template-columns: 1fr;
+            nav {
+                flex-direction: column;
+                gap: 20px;
             }
-
-            nav { flex-direction: column; gap: 20px; }
-            .nav-links { 
-                flex-direction: column; 
-                width: 100%; 
-                background: #fff; 
-                padding: 20px; 
-                border-radius: 15px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 15px;
             }
-            .nav-links a { margin: 0; padding: 12px 0; border-bottom: 1px dashed #eee; display: block; width: 100%; text-align: center; }
-            
-            .hero h1 { font-size: 2.5rem; }
-            .hero-img-container { height: 350px; }
-            .section-title { font-size: 2rem; }
+            .nav-links a {
+                margin: 0;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -441,8 +329,8 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <!-- Ảnh Logo của bạn -->
-                    <img src="Logo.jpg" alt="Logo Innerly" style="height: 80px; width: auto;">
+                    <img src="Logo.jpg" alt="Logo Innerly" style="height: 60px; width: auto;">
+                    <span>INNERLY</span>
                 </div>
                 <div class="nav-links">
                     <a href="#">TRANG CHỦ</a>
@@ -541,9 +429,9 @@
         <div class="container">
             
             <div class="chat-cta-box">
-                <i class="fas fa-robot" style="font-size: 4rem; color: var(--primary-yellow); margin-bottom: 25px;"></i>
-                <h2 style="color: var(--primary-blue); margin-bottom: 20px; font-size: 2.2rem;">Góc Tâm Sự INNERLY AI</h2>
-                <p style="margin-bottom: 30px; color: #555; font-size: 1.2rem; line-height: 1.8;">
+                <i class="fas fa-robot" style="font-size: 3rem; color: var(--primary-yellow); margin-bottom: 20px;"></i>
+                <h2 style="color: var(--primary-blue); margin-bottom: 20px;">Góc Tâm Sự INNERLY AI</h2>
+                <p style="margin-bottom: 30px; color: #555; font-size: 1.1rem;">
                     Bạn có điều gì khó nói không? Innerly AI luôn ở đây để lắng nghe, thấu hiểu và cùng bạn tìm ra những góc nhìn mới trong một không gian hoàn toàn riêng tư.
                 </p>
                 <a href="chat.html" class="chat-cta-btn">
@@ -551,35 +439,25 @@
                 </a>
             </div>
 
-            <div class="ai-header">
-                <h3 style="color: var(--primary-blue); font-size: 1.8rem; margin-bottom: 40px;">Các công cụ cảm xúc khác</h3>
-            </div>
-
             <div class="ai-features-grid">
                 <!-- Tool 1 -->
                 <div class="ai-feature-card">
                     <h3><i class="fas fa-book-open"></i> Từ Điển Cảm Xúc ✨</h3>
-                    <p style="color:#666; margin-bottom: 25px;">Cảm xúc của bạn khó gọi tên? Hãy mô tả nó, AI sẽ sáng tạo cho bạn một cái tên thật hay và định nghĩa ý nghĩa.</p>
-                    
+                    <p style="color:#666; margin-bottom: 20px;">AI sẽ sáng tạo cho bạn một cái tên thật hay và định nghĩa ý nghĩa dựa trên mô tả của bạn.</p>
                     <div class="input-group">
                         <input type="text" id="emotionDesc" placeholder="VD: Cảm thấy vừa hồi hộp lại vừa mong chờ...">
                     </div>
-                    
-                    <button onclick="defineEmotion()" id="btnDefine" class="chat-btn secondary">
-                        <i class="fas fa-magic"></i> Sáng tạo tên cảm xúc
-                    </button>
-
+                    <button onclick="defineEmotion()" id="btnDefine" class="chat-btn secondary">Sáng tạo tên cảm xúc</button>
                     <div id="resultDefine" style="margin-top:20px; background:#f0f8ff; padding:20px; border-radius:15px; display:none; border: 1px solid #d1e9ff;">
-                        <strong id="emotionTitle" style="color:var(--primary-blue); display:block; font-size:1.2rem; margin-bottom:5px;"></strong>
-                        <p id="emotionDef" style="font-size:1rem; color: #444;"></p>
+                        <strong id="emotionTitle" style="color:var(--primary-blue); display:block; font-size:1.1rem;"></strong>
+                        <p id="emotionDef" style="font-size:0.95rem; color: #444;"></p>
                     </div>
                 </div>
 
                 <!-- Tool 2 -->
                 <div class="ai-feature-card">
                     <h3><i class="fas fa-lightbulb"></i> Gợi Ý Giải Tỏa ✨</h3>
-                    <p style="color:#666; margin-bottom: 25px;">Bạn đang thấy quá tải? Chọn tâm trạng hiện tại, Innerly sẽ gợi ý cho bạn một hành động nhỏ để cân bằng lại.</p>
-                    
+                    <p style="color:#666; margin-bottom: 20px;">Chọn tâm trạng hiện tại, Innerly sẽ gợi ý cho bạn một hành động nhỏ để cân bằng lại ngay.</p>
                     <div class="input-group">
                         <select id="moodSelect">
                             <option value="Căng thẳng">Căng thẳng / Stress áp lực</option>
@@ -589,14 +467,9 @@
                             <option value="Mệt mỏi">Mệt mỏi / Cạn năng lượng</option>
                         </select>
                     </div>
-                    
-                    <button onclick="suggestActivity()" id="btnSuggest" class="chat-btn secondary">
-                        <i class="fas fa-hand-sparkles"></i> Tìm hoạt động phù hợp
-                    </button>
-
+                    <button onclick="suggestActivity()" id="btnSuggest" class="chat-btn secondary">Tìm hoạt động phù hợp</button>
                     <div id="resultSuggest" style="margin-top:20px; background:#fff8e1; padding:20px; border-radius:15px; display:none; border: 1px solid #ffeeba;">
-                        <strong style="color:var(--primary-yellow); display:block; margin-bottom:5px;">💡 Gợi ý dành riêng cho bạn:</strong>
-                        <p id="activityText" style="font-size:1rem; color: #444;"></p>
+                        <p id="activityText" style="font-size:0.95rem; color: #444;"></p>
                     </div>
                 </div>
             </div>
@@ -609,11 +482,9 @@
             <div class="history-content">
                 <h3>Khởi đầu từ những thấu cảm</h3>
                 <p>INNERLY là một dự án đầy tâm huyết giúp tụi mình hiểu cảm xúc của chính mình hơn, nhất là những lúc áp lực học hành hay rối bời không biết nói với ai. Chỉ từ những công cụ rất nhỏ, INNERLY giúp bạn xả bớt cảm xúc, lấy lại sự bình tĩnh và cảm thấy mình không hề cô đơn trong hành trình trưởng thành đầy biến động.</p>
-                
-                <h3 style="margin-top: 35px;">Thành tựu hiện tại</h3>
-                <p>Từ những ý tưởng sơ khai xoay quanh cảm xúc học đường, INNERLY đã dần hình thành một hệ sinh thái sản phẩm hoàn chỉnh. Chúng tôi tự hào đã xây dựng được bộ sản phẩm cân bằng cảm xúc học đường INNERLY độc đáo, bao gồm: Landing page tương tác, Hộp ghi cảm xúc tinh tế, Bộ thẻ cảm xúc đa dạng, Stress ball đàn hồi và các vật dụng hỗ trợ ý nghĩa khác.</p>
-                <p style="margin-top: 20px; background: #fffde7; padding: 20px; border-radius: 10px; font-style: italic; color: #555;">
-                    "Quan trọng hơn tất cả, INNERLY không chỉ đơn thuần là một bộ sản phẩm thương mại. Chúng mình đang nỗ lực trở thành một không gian tinh thần an toàn, nơi mỗi mầm non cảm xúc của tuổi teen đều được nhìn nhận một cách nghiêm túc, bao dung và tôn trọng tuyệt đối."
+                <p>Từ những ý tưởng sơ khai, INNERLY đã dần hình thành một hệ sinh thái sản phẩm hoàn chỉnh, bao gồm: Landing page tương tác, Hộp ghi cảm xúc tinh tế, Bộ thẻ cảm xúc đa dạng, Stress ball đàn hồi và các vật dụng hỗ trợ ý nghĩa khác.</p>
+                <p style="margin-top: 20px; font-style: italic; color: var(--primary-blue); font-weight: 600;">
+                    "INNERLY không chỉ là một bộ sản phẩm. Chúng mình là một không gian tinh thần an toàn cho tuổi teen."
                 </p>
             </div>
         </div>
@@ -623,17 +494,17 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-item">
-                    <h4>INNERLY trong đời sống</h4>
+                    <h4>INNERLY học đường</h4>
                     <img src="Doi song.png" alt="Đời sống học đường">
-                    <p>Những công cụ nhỏ bé nhưng có võ, giúp tuổi teen chạm vào cảm xúc của mình, giải tỏa nhẹ nhàng và cảm thấy được vỗ về trong quá trình lớn lên.</p>
+                    <p>Giúp tuổi teen chạm vào cảm xúc, giải tỏa nhẹ nhàng và cảm thấy được vỗ về.</p>
                 </div>
                 <div class="footer-item">
-                    <h4>Bộ sản phẩm INNERLY</h4>
+                    <h4>Bộ sản phẩm</h4>
                     <img src="San pham.png" alt="Bộ sản phẩm">
-                    <p>Được thiết kế gần gũi, tinh tế và cực kỳ dễ sử dụng mỗi ngày – INNERLY hứa hẹn là người bạn đồng hành đáng tin cậy trên hành trình thấu hiểu bản thân.</p>
+                    <p>Thiết kế tinh tế, dễ sử dụng – người bạn đồng hành đáng tin cậy mỗi ngày.</p>
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: #888;">
+            <div style="text-align: center; margin-top: 50px; opacity: 0.6; font-size: 0.9rem;">
                 &copy; 2024 INNERLY Project. Nơi cảm xúc được trân trọng.
             </div>
         </div>
@@ -643,19 +514,28 @@
         const apiKey = "AIzaSyCtYRhJL5k3c038h22vMEUju_jhf9G6Tjg"; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        // --- PHÁT HIỆN THIẾT BỊ ---
-        function checkDevice() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // --- HÀM TỰ ĐỘNG PHÁT HIỆN VÀ CẬP NHẬT THIẾT BỊ ---
+        function updateLayout() {
+            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+            const width = window.innerWidth;
             const body = document.body;
-            if (isMobile) {
-                body.classList.add('mobile-device');
-                body.classList.remove('pc-mode');
-            } else {
+
+            // Xóa các class cũ
+            body.classList.remove('pc-mode', 'mobile-mode');
+
+            // Nếu là PC (không có cảm ứng) hoặc màn hình đủ rộng
+            if (!isTouch && width > 1024) {
                 body.classList.add('pc-mode');
-                body.classList.remove('mobile-device');
+                console.log("Chế độ: PC (Tối ưu chuột & màn hình rộng)");
+            } else {
+                body.classList.add('mobile-mode');
+                console.log("Chế độ: Mobile/Tablet (Tối ưu cảm ứng & bố cục dọc)");
             }
         }
-        window.addEventListener('load', checkDevice);
+
+        // Tự động chạy khi tải trang và khi xoay/resize màn hình
+        window.addEventListener('load', updateLayout);
+        window.addEventListener('resize', updateLayout);
 
         // --- CÁC HÀM AI ---
         async function defineEmotion() {
@@ -666,20 +546,18 @@
             const defEl = document.getElementById('emotionDef');
 
             if (!input) return alert("Bạn hãy chia sẻ cảm xúc của mình nhé!");
-
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang suy nghĩ...'; resultBox.style.display = 'none';
+            btn.disabled = true; btn.innerHTML = 'Đang suy nghĩ...'; resultBox.style.display = 'none';
 
             try {
-                const prompt = `User input: "${input}". Task: Dựa trên mô tả này, hãy sáng tạo ra một "Tên gọi cảm xúc" thật hay, nên thơ hoặc hài hước (Tiếng Việt) và viết một định nghĩa ngắn (1 câu) cho nó giống như từ điển. Output Format: Tên Cảm Xúc|Định nghĩa ngắn.`;
+                const prompt = `User input: "${input}". Task: Đặt tên cảm xúc (Tiếng Việt) và định nghĩa ngắn (1 câu). Format: Tên|Định nghĩa.`;
                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
                 const data = await response.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Lỗi|Thử lại sau.";
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Cảm xúc|Vui lòng thử lại.";
                 const parts = text.split('|');
-                titleEl.innerText = parts[0]?.trim() || "Cảm xúc đặc biệt"; 
-                defEl.innerText = parts[1]?.trim() || text;
+                titleEl.innerText = parts[0]?.trim(); defEl.innerText = parts[1]?.trim() || text;
                 resultBox.style.display = 'block';
-            } catch (e) { alert("Kết nối gián đoạn, bạn thử lại nhé!"); } 
-            finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-magic"></i> Sáng tạo tên cảm xúc'; }
+            } catch (e) { alert("Lỗi kết nối!"); } 
+            finally { btn.disabled = false; btn.innerHTML = 'Sáng tạo tên cảm xúc'; }
         }
 
         async function suggestActivity() {
@@ -688,17 +566,17 @@
             const resultBox = document.getElementById('resultSuggest');
             const activityText = document.getElementById('activityText');
 
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tìm...'; resultBox.style.display = 'none';
+            btn.disabled = true; btn.innerHTML = 'Đang tìm...'; resultBox.style.display = 'none';
 
             try {
-                const prompt = `User mood: "${mood}". Task: Gợi ý ĐÚNG 1 hoạt động nhỏ, cụ thể, dễ làm trong 5 phút để giúp học sinh giải tỏa tâm trạng này. Giọng văn thân thiện, nhẹ nhàng.`;
+                const prompt = `User mood: "${mood}". Task: Gợi ý 1 hoạt động nhỏ 5 phút giúp giải tỏa. Thân thiện.`;
                 const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
                 const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Hãy hít thở thật sâu trong 3 nhịp nhé!";
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Hít thở sâu nhé!";
                 activityText.innerHTML = marked.parse(reply);
                 resultBox.style.display = 'block';
-            } catch (e) { alert("Kết nối gián đoạn, bạn thử lại nhé!"); } 
-            finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-hand-sparkles"></i> Tìm hoạt động phù hợp'; }
+            } catch (e) { alert("Lỗi kết nối!"); } 
+            finally { btn.disabled = false; btn.innerHTML = 'Tìm hoạt động phù hợp'; }
         }
     </script>
 </body>
