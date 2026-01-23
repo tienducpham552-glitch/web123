@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Tâm Sự - Innerly</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        
+        .header a { text-decoration: none; color: #555; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+        .header h2 { color: #4A90E2; margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+
+        /* Nút cài đặt */
+        .settings-btn {
+            background: none; border: none; font-size: 1.2rem; color: #888; cursor: pointer; transition: 0.3s;
+        }
+        .settings-btn:hover { color: #4A90E2; transform: rotate(90deg); }
+
+        /* Khung chat chính */
+        .chat-container {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container { margin: 0; border-radius: 0; }
+        }
+
+        .messages-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-image: radial-gradient(#e8f5e9 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Bong bóng chat */
+        .bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+            word-wrap: break-word;
+            font-size: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .user { 
+            background: #4A90E2; color: white; align-self: flex-end; 
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 5px rgba(74, 144, 226, 0.2);
+        }
+
+        .ai { 
+            background: #fff; color: #333; align-self: flex-start; 
+            border-bottom-left-radius: 4px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .ai strong { color: #d35400; font-weight: 600; }
+        .ai ul, .ai ol { padding-left: 20px; margin: 5px 0; }
+        .ai p { margin: 5px 0; }
+        .ai em { color: #666; font-size: 0.9em; }
+
+        /* Khu vực nhập liệu */
+        .input-area {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input {
+            flex: 1; padding: 15px 20px;
+            border: 1px solid #ddd; border-radius: 30px;
+            outline: none; font-size: 1rem; background: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: #4A90E2; background: #fff; }
+
+        button#sendBtn {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: #4A90E2; color: white; border: none;
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+        button#sendBtn:hover { background: #357abd; transform: scale(1.05); }
+        button#sendBtn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .typing-indicator { display: flex; gap: 4px; padding: 5px 0; }
+        .typing-indicator span { width: 8px; height: 8px; background: #bbb; border-radius: 50%; animation: blink 1.4s infinite both; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } }
+
+        /* Modal Cài đặt Key */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 100;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-box {
+            background: white; padding: 30px; border-radius: 15px;
+            width: 90%; max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; color: #333; }
+        .modal-input {
+            width: 100%; padding: 12px; border: 1px solid #ddd;
+            border-radius: 8px; margin-bottom: 15px;
+            font-family: monospace;
+        }
+        .modal-btn {
+            background: #4A90E2; color: white; border: none;
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%;
+            font-weight: bold;
+        }
+        .modal-close {
+            margin-top: 10px; background: transparent; color: #666;
+            border: none; cursor: pointer; width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html"><i class="fas fa-arrow-left"></i> Quay lại</a>
+        <h2><i class="fas fa-robot" style="color: #F5A623;"></i> Góc Tâm Sự Innerly</h2>
+        <button class="settings-btn" id="openSettingsBtn" title="Cài đặt API Key"><i class="fas fa-cog"></i></button>
+    </div>
+
+    <div class="chat-container">
+        <div id="chatBox" class="messages-area">
+            <div class="bubble ai">
+                Chào bạn! Mình là Innerly 🌱<br>
+                Mình ở đây để lắng nghe. Hôm nay bạn thế nào?
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Nhắn tin cho Innerly..." autocomplete="off">
+            <button id="sendBtn" onclick="window.sendMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- MODAL NHẬP KEY -->
+    <div class="modal-overlay" id="keyModal">
+        <div class="modal-box">
+            <div class="modal-title">🔑 Cài đặt API Key</div>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
+                Cần có API Key để chat. Hãy nhập Key của bạn vào bên dưới nhé!
+            </p>
+            <input type="password" id="apiKeyInput" class="modal-input" placeholder="Dán API Key của bạn vào đây...">
+            <button class="modal-btn" onclick="saveKey()">Lưu & Kết nối lại</button>
+            <button class="modal-close" onclick="closeModal()">Đóng</button>
+            <p style="font-size: 0.8rem; margin-top: 15px; text-align: center;">
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #4A90E2;">Lấy Key miễn phí tại đây</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Thư viện Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        // CẤU HÌNH API
+        // Để trống để hệ thống tự điền hoặc người dùng tự nhập
+        const DEFAULT_KEY = ""; 
+        // Sử dụng model 2.5 flash preview được hỗ trợ
+        const MODEL_NAME = "gemini-2.5-flash-preview-09-2025";
+        
+        // Lấy Key từ bộ nhớ máy người dùng, nếu không có thì dùng Key mặc định
+        function getApiKey() {
+            return localStorage.getItem('innerly_custom_key') || DEFAULT_KEY;
+        }
+
+        // Context trò chuyện
+        let chatHistory = [
+            {
+                role: "user",
+                parts: [{ text: "Bạn là Innerly, AI tâm lý học đường. Tính cách: Nhẹ nhàng, thấu cảm, Gen Z. Nhiệm vụ: Lắng nghe, an ủi, không phán xét. Trả lời ngắn gọn." }]
+            },
+            {
+                role: "model",
+                parts: [{ text: "Chào bạn! Mình là Innerly đây ✨. Mình sẵn sàng lắng nghe rồi 💛." }]
+            }
+        ];
+
+        // --- HÀM XỬ LÝ GIAO DIỆN ---
+        function addBubble(text, sender) {
+            const box = document.getElementById("chatBox");
+            if (!box) return;
+
+            const div = document.createElement("div");
+            div.className = `bubble ${sender}`;
+            
+            if (sender === 'ai' && typeof marked !== 'undefined') {
+                try { div.innerHTML = marked.parse(text); } catch (e) { div.innerText = text; }
+            } else {
+                div.innerText = text;
+            }
+            
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // --- HÀM GỬI TIN NHẮN ---
+        window.sendMessage = async function() {
+            const input = document.getElementById("userInput");
+            const btn = document.getElementById("sendBtn");
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // 1. UI: User message
+            addBubble(text, 'user');
+            input.value = "";
+            btn.disabled = true;
+
+            // 2. UI: Loading
+            const loadingId = "loading-" + Date.now();
+            const loadingDiv = document.createElement("div");
+            loadingDiv.className = "bubble ai";
+            loadingDiv.id = loadingId;
+            loadingDiv.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            document.getElementById("chatBox").appendChild(loadingDiv);
+            document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+
+            try {
+                const currentKey = getApiKey();
+                // Nếu chưa có key thì báo lỗi ngay để mở modal
+                if (!currentKey) {
+                    throw new Error("KEY_MISSING");
+                }
+
+                const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${currentKey}`;
+
+                const payload = {
+                    contents: [
+                        ...chatHistory,
+                        { role: "user", parts: [{ text: text }] }
+                    ]
+                };
+
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    // Nếu lỗi 400 hoặc 403 => Key bị chặn hoặc lỗi
+                    if (response.status === 400 || response.status === 403) {
+                        throw new Error("KEY_ERROR");
+                    }
+                    if (response.status === 404) {
+                        throw new Error("MODEL_ERROR");
+                    }
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Innerly đang suy nghĩ...";
+
+                // Xóa loading, hiện trả lời
+                document.getElementById(loadingId).remove();
+                addBubble(reply, 'ai');
+
+                chatHistory.push({ role: "user", parts: [{ text: text }] });
+                chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+            } catch (error) {
+                console.error(error);
+                const loader = document.getElementById(loadingId);
+                if (loader) loader.remove();
+                
+                if (error.message === "KEY_ERROR" || error.message === "KEY_MISSING") {
+                    addBubble("⚠️ Bạn chưa nhập Key hoặc Key bị lỗi. Hãy bấm nút ⚙️ (Cài đặt) để nhập Key mới nhé!", 'ai');
+                    openModal(); 
+                } else if (error.message === "MODEL_ERROR") {
+                    addBubble("⚠️ Lỗi phiên bản AI (404). Vui lòng kiểm tra lại cấu hình model.", 'ai');
+                } else {
+                    addBubble(`Có lỗi xảy ra (${error.message}). Bạn thử lại sau nhé! 📶`, 'ai');
+                }
+            } finally {
+                btn.disabled = false;
+                input.focus();
+            }
+        };
+
+        // --- QUẢN LÝ MODAL & KEY ---
+        const modal = document.getElementById("keyModal");
+        const keyInput = document.getElementById("apiKeyInput");
+
+        function openModal() {
+            modal.classList.add("active");
+            keyInput.value = localStorage.getItem('innerly_custom_key') || "";
+        }
+
+        function closeModal() {
+            modal.classList.remove("active");
+        }
+
+        function saveKey() {
+            const newKey = keyInput.value.trim();
+            if (newKey) {
+                localStorage.setItem('innerly_custom_key', newKey);
+                alert("Đã lưu Key mới! Bạn có thể chat ngay.");
+                closeModal();
+            } else {
+                alert("Bạn chưa nhập Key nào cả!");
+            }
+        }
+
+        // Gán sự kiện cho các nút
+        document.getElementById("openSettingsBtn").addEventListener("click", openModal);
+        
+        // Gán sự kiện Global
+        window.saveKey = saveKey;
+        window.closeModal = closeModal;
+
+        // Enter để gửi
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById("userInput");
+            if(input) {
+                input.addEventListener("keypress", function(e) {
+                    if (e.key === "Enter") window.sendMessage();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
