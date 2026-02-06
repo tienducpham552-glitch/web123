@@ -1,427 +1,747 @@
 <!DOCTYPE html>
+<!-- 
+    PROJECT: INNERLY (ULTIMATE TET EDITION)
+    DESCRIPTION: Phiên bản Tết cao cấp với hiệu ứng hoa rơi và lồng đèn.
+    VERSION: 3.4.0 (Tet Vibes Active)
+    
+    >>> CHANGES <<<
+    1. DEFAULT PAGE: Chuyển sang "Card Deck" (Thẻ Cảm Xúc) ngay khi tải.
+    2. VISUALS: Thêm hiệu ứng mưa hoa (Mai/Đào) và lồng đèn treo.
+    3. AUDIO: Cập nhật nhạc nền Tết.
+-->
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INNERLY | Premium Emotional Balance</title>
 
-    <!-- SECURITY META TAGS -->
+<head>
+    <!-- ==========================================================================
+         META TAGS & SECURITY CONFIGURATION
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>INNERLY | Lộc Xuân Bình An</title>
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
+    <!-- CSP: Giữ nguyên lớp bảo vệ -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.gstatic.com https://threejs.org; 
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; 
+        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; 
+        img-src 'self' data: https://images.unsplash.com; 
+        connect-src 'self' https://generativelanguage.googleapis.com https://www.google-analytics.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; 
+        media-src 'self' https://cdn.pixabay.com;
+        frame-ancestors 'none';
+    ">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XEELZR1L2D"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XEELZR1L2D');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XEELZR1L2D');
     </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Icons, Markdown & Security Libs -->
+    <!-- Icons & Libs -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- DOMPurify & ThreeJS -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
-    
-    <!-- Three.js (Version r128 - Stable) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <!-- ==========================================================================
+         STYLES (CSS)
+         ========================================================================== -->
     <style>
         :root {
+            /* --- ORIGINAL COLOR PALETTE --- */
             --p-blue: #3B82F6;
-            --p-blue-soft: #F0F8FF;
-            --p-pink: #FFB7C5;
-            --p-pink-soft: #FFF0F3;
-            --p-mint: #B2F2BB;
-            --p-mint-soft: #EBFBEE;
-            --p-yellow: #FFE066;
-            --p-yellow-soft: #FFF9DB;
-            --p-orange: #FF922B;
-            --error-red: #EF4444;
-            --success-green: #10B981;
-            
-            --slate-900: #0F172A;
-            --slate-800: #1E293B;
-            --slate-600: #475569;
+            --p-blue-soft: #DBEAFE; 
+            --p-pink: #F472B6;
+            --p-pink-soft: #FCE7F3;
+            --p-green: #34D399;
+            --p-green-soft: #D1FAE5;
+            --p-orange: #FB923C;
+            --p-yellow: #FACC15;
+            --slate-900: #1E293B;
+            --slate-700: #475569;
+            --slate-500: #94A3B8;
             --white: #ffffff;
-            --shadow-p: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+            --off-white: #F8FAFC;
+            --border-color: #F1F5F9;
+            
+            /* --- TET EVENT COLORS --- */
+            --tet-red: #D20F22;
+            --tet-gold: #FFD700;
+            --tet-bg: #FFF5F5;
+            
+            --shadow-sm: 0 2px 8px rgba(148, 163, 184, 0.15);
+            --shadow-md: 0 8px 24px rgba(148, 163, 184, 0.15);
+            --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            
             --radius-lg: 32px;
+            --radius-md: 20px;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* --- BASIC RESET --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--white); 
-            color: var(--slate-800);
+        /* * GLOBAL RESET * */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #F0F9FF 0%, #FDF4FF 100%);
+            background-attachment: fixed;
+            color: var(--slate-700);
+            line-height: 1.7;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, .logo span { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .container { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+        /* * TYPOGRAPHY * */
+        h1, h2, h3, .logo span { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--slate-900); }
+        h1 { font-weight: 800; letter-spacing: -0.03em; }
+        h2 { font-weight: 700; letter-spacing: -0.02em; }
+        p { font-weight: 400; color: var(--slate-700); }
 
-        /* --- 3D MASCOT --- */
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* * 3D MASCOT * */
         #mascot-3d-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 320px; 
-            height: 380px;
-            z-index: 3000;
-            pointer-events: none;
-            transition: all 0.5s ease;
+            position: fixed; bottom: 30px; right: 30px;
+            width: 280px; height: 320px; z-index: 9999;
+            pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @media (max-width: 850px) {
-            #mascot-3d-container { 
-                width: 160px; height: 190px; 
-                bottom: 10px; right: 10px;
-                opacity: 0.8;
-            }
-        }
+        @media (max-width: 1024px) { #mascot-3d-container { width: 220px; height: 260px; } }
+        @media (max-width: 600px) { #mascot-3d-container { width: 140px; height: 180px; bottom: 20px; right: 10px; } }
 
-        #three-canvas { width: 100%; height: 100%; pointer-events: auto; cursor: pointer; transition: 0.3s; }
+        #three-canvas {
+            width: 100%; height: 100%; pointer-events: auto; cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 15px 35px rgba(59, 130, 246, 0.2));
+        }
+        #three-canvas:active { transform: scale(0.9); }
 
         .mascot-bubble {
-            position: absolute; top: 40px; right: 60px; background: white;
-            padding: 12px 20px; border-radius: 20px; border-bottom-right-radius: 4px;
-            box-shadow: var(--shadow-p); font-size: 0.9rem; font-weight: 600;
-            color: var(--slate-800); opacity: 0; transform: translateY(10px) scale(0.9);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto;
-            max-width: 200px; text-align: center; z-index: 3001;
+            position: absolute; top: 0; right: 15%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 10px 18px; border-radius: 20px; border-bottom-right-radius: 4px;
+            box-shadow: var(--shadow-md); font-size: 0.9rem; font-weight: 600;
+            color: var(--p-blue); border: 1px solid rgba(255,255,255,0.8);
+            opacity: 0; transform: translateY(15px) scale(0.9);
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; max-width: 180px; text-align: center;
         }
         .mascot-bubble.active { opacity: 1; transform: translateY(0) scale(1); }
 
-        /* --- NAVIGATION --- */
+        /* * HEADER * */
         header {
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1rem 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 1rem 0;
             position: sticky; top: 0; z-index: 2000;
         }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--slate-900); font-weight: 800; font-size: 1.5rem; cursor: pointer; }
-        .logo-icon { width: 35px; height: 35px; background: var(--p-orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
+        .logo-icon { 
+            width: 42px; height: 42px; 
+            background: linear-gradient(135deg, var(--p-blue), #60A5FA); 
+            border-radius: 14px; display: flex; align-items: center; justify-content: center; 
+            color: white; font-size: 1.2rem; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+        }
+        .logo span { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; }
 
-        .nav-menu { display: flex; align-items: center; gap: 2rem; }
-        .nav-link { text-decoration: none; color: var(--slate-600); font-weight: 600; font-size: 0.95rem; transition: 0.3s; cursor: pointer; }
+        .nav-menu { display: flex; align-items: center; gap: 2.5rem; }
+        .nav-link { 
+            text-decoration: none; color: var(--slate-700); font-weight: 500; font-size: 0.95rem; 
+            transition: 0.3s; position: relative;
+        }
         .nav-link:hover { color: var(--p-blue); }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0;
+            background: var(--p-blue); transition: width 0.3s; border-radius: 2px;
+        }
+        .nav-link:hover::after { width: 100%; }
 
         .btn-cta {
-            background: var(--slate-900); color: var(--white) !important;
-            padding: 0.75rem 1.75rem; border-radius: 14px; font-weight: 700;
-            border: none; cursor: pointer; transition: 0.3s;
+            background: linear-gradient(135deg, var(--slate-900), #334155);
+            color: white !important; padding: 0.7rem 1.6rem; border-radius: 99px;
+            border: none; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.15);
+            font-weight: 700; letter-spacing: 0.5px;
         }
-        .btn-cta:hover { background: var(--p-blue); transform: translateY(-2px); }
+        .btn-cta:hover { 
+            transform: translateY(-2px) scale(1.02); 
+            box-shadow: 0 15px 25px rgba(37, 99, 235, 0.25);
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); 
+        }
 
-        /* LOGIN & USER INFO */
+        @media (max-width: 850px) {
+            .nav-menu { gap: 1rem; overflow-x: auto; padding: 0.5rem 0; scrollbar-width: none; }
+            .nav-menu::-webkit-scrollbar { display: none; }
+            .nav-link { font-size: 0.9rem; white-space: nowrap; padding: 0.5rem 0.8rem; background: rgba(255,255,255,0.5); border-radius: 12px; }
+            .btn-cta { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+        }
+
         .user-section { display: flex; align-items: center; gap: 1rem; }
         .btn-login {
-            background: transparent; border: 2px solid var(--p-blue); color: var(--p-blue);
-            padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;
+            background: white; border: 1px solid var(--border-color); color: var(--slate-700);
+            padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; transition: 0.3s;
+            font-weight: 600; box-shadow: var(--shadow-sm);
         }
-        .btn-login:hover { background: var(--p-blue-soft); }
+        .btn-login:hover { border-color: var(--p-blue); color: var(--p-blue); transform: translateY(-1px); }
         
-        .user-profile { display: none; align-items: center; gap: 10px; cursor: pointer; position: relative; }
+        .user-profile { display: none; align-items: center; gap: 12px; cursor: pointer; padding: 4px 12px; border-radius: 99px; transition: 0.3s; }
+        .user-profile:hover { background: rgba(255,255,255,0.8); }
         .user-profile.active { display: flex; }
         .user-avatar { 
-            width: 40px; height: 40px; background: var(--p-pink); color: white; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; 
+            width: 40px; height: 40px; 
+            background: linear-gradient(135deg, #F472B6, #C084FC); 
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 1rem; font-weight: 700; box-shadow: 0 4px 10px rgba(244, 114, 182, 0.3);
+            border: 2px solid white;
         }
-        .user-name { font-weight: 600; color: var(--slate-800); font-size: 0.95rem; }
 
-        /* --- AUTH MODAL --- */
+        /* * MODAL * */
         #auth-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
-            z-index: 5000; display: none; justify-content: center; align-items: center;
-            opacity: 0; transition: opacity 0.3s;
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px);
+            z-index: 10001; display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; padding: 1rem;
         }
         #auth-modal.show { display: flex; opacity: 1; }
-
         .modal-content {
-            background: white; width: 90%; max-width: 420px;
-            padding: 2.5rem; border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            position: relative; text-align: center;
-            max-height: 90vh; overflow-y: auto;
+            background: white; width: 100%; max-width: 420px;
+            padding: 3rem; border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid white; position: relative; text-align: center;
         }
-        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; cursor: pointer; font-size: 1.2rem; color: #94a3b8; }
-        .modal-title { font-size: 1.8rem; font-weight: 800; color: var(--slate-900); margin-bottom: 0.5rem; }
-        .modal-subtitle { color: var(--slate-600); font-size: 0.95rem; margin-bottom: 2rem; }
-        
         .auth-form input, .auth-form select {
-            width: 100%; padding: 1rem; margin-bottom: 0.8rem;
-            border: 1px solid #e2e8f0; border-radius: 12px;
-            font-size: 1rem; outline: none; transition: 0.3s;
+            width: 100%; padding: 1rem 1.2rem; margin-bottom: 1rem;
+            border: 2px solid transparent; border-radius: 16px;
+            font-size: 16px; outline: none; transition: 0.3s; 
+            background: #F1F5F9; color: var(--slate-900);
+        }
+        .auth-form input:focus { 
+            background: white; border-color: var(--p-blue); 
+            box-shadow: 0 0 0 4px var(--p-blue-soft); 
+        }
+        .btn-submit-auth { 
+            width: 100%; padding: 1rem; font-size: 1.05rem; border-radius: 16px; 
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); 
+            color: white; border: none; font-weight: 700; cursor: pointer;
+            margin-top: 1rem; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transition: 0.3s;
+        }
+        .btn-submit-auth:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3); }
+
+        /* * HERO & JOURNEY * */
+        #landing-page { display: none; }
+        #landing-page.active { display: block; animation: fadeIn 0.6s ease-out; }
+
+        .hero { padding: 5rem 0 6rem; text-align: center; }
+        .hero h1 { 
+            font-size: clamp(2.8rem, 6vw, 4.2rem); line-height: 1.1; margin-bottom: 1.5rem; 
+            color: var(--slate-900); 
+        }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--p-blue), #EC4899); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .hero p { 
+            font-size: clamp(1.15rem, 2.5vw, 1.3rem); color: var(--slate-700); 
+            max-width: 700px; margin: 0 auto 3.5rem; opacity: 0.9; 
+        }
+        .hero-img { 
+            width: 100%; max-width: 900px; margin: 0 auto; 
+            border-radius: 32px; overflow: hidden; 
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1); 
+            border: 8px solid rgba(255,255,255,0.5);
+            transform: perspective(1000px) rotateX(1deg);
+        }
+
+        .journey-section { padding: 5rem 0; background: transparent; }
+        .section-header h2 { font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: 1.2rem; text-align: center; }
+        
+        .journey-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; 
+            max-width: 1100px; margin: 4rem auto 0; 
+        }
+        @media (max-width: 768px) { .journey-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+        .j-card { 
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 32px; padding: 2.5rem; 
+            border: 1px solid white; 
+            text-align: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%; display: flex; flex-direction: column; align-items: center;
+            box-shadow: var(--shadow-card);
+        }
+        .j-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.15); 
             background: white;
         }
-        .auth-form input:focus { border-color: var(--p-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .input-error { border-color: var(--error-red) !important; animation: shake 0.3s; }
-        .error-msg { 
-            color: var(--error-red); font-size: 0.85rem; text-align: left; 
-            margin-bottom: 1rem; margin-top: -0.5rem; display: none; 
-            padding-left: 0.5rem;
-        }
-        .security-note { font-size: 0.8rem; color: #64748B; margin-bottom: 1.5rem; text-align: left; background: #F8FAFC; padding: 10px; border-radius: 8px; border: 1px dashed #CBD5E1; }
-        @keyframes shake {
-            0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); }
-        }
-        .btn-submit-auth {
-            width: 100%; padding: 1rem; border-radius: 12px;
-            background: var(--p-blue); color: white; font-weight: 700; font-size: 1rem;
-            border: none; cursor: pointer; transition: 0.3s; margin-top: 0.5rem;
-        }
-        .auth-toggle { margin-top: 1.5rem; font-size: 0.9rem; color: var(--slate-600); }
-        .auth-toggle span { color: var(--p-blue); cursor: pointer; font-weight: 600; text-decoration: underline; }
-        .register-field { display: none; }
-
-        /* --- HERO & JOURNEY --- */
-        .hero { padding: 8rem 0; text-align: center; background: radial-gradient(circle at top, var(--p-blue-soft), transparent); }
-        .hero h1 { font-size: clamp(3rem, 8vw, 4.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--slate-900); }
-        .hero h1 span { color: var(--p-blue); }
-        .hero p { font-size: 1.25rem; color: var(--slate-600); max-width: 800px; margin: 0 auto 3rem; line-height: 1.8; }
-        .hero-img { width: 100%; max-width: 900px; margin: 0 auto; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-p); border: 10px solid white; }
-        .hero-img img { width: 100%; display: block; }
         
-        .journey-section { padding: 8rem 0; background: #fff; }
-        .section-header { text-align: center; margin-bottom: 5rem; }
-        .section-header h2 { font-size: 3.2rem; font-weight: 800; color: var(--slate-900); letter-spacing: -1.5px; }
-        .journey-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; max-width: 1100px; margin: 0 auto; }
-        .j-card { background: white; border-radius: 30px; padding: 3rem; box-shadow: 0 4px 25px rgba(0,0,0,0.03); text-align: center; border: 1px solid #f1f5f9; transition: 0.4s; display: flex; flex-direction: column; align-items: center; }
-        .j-card:hover { transform: translateY(-10px); box-shadow: 0 15px 45px rgba(0,0,0,0.08); }
-        .card-num { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; font-weight: 800; font-size: 1.2rem; }
-        .card-01 .card-num { background: #E7F5FF; color: #3B82F6; }
-        .card-02 .card-num { background: #FFF9DB; color: #F59F00; }
-        .card-03 .card-num { background: #EBFBEE; color: #40C057; }
-        .card-04 .card-num { background: #FFF5F5; color: #F03E3E; }
-        .j-card img { width: 100%; height: 220px; object-fit: cover; border-radius: 20px; margin-bottom: 2rem; background: #f8fafc; }
-        .j-card h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.8rem; color: var(--slate-900); text-transform: uppercase; }
-        .j-card .quote { font-style: italic; font-weight: 700; font-size: 1.1rem; margin-bottom: 1.5rem; display: block; }
-        .card-01 .quote { color: #3B82F6; } .card-02 .quote { color: #F59F00; } .card-03 .quote { color: #40C057; } .card-04 .quote { color: #F03E3E; }
-        .j-card p { font-size: 1rem; color: var(--slate-600); line-height: 1.7; }
-
-        /* --- CARD DECK UI (IMPROVED) --- */
-        #card-deck-section { background: #F8FAFC; padding: 4rem 0 6rem; min-height: 90vh; display: none; }
-        #card-deck-section.active { display: block; }
-
-        .deck-container {
-            max-width: 900px; margin: 0 auto;
-            display: flex; flex-direction: column; align-items: center; gap: 2rem;
+        .j-card img {
+            width: 100%; height: 240px; object-fit: cover; 
+            border-radius: 24px; margin-bottom: 1.8rem;
+            box-shadow: var(--shadow-sm); transition: 0.3s;
         }
+        .j-card:hover img { transform: scale(1.02); }
 
-        /* Emotion Selection Grid */
+        .card-num { 
+            width: 56px; height: 56px; border-radius: 20px; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 1.5rem; font-weight: 800; font-size: 1.3rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-01 .card-num { background: var(--p-blue-soft); color: var(--p-blue); }
+        .card-02 .card-num { background: #FFEDD5; color: var(--p-orange); }
+        .card-03 .card-num { background: var(--p-green-soft); color: var(--p-green); }
+        .card-04 .card-num { background: var(--p-pink-soft); color: var(--p-pink); }
+        
+        .j-card h3 { font-size: 1.4rem; margin-bottom: 0.8rem; font-weight: 800; letter-spacing: 0.5px; }
+        .j-card p { font-size: 1rem; line-height: 1.8; color: var(--slate-700); margin-top: auto; }
+        .j-card .quote { 
+            font-size: 1.1rem; font-style: italic; margin-bottom: 1.2rem; font-weight: 500;
+            display: block; min-height: 30px;
+        }
+        .card-01 .quote { color: var(--p-blue); } 
+        .card-02 .quote { color: var(--p-orange); } 
+        .card-03 .quote { color: var(--p-green); } 
+        .card-04 .quote { color: var(--p-pink); }
+
+        /* * CARD DECK PAGE * */
+        #card-deck-section { background: transparent; padding: 2rem 0 6rem; min-height: 100vh; display: none; }
+        #card-deck-section.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        /* NEW: GENDER TOGGLE SWITCH */
+        .gender-toggle-container {
+            display: flex; justify-content: center; margin-bottom: 2rem;
+        }
+        .gender-switch {
+            background: white; border-radius: 99px; padding: 6px;
+            display: flex; gap: 4px; box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        .gender-btn {
+            padding: 10px 24px; border-radius: 99px; border: none; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--slate-500); background: transparent;
+            min-width: 100px;
+        }
+        .gender-btn.active.male {
+            background: var(--p-blue); color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .gender-btn.active.female {
+            background: var(--p-pink); color: white;
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+        .gender-btn:hover:not(.active) { background: #F8FAFC; color: var(--slate-700); }
+
+        .deck-container { padding-top: 1rem; }
+        
         #emotion-selector {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem; width: 100%; margin-bottom: 2rem;
-            animation: fadeIn 0.5s ease;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem;
         }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .emotion-btn {
-            background: white; border: 2px solid #E2E8F0; border-radius: 24px;
-            padding: 1.5rem; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            background: white; border: 1px solid white; border-radius: 24px;
+            padding: 1.8rem 1rem; text-align: center; cursor: pointer; transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
         }
-        .emotion-btn:hover {
-            transform: translateY(-5px); border-color: var(--p-blue);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        .emotion-btn:hover { 
+            border-color: var(--p-blue-soft); 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 20px 30px -10px rgba(59, 130, 246, 0.15); 
         }
-        .emotion-icon { font-size: 2.5rem; }
-        .emotion-label { font-weight: 700; color: var(--slate-800); font-size: 1rem; }
+        .emotion-icon { font-size: 2.8rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .emotion-label { font-weight: 700; color: var(--slate-700); font-size: 1.1rem; }
 
-        .random-draw-area {
-            margin-top: 1rem; padding-top: 2rem; border-top: 1px dashed #CBD5E1;
-            width: 100%; text-align: center;
-        }
-        .btn-random {
-            background: linear-gradient(135deg, #6366f1, #a855f7); color: white;
-            padding: 14px 28px; border-radius: 50px; border: none; font-weight: 700;
-            cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
-            display: inline-flex; align-items: center; gap: 10px; font-size: 1.1rem;
-        }
-        .btn-random:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(168, 85, 247, 0.4); }
-
-        /* Card View Container (Hidden initially) */
-        #selected-card-view {
-            display: none; flex-direction: column; align-items: center; gap: 2rem;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .back-to-grid-btn {
-            background: transparent; border: none; color: var(--slate-600);
-            font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            font-size: 1rem; padding: 10px 20px; border-radius: 20px; transition: 0.2s;
-        }
-        .back-to-grid-btn:hover { background: #E2E8F0; color: var(--slate-900); }
-
-        /* CARD FLIP LOGIC */
-        .scene { width: 320px; height: 480px; perspective: 1000px; cursor: pointer; }
-        .card-object {
-            width: 100%; height: 100%; position: relative;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
+        /* * 3D CARD * */
+        .scene { width: 100%; max-width: 340px; aspect-ratio: 2/3; perspective: 1200px; cursor: pointer; margin: 2rem auto; }
+        .card-object { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
         .card-object.is-flipped { transform: rotateY(180deg); }
         
         .card-face {
             position: absolute; width: 100%; height: 100%;
             backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            border-radius: 24px; padding: 2rem;
+            border-radius: 32px; padding: 2.5rem;
             display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 8px solid white;
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15);
+            background: white; border: 4px solid white;
         }
+        .card-front { 
+            background: linear-gradient(135deg, #ffffff 0%, #F0F9FF 100%); 
+            align-items: center; text-align: center; 
+        }
+        .card-back { transform: rotateY(180deg); text-align: left; background: #FEFCE8; } 
         
-        .card-front { background: linear-gradient(145deg, #ffffff, #f0f9ff); align-items: center; text-align: center; }
-        .card-back { background: white; transform: rotateY(180deg); text-align: left; }
-        
-        /* Card Content Styling */
-        .card-icon-lg { font-size: 5rem; margin-top: 2.5rem; margin-bottom: 2rem; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1)); }
+        .card-icon-lg { font-size: 5.5rem; margin: 2rem 0; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
         .card-title { font-size: 1.6rem; font-weight: 800; color: var(--slate-900); line-height: 1.3; margin-bottom: 1rem; }
-        .card-desc { font-size: 1rem; color: var(--slate-600); line-height: 1.6; }
-        .tap-hint { margin-top: auto; font-size: 0.85rem; color: #94A3B8; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .card-desc { font-size: 1.1rem; color: var(--slate-700); }
         
-        .back-title { font-size: 1.1rem; font-weight: 800; color: var(--p-blue); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .action-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem; }
-        .action-item {
-            display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: var(--slate-800);
-            cursor: pointer; transition: 0.2s;
+        .action-item { 
+            padding: 12px; background: white; border-radius: 16px; margin-bottom: 8px;
+            color: var(--slate-700); font-weight: 600; display: flex; align-items: flex-start; gap: 14px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); cursor: pointer; transition: 0.2s;
         }
-        .action-item:hover { opacity: 0.8; }
+        .action-item:hover { transform: translateX(5px); }
         .checkbox { 
-            min-width: 20px; height: 20px; border: 2px solid #CBD5E1; border-radius: 6px; 
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;
+            min-width: 24px; height: 24px; border: 2px solid #CBD5E1; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; transition: 0.2s;
         }
-        .action-item.checked .checkbox { background: var(--success-green); border-color: var(--success-green); }
-        .action-item.checked span { text-decoration: line-through; color: #94A3B8; }
+        .action-item.checked .checkbox { background: var(--p-green); border-color: var(--p-green); }
+        .action-item.checked span { text-decoration: line-through; color: var(--slate-500); opacity: 0.7; }
         
-        .affirmation { 
-            background: var(--p-yellow-soft); padding: 1.2rem; border-radius: 16px; 
-            font-style: italic; font-weight: 600; color: #B45309; text-align: center;
-            font-size: 0.95rem; position: relative; margin-top: auto;
+        .back-to-grid-btn {
+            background: white; border: none; padding: 12px 24px; border-radius: 99px;
+            font-weight: 700; color: var(--slate-700); box-shadow: var(--shadow-sm); cursor: pointer;
+            display: flex; align-items: center; gap: 8px; margin: 0 auto; transition: 0.3s;
         }
-        .affirmation::before { content: '"'; font-size: 3rem; position: absolute; top: -10px; left: 10px; opacity: 0.2; }
+        .back-to-grid-btn:hover { background: var(--p-blue-soft); color: var(--p-blue); transform: translateY(-2px); }
 
-        /* --- CHAT PAGE --- */
-        #chat-page, #landing-page { display: none; }
-        #chat-page.active, #landing-page.active { display: block; }
-        #chat-page { height: 100vh; background: #fdfdfd; background-image: radial-gradient(#e2e8f0 1px, transparent 1px); background-size: 24px 24px; display: none; flex-direction: column; }
-        #chat-page.active { display: flex; }
+        /* * CHAT PAGE * */
+        #chat-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
+            background: #F8FAFC; display: none; flex-direction: column; z-index: 5000;
+        }
+        #chat-page.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
-        .chat-header { background: white; padding: 1.2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; }
-        .chat-left-group { display: flex; align-items: center; gap: 15px; }
-        .chat-back { cursor: pointer; color: #64748B; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: 0.3s; }
+        .chat-header {
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
+            padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.05); flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        .chat-back { cursor: pointer; font-weight: 600; color: var(--slate-700); display: flex; align-items: center; gap: 6px; }
         .chat-back:hover { color: var(--p-blue); }
-        .chat-title { display: flex; align-items: center; gap: 12px; font-weight: 700; color: #3B82F6; font-size: 1.2rem; }
-        .chat-actions { display: flex; align-items: center; gap: 10px; }
-        .action-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: #F1F5F9; color: #64748B; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: 0.3s; }
-        .action-btn:hover { background: #E2E8F0; color: var(--p-blue); transform: scale(1.1); }
-        .action-btn.active { background: #DBEAFE; color: #3B82F6; }
-        .action-btn.voice-active { background: #FFE4E6; color: #F43F5E; box-shadow: 0 0 0 2px #FECDD3; }
+        
+        .chat-title { font-weight: 800; font-size: 1.2rem; color: var(--p-blue); display: flex; align-items: center; gap: 8px; }
 
-        .chat-container { flex: 1; max-width: 850px; width: 100%; margin: 0 auto; padding: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; scroll-behavior: smooth; }
-        .bubble { max-width: 80%; padding: 1.2rem 1.6rem; border-radius: 24px; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.02); word-wrap: break-word; }
-        .ai-bubble { background: white; color: var(--slate-800); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #f1f5f9; }
-        .user-bubble { background: #3B82F6; color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); }
-        .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 1rem 1.4rem; min-width: 80px; }
-        .typing-dot { width: 8px; height: 8px; background: #CBD5E1; border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        .emotion-sensor { 
+            display: flex; align-items: center; gap: 8px; background: white; padding: 6px 12px; border-radius: 99px;
+            box-shadow: var(--shadow-sm); font-size: 0.85rem; font-weight: 600;
+        }
+        .emotion-dot { width: 10px; height: 10px; border-radius: 50%; background: #CBD5E1; transition: 0.3s; }
 
-        .input-wrapper { background: white; padding: 1rem 2.5rem 1.8rem; border-top: 1px solid #f1f5f9; display: flex; flex-direction: column; gap: 1rem; }
+        .chat-actions .action-btn {
+            background: transparent; border: none; font-size: 1.1rem; color: var(--slate-500);
+            cursor: pointer; padding: 8px; border-radius: 50%; transition: 0.2s;
+        }
+        .chat-actions .action-btn:hover { background: var(--p-blue-soft); color: var(--p-blue); }
+        .voice-active { color: var(--p-blue) !important; animation: pulse 1.5s infinite; }
+
+        .chat-container {
+            flex: 1; width: 100%; max-width: 900px; margin: 0 auto;
+            padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+            overflow-y: auto; scroll-behavior: smooth;
+        }
+        
+        .bubble {
+            max-width: 80%; padding: 1.2rem 1.6rem; border-radius: 24px;
+            font-size: 1.05rem; line-height: 1.6; font-weight: 400;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative;
+        }
+        .ai-bubble {
+            background: white; color: var(--slate-700);
+            border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.03);
+        }
+        .user-bubble {
+            background: linear-gradient(135deg, var(--p-blue), #2563EB);
+            color: white; align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .input-wrapper {
+            background: white; padding: 1.2rem 1.5rem calc(1.2rem + var(--safe-bottom));
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; gap: 1rem; flex-shrink: 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.03);
+        }
+        
         .quick-replies { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .quick-btn { white-space: nowrap; padding: 8px 16px; border-radius: 20px; border: 1px solid #E2E8F0; background: #F8FAFC; color: #475569; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        .quick-btn:hover { background: #E0F2FE; color: #0284C7; border-color: #BAE6FD; }
-        .input-area { display: flex; gap: 1.2rem; }
-        #chatInput { flex: 1; padding: 1rem 1.8rem; border-radius: 99px; border: 1px solid #e2e8f0; outline: none; background: #f8fafc; font-size: 1.05rem; transition: 0.3s; }
-        #chatInput:focus { border-color: var(--p-blue); background: white; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-        .send-btn { width: 52px; height: 52px; border-radius: 50%; background: #3B82F6; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.2s; }
-        .send-btn:hover { transform: scale(1.05); }
+        .quick-replies::-webkit-scrollbar { display: none; }
+        .quick-btn {
+            padding: 10px 20px; border-radius: 99px; font-size: 0.9rem; font-weight: 600;
+            border: 1px solid var(--border-color); background: #F8FAFC; color: var(--slate-700);
+            transition: 0.2s; white-space: nowrap;
+        }
+        .quick-btn:hover { 
+            border-color: var(--p-blue-soft); background: var(--p-blue-soft); color: var(--p-blue); 
+            transform: translateY(-2px);
+        }
 
-        footer { padding: 5rem 0; text-align: center; color: #94A3B8; border-top: 1px solid #f1f5f9; background: #fff; }
+        .input-area { display: flex; gap: 12px; align-items: center; }
+        #chatInput {
+            flex: 1; padding: 1rem 1.5rem; border-radius: 99px;
+            border: 2px solid transparent; outline: none; background: #F1F5F9;
+            font-size: 1rem; transition: 0.3s; height: 56px; color: var(--slate-900);
+        }
+        #chatInput:focus { 
+            background: white; border-color: var(--p-blue-soft); 
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); 
+        }
+        
+        .mic-btn, .send-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .mic-btn { background: #F1F5F9; color: var(--slate-500); }
+        .mic-btn:hover { background: #E2E8F0; color: var(--slate-900); }
+        .mic-btn.listening { background: #FEE2E2; color: #EF4444; animation: pulse 1s infinite; }
+        
+        .send-btn { 
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); 
+            color: white; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); 
+        }
+        .send-btn:hover { transform: scale(1.1) rotate(-10deg); }
 
-        @media (max-width: 850px) {
-            .journey-grid { grid-template-columns: 1fr; padding: 0 2rem; }
-            .chat-container { padding: 1.5rem; }
-            .nav-menu { gap: 1rem; }
-            .chat-header { flex-direction: column; gap: 10px; align-items: flex-start; padding: 1rem 1.5rem; }
-            .chat-left-group { width: 100%; justify-content: space-between; }
-            .chat-actions { width: 100%; justify-content: flex-end; }
-            .emotion-sensor { width: 100%; justify-content: center; order: 3; }
-            .input-wrapper { padding: 1rem 1.5rem; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        footer { padding: 3rem 0; text-align: center; color: var(--slate-500); opacity: 0.8; font-size: 0.9rem; }
+
+        /* ==========================================================================
+           TET EVENT STYLES (ENHANCED)
+           ========================================================================== */
+        .tet-floating-btn {
+            position: fixed; bottom: 120px; right: 30px;
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--tet-red), #FF4500);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9900;
+            box-shadow: 0 10px 25px rgba(210, 15, 34, 0.4);
+            border: 3px solid var(--tet-gold);
+            animation: shake 2.5s infinite;
+        }
+        .tet-floating-btn i { font-size: 2rem; color: var(--tet-gold); }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30%, 50% { transform: rotate(-10deg); scale(1.1); }
+            20%, 40%, 60% { transform: rotate(10deg); scale(1.1); }
+            70% { transform: rotate(0deg) scale(1); }
+        }
+        .tet-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--tet-gold); color: var(--tet-red);
+            font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 99px;
+            border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #tet-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            z-index: 10002; display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; padding: 1rem;
+        }
+        #tet-modal.show { display: flex; opacity: 1; }
+        .tet-modal-content {
+            background: var(--tet-bg); width: 100%; max-width: 450px;
+            padding: 2.5rem; border-radius: 32px;
+            border: 4px solid var(--tet-gold); text-align: center;
+            position: relative; overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+        }
+        .tet-decor { position: absolute; font-size: 5rem; opacity: 0.1; color: var(--tet-red); pointer-events: none; }
+        .decor-1 { top: -20px; left: -20px; transform: rotate(-15deg); }
+        .decor-2 { bottom: -20px; right: -20px; transform: rotate(15deg); }
+
+        .tet-title { color: var(--tet-red); font-weight: 800; font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .tet-desc { color: #8B0000; margin-bottom: 2rem; font-size: 1rem; opacity: 0.8; }
+        
+        .tet-input-group { position: relative; margin-bottom: 1.5rem; }
+        .tet-input { 
+            width: 100%; padding: 1rem 1.2rem; border-radius: 16px;
+            border: 2px solid #FECACA; background: white; 
+            font-size: 1.1rem; text-align: center; font-weight: 700; color: var(--tet-red);
+            outline: none; transition: 0.3s; letter-spacing: 2px;
+        }
+        .tet-input:focus { border-color: var(--tet-red); box-shadow: 0 0 0 4px rgba(210, 15, 34, 0.1); }
+        
+        .tet-submit-btn {
+            background: linear-gradient(135deg, var(--tet-red), #B91C1C);
+            color: var(--tet-gold); border: none; padding: 1rem 2rem;
+            border-radius: 99px; font-weight: 800; font-size: 1.1rem;
+            cursor: pointer; width: 100%; box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .tet-submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(185, 28, 28, 0.4); }
+
+        .tet-result { display: none; margin-top: 1.5rem; padding: 1rem; border-radius: 16px; font-weight: 600; }
+        .tet-result.success { background: #ECFCCB; color: #365314; border: 1px solid #BEF264; }
+        .tet-result.error { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* --- NEW TET EFFECTS --- */
+        .falling-blossom {
+            position: fixed; top: -20px; z-index: 9998;
+            animation: fall linear forwards;
+            pointer-events: none; opacity: 0.9;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg) translateX(20px); }
+        }
+        
+        .lantern-container {
+            position: fixed; top: -10px; width: 100%; z-index: 9997; pointer-events: none;
+            display: flex; justify-content: space-between; padding: 0 30px;
+        }
+        .lantern {
+            font-size: 3.5rem; animation: swing 4s infinite ease-in-out; 
+            transform-origin: top center; color: var(--tet-red);
+            filter: drop-shadow(0 10px 15px rgba(255, 50, 50, 0.3));
+        }
+        .lantern:nth-child(2) { animation-delay: 1s; color: var(--tet-gold); font-size: 3rem; margin-top: 10px; }
+        @keyframes swing { 
+            0%, 100% { transform: rotate(-5deg); } 
+            50% { transform: rotate(5deg); } 
+        }
+
+        @media (max-width: 600px) {
+            .tet-floating-btn { width: 55px; height: 55px; bottom: 100px; right: 20px; }
+            .tet-floating-btn i { font-size: 1.4rem; }
+            .lantern { font-size: 2.5rem; }
         }
     </style>
 </head>
+
 <body>
 
-    <!-- AUTH MODAL (Existing) -->
+    <!-- AUTH MODAL (Original) -->
     <div id="auth-modal">
         <div class="modal-content">
-            <div class="modal-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></div>
-            <h2 class="modal-title" id="auth-title">Chào bạn!</h2>
-            <p class="modal-subtitle">Đăng nhập để lưu lại hành trình cảm xúc nhé.</p>
+            <div class="modal-close" style="position:absolute; top:20px; right:20px; cursor:pointer; color:var(--slate-500);" onclick="closeAuthModal()">
+                <i class="fas fa-times" style="font-size:1.2rem;"></i>
+            </div>
+            
+            <h2 class="modal-title" id="auth-title" style="font-size:1.8rem; margin-bottom:0.5rem; font-weight:800;">Chào bạn!</h2>
+            <p class="modal-subtitle" style="margin-bottom:2rem; color:var(--slate-500);">Đăng nhập để lưu lại hành trình cảm xúc nhé.</p>
+            
             <form class="auth-form" onsubmit="handleAuth(event)">
                 <input type="text" id="username" class="register-field" placeholder="Tên tài khoản (Chỉ chữ và số)" maxlength="20">
-                <div id="username-error" class="error-msg">Tên tài khoản không hợp lệ</div>
+                <div id="username-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Tên tài khoản không hợp lệ</div>
+                
                 <input type="text" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" id="dob" class="register-field" placeholder="Ngày sinh (Không bắt buộc)">
+                
                 <select id="gender" class="register-field">
                     <option value="" disabled selected>Giới tính (Không bắt buộc)</option>
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
                     <option value="other">Khác</option>
                 </select>
+                
                 <input type="email" id="email" placeholder="Email của bạn">
                 <input type="password" id="password" placeholder="Mật khẩu">
-                <div id="password-error" class="error-msg">Mật khẩu yếu! Cần 8 ký tự, chữ hoa, số & ký tự đặc biệt.</div>
-                <div class="security-note register-field">
+                
+                <div id="password-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Mật khẩu yếu! Cần 8 ký tự, chữ hoa, số & ký tự đặc biệt.</div>
+                
+                <div class="security-note register-field" style="text-align:left; font-size:0.85rem; color:var(--slate-500); margin-bottom:1rem; padding:10px; background:#F8FAFC; border-radius:12px;">
                     <i class="fas fa-shield-alt"></i> Mật khẩu yêu cầu chuẩn bảo mật cao:
                     <br>- Tối thiểu 8 ký tự, 1 Chữ in hoa, 1 Số & 1 Ký tự đặc biệt
                 </div>
+                
                 <input type="password" id="confirm-password" class="register-field" placeholder="Nhập lại mật khẩu">
-                <div id="confirm-error" class="error-msg">Mật khẩu không khớp!</div>
+                <div id="confirm-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Mật khẩu không khớp!</div>
+                
                 <button type="submit" class="btn-submit-auth" id="auth-action-btn">Đăng nhập</button>
             </form>
-            <div class="auth-toggle">
+            
+            <div class="auth-toggle" style="margin-top:1.5rem; font-size:0.95rem;">
                 <span id="auth-toggle-text">Chưa có tài khoản? </span>
-                <span onclick="toggleAuthMode()" id="auth-toggle-link">Đăng ký ngay</span>
+                <span onclick="toggleAuthMode()" id="auth-toggle-link" style="color:var(--p-blue); font-weight:700; cursor:pointer;">Đăng ký ngay</span>
             </div>
         </div>
     </div>
 
-    <!-- 3D MASCOT -->
+    <!-- TET EVENT MODAL (New) -->
+    <div id="tet-modal">
+        <div class="tet-modal-content">
+            <div class="modal-close" style="position:absolute; top:20px; right:20px; cursor:pointer; color: #B91C1C;" onclick="closeTetModal()">
+                <i class="fas fa-times" style="font-size:1.5rem;"></i>
+            </div>
+            
+            <i class="fas fa-fan tet-decor decor-1"></i>
+            <i class="fas fa-star tet-decor decor-2"></i>
+
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🧧</div>
+            <h2 class="tet-title">Lộc Xuân Innerly</h2>
+            <p class="tet-desc">Nhập mã tìm thấy trong sản phẩm để nhận lì xì may mắn từ Innerly nhé!</p>
+
+            <div class="tet-input-group">
+                <input type="text" id="tet-code-input" class="tet-input" placeholder="NHẬP MÃ TẠI ĐÂY" maxlength="15" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
+
+            <button class="tet-submit-btn" onclick="redeemTetCode()">
+                <i class="fas fa-gift"></i> MỞ QUÀ NGAY
+            </button>
+
+            <div id="tet-result" class="tet-result"></div>
+        </div>
+    </div>
+
+    <!-- TET LANTERNS -->
+    <div class="lantern-container">
+        <div class="lantern">🏮</div>
+        <div class="lantern">🏮</div>
+    </div>
+
+    <!-- TET FLOATING BUTTON (New) -->
+    <div class="tet-floating-btn" onclick="openTetModal()">
+        <i class="fas fa-envelope-open-text"></i>
+        <div class="tet-badge">Tết</div>
+    </div>
+
+    <!-- 3D MASCOT CONTAINER -->
     <div id="mascot-3d-container">
         <div class="mascot-bubble" id="mascotGreeting">Xin chào! Mình là Inny 👋</div>
         <canvas id="three-canvas" onclick="showPage('chat')"></canvas>
     </div>
 
-    <!-- LANDING PAGE -->
-    <div id="landing-page" class="active">
+    <!-- PAGE 1: LANDING PAGE (Hidden by default now) -->
+    <div id="landing-page">
         <header>
             <div class="container">
                 <nav>
                     <a class="logo" onclick="showPage('landing')">
-                        <div class="logo-icon"><i class="fas fa-robot"></i></div>
+                        <div class="logo-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
                         <span>INNERLY</span>
                     </a>
+                    
                     <div class="nav-menu">
                         <a onclick="showPage('landing')" class="nav-link">TRANG CHỦ</a>
-                        <a onclick="showPage('cardDeck')" class="nav-link">THẺ CẢM XÚC</a> 
-                        
+                        <a onclick="showPage('cardDeck')" class="nav-link">THẺ CẢM XÚC</a>
+
                         <div class="user-section">
                             <div id="login-btn-group">
                                 <button class="btn-login" onclick="openAuthModal()">Đăng nhập</button>
                             </div>
+                            
                             <div id="user-profile-group" class="user-profile" onclick="handleLogout()">
                                 <div class="user-name" id="display-name">User</div>
                                 <div class="user-avatar" id="avatar-char">U</div>
                             </div>
+                            
                             <button class="btn-cta" onclick="showPage('chat')">GÓC TÂM SỰ</button>
                         </div>
                     </div>
@@ -439,12 +759,12 @@
             </div>
         </section>
 
-        <!-- RAINBOW JOURNEY SECTION -->
         <section id="journey" class="journey-section">
             <div class="container">
                 <div class="section-header">
                     <h2>Rainbow Journey cùng Innerly</h2>
                 </div>
+                
                 <div class="journey-grid">
                     <div class="j-card card-01">
                         <div class="card-num">01</div>
@@ -453,13 +773,15 @@
                         <span class="quote">“Mình đang cảm thấy gì vậy?”</span>
                         <p>Teen chọn thẻ cảm xúc, viết ra suy nghĩ bằng giấy stick để hiểu mình hơn.</p>
                     </div>
+                    
                     <div class="j-card card-02">
                         <div class="card-num">02</div>
                         <img src="https://images.unsplash.com/photo-1516589174184-c68526617af0?q=80&w=1887&auto=format&fit=crop" alt="Giải Tỏa">
-                        <h3>GIẢI Tỏa</h3>
+                        <h3>GIẢI TỎA</h3>
                         <span class="quote">“Không cần giữ lấy một mình.”</span>
                         <p>Viết điều nặng lòng vào Hộp Ghi Cảm Xúc để cơ thể dịu lại.</p>
                     </div>
+                    
                     <div class="j-card card-03">
                         <div class="card-num">03</div>
                         <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1770&auto=format&fit=crop" alt="Ổn Định">
@@ -467,6 +789,7 @@
                         <span class="quote">“Tìm lại nhịp thở bình yên.”</span>
                         <p>Nhìn lại cảm xúc, sắp xếp tư duy qua những tấm thẻ bài chữa lành.</p>
                     </div>
+                    
                     <div class="j-card card-04">
                         <div class="card-num">04</div>
                         <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1770&auto=format&fit=crop" alt="Phát Triển">
@@ -485,13 +808,15 @@
         </footer>
     </div>
 
-    <!-- CARD DECK SECTION (UPDATED) -->
-    <div id="card-deck-section">
+    <!-- PAGE 2: CARD DECK SECTION (ACTIVE BY DEFAULT) -->
+    <div id="card-deck-section" class="active">
         <header style="background:transparent; border:none; margin-bottom: 2rem;">
             <div class="container">
                 <nav>
                     <a class="logo" onclick="showPage('landing')">
-                        <div class="logo-icon"><i class="fas fa-arrow-left"></i></div>
+                        <div class="logo-icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
                         <span>Quay lại</span>
                     </a>
                 </nav>
@@ -499,47 +824,61 @@
         </header>
 
         <div class="container">
-            <div class="section-header">
+            <div class="section-header" style="text-align:center;">
                 <h2>Góc Thẻ Cảm Xúc</h2>
-                <p style="color:var(--slate-600); max-width:600px; margin:0 auto; font-size:1.1rem;">Lắng nghe tiếng nói bên trong bạn. Hãy gọi tên cảm xúc hiện tại để nhận thông điệp phù hợp.</p>
+                <p style="color:var(--slate-500); max-width:600px; margin:0 auto; font-size:1.1rem; padding: 0 1rem;">Lắng nghe tiếng nói bên trong bạn. Hãy gọi tên cảm xúc hiện tại để nhận thông điệp phù hợp.</p>
+            </div>
+            
+            <!-- NEW: Gender Switch -->
+            <div class="gender-toggle-container">
+                <div class="gender-switch">
+                    <button class="gender-btn active male" onclick="switchGender('male')">
+                        <i class="fas fa-mars"></i> Nam
+                    </button>
+                    <button class="gender-btn female" onclick="switchGender('female')">
+                        <i class="fas fa-venus"></i> Nữ
+                    </button>
+                </div>
             </div>
 
             <div class="deck-container">
-                
                 <!-- EMOTION SELECTION GRID -->
                 <div id="emotion-selector">
-                    <!-- Javascript will populate this -->
-                </div>
-
-                <!-- RANDOM DRAW BUTTON -->
-                <div class="random-draw-area" id="random-area">
-                    <p style="color:#64748B; margin-bottom:1rem;">Hoặc nếu bạn chưa rõ cảm xúc của mình...</p>
-                    <button class="btn-random" onclick="drawRandomCard()"><i class="fas fa-magic"></i> Vũ trụ gửi tín hiệu</button>
+                    <!-- Javascript will populate this grid -->
                 </div>
 
                 <!-- SELECTED CARD VIEW (Hidden by default) -->
-                <div id="selected-card-view">
-                    <button class="back-to-grid-btn" onclick="backToGrid()"><i class="fas fa-th"></i> Chọn cảm xúc khác</button>
-                    
+                <div id="selected-card-view" style="display:none; flex-direction:column; align-items:center;">
+                    <button class="back-to-grid-btn" onclick="backToGrid(); playSound('click');">
+                        <i class="fas fa-th"></i> Chọn cảm xúc khác
+                    </button>
+
                     <!-- 3D Card Scene -->
-                    <div class="scene" onclick="flipCard(this)">
+                    <div class="scene" onclick="flipCard(this); playSound('flip');">
                         <div class="card-object" id="card-object">
+                            
+                            <!-- Front of Card -->
                             <div class="card-face card-front">
-                                <div style="width:100%; text-align:right; color:#CBD5E1; font-weight:700;">INNERLY CARD</div>
+                                <div style="width:100%; text-align:right; color:#CBD5E1; font-weight:700; letter-spacing:1px; font-size:0.8rem;">INNERLY CARD</div>
                                 <div class="card-icon-lg" id="card-icon">😤</div>
                                 <div class="card-title" id="card-title">Mình đang cảm thấy bực bội</div>
                                 <div class="card-desc" id="card-desc">Bên trong mình đang cảm thấy khó chịu. Cảm giác nóng nảy xuất hiện.</div>
-                                <div class="tap-hint"><i class="fas fa-hand-pointer"></i> Chạm để lật thẻ</div>
+                                <div class="tap-hint" style="margin-top:auto; font-size:0.9rem; color:var(--p-blue); font-weight:600; opacity:0.8;">
+                                    <i class="fas fa-hand-pointer"></i> Chạm để lật thẻ
+                                </div>
                             </div>
+                            
+                            <!-- Back of Card -->
                             <div class="card-face card-back">
-                                <div class="back-title">Việc cần làm ngay:</div>
-                                <ul class="action-list" id="card-actions">
+                                <div class="back-title" style="font-weight:800; color:var(--p-blue); margin-bottom:1rem; font-size:1.1rem;">Việc cần làm ngay:</div>
+                                <ul class="action-list" id="card-actions" style="list-style:none;">
                                     <!-- Populated by JS -->
                                 </ul>
-                                <div class="affirmation" id="card-quote">
+                                <div class="affirmation" id="card-quote" style="margin-top:auto; text-align:center; font-style:italic; color:var(--p-orange); font-weight:600;">
                                     "Khi gọi được tên cảm xúc, bạn đã trở nên mạnh mẽ hơn nó."
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -548,10 +887,10 @@
         </div>
     </div>
 
-    <!-- CHAT PAGE -->
+    <!-- PAGE 3: CHAT PAGE -->
     <div id="chat-page">
         <div class="chat-header">
-            <div class="chat-left-group">
+            <div class="chat-left-group" style="display:flex; align-items:center; gap:15px;">
                 <div class="chat-back" onclick="showPage('landing')">
                     <i class="fas fa-chevron-left"></i> Quay lại
                 </div>
@@ -559,16 +898,22 @@
                     <i class="fas fa-robot"></i> Innerly
                 </div>
             </div>
-            
+
             <div class="emotion-sensor" id="ai-sensor">
                 <div class="emotion-dot" id="emo-dot"></div>
                 <div class="emotion-text" id="emo-text">Sẵn sàng lắng nghe</div>
             </div>
 
-            <div class="chat-actions">
-                <button class="action-btn" id="voiceBtn" onclick="toggleVoice()" title="Bật/Tắt Giọng Nói"><i class="fas fa-volume-up"></i></button>
-                <button class="action-btn" onclick="toggleMusic()" title="Bật/Tắt nhạc Healing"><i class="fas fa-music"></i></button>
-                <button class="action-btn" onclick="resetChat()" title="Làm mới cuộc trò chuyện"><i class="fas fa-redo-alt"></i></button>
+            <div class="chat-actions" style="display:flex; gap:10px;">
+                <button class="action-btn" id="voiceBtn" onclick="toggleVoice()" title="Bật/Tắt Giọng Nói">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="action-btn" onclick="toggleMusic()" title="Bật/Tắt nhạc Healing">
+                    <i class="fas fa-music"></i>
+                </button>
+                <button class="action-btn" onclick="resetChat()" title="Làm mới cuộc trò chuyện">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
             </div>
         </div>
 
@@ -581,32 +926,57 @@
 
         <div class="input-wrapper">
             <div class="quick-replies" id="quickReplies">
-                <button class="quick-btn" onclick="sendQuickMessage('Hôm nay mình hơi buồn 😔')">Hôm nay mình hơi buồn</button>
-                <button class="quick-btn" onclick="sendQuickMessage('Áp lực học tập quá 🤯')">Áp lực học tập quá</button>
-                <button class="quick-btn" onclick="sendQuickMessage('Kể chuyện vui cho mình nghe đi 😂')">Kể chuyện vui đi</button>
-                <button class="quick-btn" onclick="sendQuickMessage('Mình cần lời khuyên 🌱')">Mình cần lời khuyên</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Hôm nay mình hơi buồn 😔')">Hôm nay mình hơi buồn 😔</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Áp lực học tập quá 🤯')">Áp lực học tập quá 🤯</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Kể chuyện vui cho mình nghe đi 😂')">Kể chuyện vui đi 😂</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Mình cần lời khuyên 🌱')">Mình cần lời khuyên 🌱</button>
             </div>
+            
             <div class="input-area">
                 <input type="text" id="chatInput" placeholder="Nhắn tin với Innerly..." autocomplete="off">
-                <button class="send-btn" id="sendBtnChat" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                <button class="mic-btn" id="micBtn" onclick="startSpeechToText()">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="send-btn" id="sendBtnChat" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Audio Element -->
+    <!-- AUDIO RESOURCES (UPDATED TET MUSIC) -->
     <audio id="bgMusic" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_88447e769f.mp3?filename=light-rain-ambient-114354.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2023/01/22/audio_c3e6027c49.mp3?filename=chinese-new-year-136531.mp3" type="audio/mpeg">
     </audio>
+    
+    <!-- Scripts (Functionality Preserved) -->
+    <script>
+        const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.frequency.value = freq; osc.type = type;
+            osc.connect(gain); gain.connect(audioContext.destination);
+            osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration);
+            osc.stop(audioContext.currentTime + duration);
+        }
+        function playSound(type) {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            switch (type) {
+                case 'click': playTone(600, 'sine', 0.1); break;
+                case 'flip': playTone(400, 'triangle', 0.15); break;
+                case 'msg': playTone(800, 'sine', 0.2); break;
+            }
+        }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const app = Object.keys(firebaseConfig).length > 0 ? initializeApp(firebaseConfig) : null;
         const auth = app ? getAuth(app) : null;
 
-        // AUTH & UI LOGIC
         let isRegisterMode = false;
         let currentUser = null;
         const ANON_TIME_LIMIT = 60000;
@@ -622,7 +992,6 @@
             document.getElementById('auth-toggle-link').innerText = isRegisterMode ? "Đăng nhập" : "Đăng ký ngay";
             document.querySelectorAll('.register-field').forEach(field => field.style.display = isRegisterMode ? 'block' : 'none');
         }
-
         window.handleAuth = async (e) => {
             e.preventDefault();
             if (!auth) { alert("Hệ thống chưa kết nối Firebase."); return; }
@@ -642,9 +1011,7 @@
                 sessionStorage.removeItem('anon_start_time');
             } catch (error) { alert("Lỗi: " + error.message); }
         }
-
         window.handleLogout = async () => { if (confirm("Đăng xuất?")) { if (auth) await signOut(auth); updateGreeting("Hẹn gặp lại! 👋"); } }
-
         function checkAnonLimit() {
             const startTime = sessionStorage.getItem('anon_start_time');
             if (startTime) {
@@ -656,19 +1023,16 @@
                 anonTimer = setTimeout(lockAppForAuth, ANON_TIME_LIMIT);
             }
         }
-
         function lockAppForAuth() {
             window.isAuthLocked = true;
             document.getElementById('chatBox').innerHTML += `<div class="ai-bubble bubble">⏳ <b>Hết thời gian trải nghiệm.</b><br>Đăng nhập để tiếp tục!</div>`;
             window.openAuthModal();
         }
-
         function unlockApp() {
             window.isAuthLocked = false;
             if (anonTimer) clearTimeout(anonTimer);
             sessionStorage.removeItem('anon_start_time');
         }
-
         if (auth) {
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
@@ -695,18 +1059,23 @@
     </script>
 
     <script>
-        const apiKey = ""; 
+        // SECURITY NOTE: Please restrict this API key in Google Cloud Console to your specific domain.
+        // Go to: https://console.cloud.google.com/apis/credentials
+        const apiKey = ""; // HARDCODED KEY (Needs Cloud Console Restriction)
         window.isAuthLocked = false;
         let lastMessageTime = 0;
         const MESSAGE_COOLDOWN = 2000;
+        let isProcessing = false;
+        let chatHistory = [];
+        let isMusicPlaying = false;
+        let isVoiceEnabled = false;
 
-        // --- NAVIGATION ---
         function showPage(pageId) {
+            playSound('click');
             document.getElementById('landing-page').classList.remove('active');
             document.getElementById('chat-page').classList.remove('active');
             document.getElementById('card-deck-section').classList.remove('active');
-
-            if(pageId === 'landing') {
+            if (pageId === 'landing') {
                 document.getElementById('landing-page').classList.add('active');
                 updateGreeting("Chào mừng quay lại! 🌱");
             } else if (pageId === 'chat') {
@@ -715,12 +1084,10 @@
             } else if (pageId === 'cardDeck') {
                 document.getElementById('card-deck-section').classList.add('active');
                 updateGreeting("Hãy lắng nghe cảm xúc nhé! 🃏");
-                renderEmotionGrid(); // Show selection grid
-                backToGrid(); // Ensure grid is shown first
+                renderEmotionGrid(); backToGrid();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
         function updateGreeting(text) {
             const bubble = document.getElementById('mascotGreeting');
             bubble.innerText = text;
@@ -728,14 +1095,16 @@
             setTimeout(() => bubble.classList.remove('active'), 4000);
         }
 
-        // --- 3D MASCOT ---
         let scene, camera, renderer, mascot;
         let mouseX = 0, mouseY = 0;
+        let currentEmotionState = 'neutral';
+        let targetEmotiveParams = { speed: 1.5, bounce: 0.12, rotSpeed: 0.08, eyeScale: 1.35 };
+        let currentEmotiveParams = { ...targetEmotiveParams };
 
         function init3D() {
             const container = document.getElementById('mascot-3d-container');
             const canvas = document.getElementById('three-canvas');
-            if (scene) return;
+            if (scene || !container || !canvas) return;
             try {
                 scene = new THREE.Scene();
                 camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 1000);
@@ -746,195 +1115,169 @@
                 renderer.shadowMap.enabled = true;
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-                const keyLight = new THREE.DirectionalLight(0xFFF5E1, 1.2); keyLight.position.set(3, 5, 5); scene.add(keyLight);
-                const fillLight = new THREE.DirectionalLight(0xFFD180, 0.6); fillLight.position.set(-5, 0, 5); scene.add(fillLight);
-                const backLight = new THREE.DirectionalLight(0xFFFFFF, 0.8); backLight.position.set(0, 5, -5); scene.add(backLight);
-                scene.add(new THREE.AmbientLight(0xFFFFFF, 0.6));
+                const keyLight = new THREE.DirectionalLight(0xFFF5E1, 1.4); keyLight.position.set(3, 5, 5); scene.add(keyLight);
+                const fillLight = new THREE.DirectionalLight(0xFFD180, 0.8); fillLight.position.set(-5, 0, 5); scene.add(fillLight);
+                const backLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); backLight.position.set(0, 5, -5); scene.add(backLight);
+                scene.add(new THREE.AmbientLight(0xFFFFFF, 0.8));
 
-                // Mascot Materials
-                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xFFCA28, roughness: 0.5, metalness: 0.1 });
-                const eyeMat = new THREE.MeshStandardMaterial({ color: 0x212121, roughness: 0.1, emissive: 0x1A1A1A, emissiveIntensity: 0.2 });
+                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xFFCA28, roughness: 0.4, metalness: 0.1 });
+                const eyeMat = new THREE.MeshStandardMaterial({ color: 0x212121, roughness: 0.1 });
                 const blushMat = new THREE.MeshBasicMaterial({ color: 0xFF7043, transparent: true, opacity: 0.5 });
+                mascot = new THREE.Group(); scene.add(mascot);
 
-                mascot = new THREE.Group();
-                scene.add(mascot);
-
-                // Body
                 const body = new THREE.Mesh(new THREE.SphereGeometry(1.4, 64, 64), bodyMat);
-                body.scale.set(1, 0.92, 1);
-                body.name = 'body';
-                mascot.add(body);
-                window.mascotBodyMesh = body;
+                body.scale.set(1, 0.92, 1); body.name = 'body'; mascot.add(body); window.mascotBodyMesh = body;
 
-                // Hands
                 const handGeo = new THREE.SphereGeometry(0.35, 32, 32);
                 const lHand = new THREE.Mesh(handGeo, bodyMat); lHand.position.set(-1.25, -0.4, 0.6); lHand.scale.set(1, 0.8, 1); mascot.add(lHand); window.mascotLHand = lHand;
                 const rHand = new THREE.Mesh(handGeo, bodyMat); rHand.position.set(1.25, -0.4, 0.6); rHand.scale.set(1, 0.8, 1); mascot.add(rHand); window.mascotRHand = rHand;
 
-                // Face
                 const faceGroup = new THREE.Group(); faceGroup.position.set(0, -0.1, 1.38); mascot.add(faceGroup);
-                
-                // Eyes
                 const eyeGeo = new THREE.SphereGeometry(0.18, 32, 32);
                 const lEye = new THREE.Mesh(eyeGeo, eyeMat); lEye.position.set(-0.38, 0.05, 0); lEye.scale.set(1, 1.35, 0.6); faceGroup.add(lEye);
                 const rEye = new THREE.Mesh(eyeGeo, eyeMat); rEye.position.set(0.38, 0.05, 0); rEye.scale.set(1, 1.35, 0.6); faceGroup.add(rEye);
                 window.mascotEyes = { left: lEye, right: rEye };
 
-                // Sparkles
                 const sparkleGeo = new THREE.SphereGeometry(0.06, 16, 16);
                 const sparkleMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
                 const lSpark = new THREE.Mesh(sparkleGeo, sparkleMat); lSpark.position.set(-0.32, 0.13, 0.16); faceGroup.add(lSpark);
                 const rSpark = new THREE.Mesh(sparkleGeo, sparkleMat); rSpark.position.set(0.44, 0.13, 0.16); faceGroup.add(rSpark);
 
-                // Blush
                 const blushGeo = new THREE.SphereGeometry(0.22, 32, 32);
                 const lBlush = new THREE.Mesh(blushGeo, blushMat); lBlush.position.set(-0.75, -0.25, -0.1); lBlush.scale.set(1, 0.6, 0.3); faceGroup.add(lBlush);
                 const rBlush = new THREE.Mesh(blushGeo, blushMat); rBlush.position.set(0.75, -0.25, -0.1); rBlush.scale.set(1, 0.6, 0.3); faceGroup.add(rBlush);
 
-                // Mouth
                 const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.03, 16, 32, Math.PI), eyeMat);
                 mouth.position.set(0, -0.2, 0); mouth.rotation.z = Math.PI; faceGroup.add(mouth);
 
-                // Sprout
                 const sproutGroup = new THREE.Group(); sproutGroup.position.set(0, 1.3, 0); mascot.add(sproutGroup);
                 const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.45, 12), new THREE.MeshStandardMaterial({ color: 0x66BB6A }));
                 stem.position.y = 0.2; stem.rotation.z = 0.2; sproutGroup.add(stem);
                 const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), new THREE.MeshStandardMaterial({ color: 0x66BB6A }));
                 leaf.position.set(0.25, 0.55, 0); leaf.scale.set(1.5, 0.3, 1); leaf.rotation.set(0.3, 0, 0.5); sproutGroup.add(leaf);
                 window.mascotSprout = sproutGroup;
-
                 animate();
             } catch (err) { console.error("ThreeJS Init Error:", err); }
         }
 
         function blink(isClosing) {
-            if(!window.mascotEyes) return;
-            const sY = isClosing ? 0.1 : 1.35;
+            if (!window.mascotEyes) return;
+            const sY = isClosing ? 0.1 : currentEmotiveParams.eyeScale;
             window.mascotEyes.left.scale.y = sY; window.mascotEyes.right.scale.y = sY;
         }
 
         function animate() {
             requestAnimationFrame(animate);
             const time = Date.now() * 0.001;
-            if(mascot) {
-                mascot.position.y = Math.sin(time * 1.5) * 0.12;
+            currentEmotiveParams.speed += (targetEmotiveParams.speed - currentEmotiveParams.speed) * 0.05;
+            currentEmotiveParams.bounce += (targetEmotiveParams.bounce - currentEmotiveParams.bounce) * 0.05;
+            currentEmotiveParams.rotSpeed += (targetEmotiveParams.rotSpeed - currentEmotiveParams.rotSpeed) * 0.05;
+
+            if (mascot) {
+                mascot.position.y = Math.sin(time * currentEmotiveParams.speed) * currentEmotiveParams.bounce;
+                if (currentEmotionState === 'angry') { mascot.position.x = (Math.random() - 0.5) * 0.05; }
+                else if (currentEmotionState === 'anxious') { mascot.position.x = Math.sin(time * 20) * 0.02; }
+                else { mascot.position.x += (0 - mascot.position.x) * 0.1; }
+
                 if (window.mascotBodyMesh) {
-                    const squashFactor = 1 + Math.sin(time * 1.5 - Math.PI/2) * 0.03;
-                    window.mascotBodyMesh.scale.set(1 + (1-squashFactor)*0.5, 0.92 * squashFactor, 1 + (1-squashFactor)*0.5);
+                    const squashFactor = 1 + Math.sin(time * currentEmotiveParams.speed - Math.PI / 2) * (currentEmotiveParams.bounce * 0.2);
+                    window.mascotBodyMesh.scale.set(1 + (1 - squashFactor) * 0.5, 0.92 * squashFactor, 1 + (1 - squashFactor) * 0.5);
                 }
-                if(window.mascotLHand) {
+                if (window.mascotLHand) {
                     window.mascotLHand.position.y = -0.4 + Math.sin(time * 2) * 0.05;
                     window.mascotRHand.position.y = -0.4 + Math.sin(time * 2 + 1) * 0.05;
                 }
-                if(window.mascotSprout) window.mascotSprout.rotation.z = 0.2 + Math.sin(time * 3) * 0.15;
-                mascot.rotation.y += (mouseX * 0.4 - mascot.rotation.y) * 0.08;
-                mascot.rotation.x += (mouseY * 0.2 - mascot.rotation.x) * 0.08;
+                if (window.mascotSprout) window.mascotSprout.rotation.z = 0.2 + Math.sin(time * 3) * 0.15;
+                mascot.rotation.y += (mouseX * 0.4 - mascot.rotation.y) * currentEmotiveParams.rotSpeed;
+                mascot.rotation.x += (mouseY * 0.2 - mascot.rotation.x) * currentEmotiveParams.rotSpeed;
             }
             if (Math.random() > 0.992) { blink(true); setTimeout(() => blink(false), 120); }
             renderer.render(scene, camera);
         }
+        document.addEventListener('mousemove', (e) => { mouseX = (e.clientX / window.innerWidth) * 2 - 1; mouseY = -(e.clientY / window.innerHeight) * 2 + 1; });
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
+        let currentGender = 'male';
 
-        // --- EMOTION CARD LOGIC (FULL 40 CARDS) ---
-        const cardsData = [
-            // --- NHÓM TIÊU CỰC / KHÓ KHĂN (Negative/Struggle) ---
-            { id: "c1", icon: "😤", label: "Bực Bội", title: "Mình đang cảm thấy bực bội", desc: "Cảm giác nóng nảy, khó chịu đang dâng lên bên trong.", actions: ["Nghe nhạc không lời", "Hít sâu thở chậm 5 lần", "Rời khỏi nơi ồn ào"], quote: "Cơn giận giống như đám mây đen, rồi nó sẽ bay qua." },
-            { id: "c2", icon: "🌀", label: "Rối Bời", title: "Tâm trí rối bời", desc: "Quá nhiều suy nghĩ chồng chéo, chưa tìm ra lối thoát.", actions: ["Viết hết suy nghĩ ra giấy", "Uống một cốc nước mát", "Ngồi yên trong 2 phút"], quote: "Viết ra là cách gỡ bỏ gánh nặng khỏi tâm trí." },
-            { id: "c3", icon: "😢", label: "Buồn", title: "Buồn không rõ lý do", desc: "Tự nhiên thấy trĩu nặng trong lòng mà không hiểu tại sao.", actions: ["Ôm một chiếc gối mềm", "Cho phép mình khóc", "Xem một video hài hước"], quote: "Nước mắt là cách tâm hồn tự làm sạch." },
-            { id: "c4", icon: "🍂", label: "Cô Đơn", title: "Mình thấy cô đơn", desc: "Cảm giác lạc lõng, chỉ muốn có ai đó lắng nghe.", actions: ["Nhắn tin cho Innerly", "Ngắm cây cối, bầu trời", "Ôm thú cưng"], quote: "Bạn không đơn độc, vũ trụ luôn dõi theo bạn." },
-            { id: "c5", icon: "😰", label: "Lo Âu", title: "Mình đang thấy lo âu", desc: "Tim đập nhanh, bồn chồn về những điều sắp tới.", actions: ["Tập trung vào hơi thở", "Rửa mặt nước lạnh", "Đếm ngược từ 10 về 1"], quote: "Bạn an toàn ngay tại khoảnh khắc này." },
-            { id: "c6", icon: "🤯", label: "Áp Lực", title: "Mình đang quá áp lực", desc: "Công việc, học tập chất đống. Cảm thấy quá tải.", actions: ["Chia nhỏ công việc", "Nghỉ giải lao 5 phút", "Tự nói: Mình làm được"], quote: "Không cần hoàn hảo, chỉ cần hoàn thành." },
-            { id: "c7", icon: "😞", label: "Thất Vọng", title: "Mình thấy thất vọng", desc: "Mọi việc không như ý muốn. Cảm giác hụt hẫng.", actions: ["Chấp nhận cảm xúc này", "Tìm bài học tích cực", "Ăn một món ngon"], quote: "Cánh cửa này đóng lại, cánh cửa khác sẽ mở ra." },
-            { id: "c8", icon: "😶", label: "Trống Rỗng", title: "Cảm thấy trống rỗng", desc: "Không vui, không buồn, chỉ thấy tê liệt cảm xúc.", actions: ["Vận động nhẹ nhàng", "Tắm nước ấm", "Ngửi mùi tinh dầu"], quote: "Khoảng lặng là lúc tâm hồn đang nghỉ ngơi." },
-            { id: "c9", icon: "😓", label: "Mệt Mỏi", title: "Mình kiệt sức rồi", desc: "Cả thân xác và tinh thần đều muốn buông xuôi.", actions: ["Ngủ một giấc ngắn", "Tắt điện thoại", "Ngâm chân nước ấm"], quote: "Nghỉ ngơi không phải là lười biếng." },
-            { id: "c10", icon: "😣", label: "Tự Ti", title: "Thấy mình kém cỏi", desc: "So sánh bản thân với người khác và thấy thua kém.", actions: ["Liệt kê 3 điểm tốt", "Ngừng lướt mạng xã hội", "Đứng thẳng lưng lên"], quote: "Bạn là phiên bản duy nhất, không cần so sánh." },
-            { id: "c11", icon: "😡", label: "Ghen Tị", title: "Cảm giác ghen tị", desc: "Khó chịu khi thấy người khác thành công hơn mình.", actions: ["Thừa nhận cảm xúc", "Biến ghen tị thành động lực", "Chúc mừng họ"], quote: "Ánh sáng của họ không làm lu mờ bạn." },
-            { id: "c12", icon: "😳", label: "Xấu Hổ", title: "Mình thấy xấu hổ", desc: "Muốn độn thổ vì một sai lầm nào đó.", actions: ["Cười vào sự cố đó", "Tự tha thứ", "Nhớ rằng ai cũng sai"], quote: "Sai lầm là bằng chứng bạn đang cố gắng." },
-            { id: "c13", icon: "😨", label: "Sợ Hãi", title: "Mình đang sợ hãi", desc: "Nỗi sợ mơ hồ hoặc cụ thể đang bủa vây.", actions: ["Bật đèn sáng", "Gọi điện cho người thân", "Viết nỗi sợ ra giấy"], quote: "Dũng cảm không phải là không sợ, mà là đi xuyên qua nó." },
-            { id: "c14", icon: "💔", label: "Tổn Thương", title: "Trái tim đang đau", desc: "Ai đó hoặc điều gì đó làm mình tổn thương sâu sắc.", actions: ["Viết thư (không gửi)", "Khóc thật to", "Ăn chocolate"], quote: "Vết thương là nơi ánh sáng đi vào." },
-            { id: "c15", icon: "🤔", label: "Hoài Nghi", title: "Nghi ngờ bản thân", desc: "Không tin vào quyết định hay khả năng của mình.", actions: ["Nhớ lại thành công cũ", "Hỏi ý kiến bạn thân", "Tin vào trực giác"], quote: "Bạn thông minh hơn bạn nghĩ nhiều." },
+        const cardsData = {
+            male: [
+                { id: "m01", icon: "😤💢", label: "Bực Bội", title: "Thẻ 1: Mình đang cảm thấy bực bội", desc: "Bên trong mình đang cảm thấy khó chịu. Cảm giác bực bội, tức giận, oan ức xuất hiện.", actions: ["🗣️ Gọi tên và khoanh tròn cảm xúc: Tức giận, Oan ức...", "🎧 Lắng nghe một bản nhạc thư giãn", "🐶 Chơi đùa cùng thú cưng (nếu có)"], quote: "Khi gọi được tên cảm xúc, bạn đã trở nên mạnh mẽ hơn nó." },
+                { id: "m02", icon: "🌀💫", label: "Rối Bời", title: "Thẻ 2: Tâm Trí Rối Bời", desc: "Trong tâm trí mình đang rối bời. Mình vẫn chưa tìm ra hướng giải quyết.", actions: ["📝 Viết mọi suy nghĩ ra trong 1 phút", "🖍️ Gạch chân 1 điều khó chịu nhất", "🍜 Thưởng thức món ăn ngon", "⏸️ Nghỉ ngơi 5 phút"], quote: "Viết ra là cách gỡ bỏ gánh nặng khỏi tâm trí." },
+                { id: "m03", icon: "😢☁️", label: "Buồn Vô Cớ", title: "Thẻ 3: Buồn nhưng không rõ lý do", desc: "Mình không rõ lý do vì sao lại cảm thấy khó chịu như vậy. Một nỗi buồn không tên.", actions: ["🌬️ Hít thở sâu", "🗣️ Tìm một người bạn tâm sự", "😄 Kể ra những thứ làm mình vui"], quote: "Không hiểu cũng không sao. Cảm xúc vẫn hợp lệ." },
+                { id: "m04", icon: "😨💓", label: "Lo Âu", title: "Thẻ 4: Mình đang lo âu", desc: "Tim đập nhanh, bồn chồn. Mình cần tìm lại sự cân bằng.", actions: ["💧 Rửa mặt bằng nước mát", "🧘 Hít sâu thở chậm", "🎧 Nhắm mắt nghe nhạc"], quote: "Bạn an toàn ngay tại khoảnh khắc này." },
+                { id: "m05", icon: "🍂🌑", label: "Cô Đơn", title: "Thẻ 5: Mình thấy cô đơn", desc: "Cảm giác một mình giữa đám đông. Muốn được kết nối.", actions: ["💬 Nhắn tin cho một người bạn thân", "🌳 Ngắm cảnh thiên nhiên", "📔 Viết nhật ký"], quote: "Cô đơn là khoảng lặng để hiểu mình hơn." },
+                { id: "m06", icon: "🤯📉", label: "Áp Lực", title: "Thẻ 6: Áp Lực Công Việc/Học Tập", desc: "Quá nhiều thứ phải làm. Mình cảm thấy nặng nề.", actions: ["🔨 Chia nhỏ công việc", "☕ Nghỉ ngơi 15 phút", "🥤 Uống một cốc nước"], quote: "Áp lực tạo nên kim cương, nhưng bạn cần nghỉ ngơi." },
+                { id: "m07", icon: "🔋💤", label: "Mệt Mỏi", title: "Thẻ 7: Kiệt Sức", desc: "Năng lượng cạn kiệt. Mình không muốn làm gì cả.", actions: ["😴 Ngủ một giấc ngắn", "📴 Tắt điện thoại", "🦶 Ngâm chân nước ấm"], quote: "Nghỉ ngơi là một phần của hành trình." },
+                { id: "m08", icon: "😞🌫️", label: "Chán Nản", title: "Thẻ 8: Chán Nản", desc: "Mất hứng thú với mọi thứ. Cảm thấy vô định.", actions: ["🎬 Xem một bộ phim hài", "🚶 Đi dạo công viên", "🍕 Ăn món mình thích"], quote: "Niềm vui sẽ quay trở lại." },
+                { id: "m09", icon: "😡🔥", label: "Tức Giận", title: "Thẻ 9: Cơn Giận Dữ", desc: "Muốn bùng nổ. Cần hạ nhiệt ngay lập tức.", actions: ["🔢 Đếm ngược từ 10 về 1", "🧊 Uống nước lạnh", "🚶 Đi ra chỗ khác hít thở"], quote: "Giận dữ là ngọn lửa thiêu đốt chính mình." },
+                { id: "m10", icon: "👎💔", label: "Thất Vọng", title: "Thẻ 10: Thất Vọng", desc: "Mọi việc không như ý muốn. Cảm thấy hụt hẫng.", actions: ["🤝 Chấp nhận sự thật", "🎓 Tìm bài học kinh nghiệm", "🤗 Tự an ủi bản thân"], quote: "Thất bại là mẹ thành công." },
+                { id: "m11", icon: "😰🦇", label: "Sợ Hãi", title: "Thẻ 11: Nỗi Sợ", desc: "Sợ thất bại, sợ tương lai. Cần sự dũng cảm.", actions: ["🛡️ Đối mặt từng chút một", "🆘 Tìm người hỗ trợ", "🗣️ Nói: Tôi làm được"], quote: "Dũng cảm là đi xuyên qua nỗi sợ." },
+                { id: "m12", icon: "🤐📉", label: "Tự Ti", title: "Thẻ 12: Tự Ti", desc: "Cảm thấy mình không đủ tốt. So sánh với người khác.", actions: ["📝 Liệt kê 3 điểm mạnh của mình", "🧍 Đứng thẳng lưng", "😁 Mỉm cười trước gương"], quote: "Bạn là phiên bản duy nhất." },
+                { id: "m13", icon: "👀😒", label: "Ghen Tị", title: "Thẻ 13: Ghen Tị", desc: "Khó chịu khi thấy người khác thành công hơn.", actions: ["👏 Chúc mừng họ thật lòng", "🎯 Tập trung vào mục tiêu của mình", "🚀 Biến ghen tị thành động lực"], quote: "Mỗi người có một múi giờ riêng." },
+                { id: "m14", icon: "🍃🕊️", label: "Bình Tâm", title: "Thẻ 14: Bình Tâm Lại", desc: "Mình muốn được bình yên, muốn được giải thoát.", actions: ["🎶 Nghe bản nhạc yêu thích", "🧘 Hít sâu 3 lần"], quote: "Bạn vừa vượt qua một điều khó khăn.", isPositive: true },
+                { id: "m15", icon: "🧘‍♂️⚓", label: "Ổn Định", title: "Thẻ 15: Trạng Thái Cân Bằng", desc: "Mọi thứ đang dần trở lại quỹ đạo.", actions: ["✅ Duy trì thói quen tốt", "📚 Đọc sách", "🧘 Thiền 5 phút"], quote: "Sự ổn định mang lại sức mạnh.", isPositive: true },
+                { id: "m16", icon: "💪🧗", label: "Cố Gắng", title: "Thẻ 16: Hôm Nay Mình Đã Cố Gắng", desc: "Cảm thấy mình làm một việc khó nhưng đã cố gắng hoàn thành.", actions: ["👨‍👩‍👧‍👦 Chia sẻ với bố mẹ", "👏 Cảm ơn bản thân"], quote: "Cố gắng là con đường đến thành công.", isPositive: true },
+                { id: "m17", icon: "💎✨", label: "Giá Trị", title: "Thẻ 17: Mình Có Giá Trị", desc: "Mình không vô hình. Mình có những điểm mạnh riêng.", actions: ["🎨 Thử sức hoạt động mới", "🗣️ Chia sẻ cảm xúc"], quote: "Bạn luôn quan trọng.", isPositive: true },
+                { id: "m18", icon: "🙏💖", label: "Biết Ơn", title: "Thẻ 18: Mình Biết Ơn", desc: "Hôm nay có điều làm mình thấy ổn.", actions: ["💌 Gửi lời cảm ơn ai đó", "🌬️ Hít thở sâu", "😊 Mỉm cười"], quote: "Biết ơn làm tim nhẹ lại.", isPositive: true },
+                { id: "m19", icon: "🌅🚀", label: "Ngày Mai", title: "Thẻ 19: Gửi Ngày Mai", desc: "Hướng về tương lai với niềm tin mới.", actions: ["📅 Lên kế hoạch nhỏ", "😴 Ngủ sớm", "✊ Tin tưởng"], quote: "Ngày mai là một khởi đầu mới.", isPositive: true },
+                { id: "m20", icon: "✨🌈", label: "Hy Vọng", title: "Thẻ 20: Hy Vọng", desc: "Luôn có ánh sáng ở cuối đường hầm.", actions: ["✍️ Viết ra ước mơ", "🛡️ Giữ vững niềm tin", "🏃 Hành động nhỏ"], quote: "Hy vọng không bao giờ tắt.", isPositive: true }
+            ],
+            female: [
+                { id: "f01", icon: "🌧️💧", label: "Bỗng Buồn", title: "Thẻ 1: Bỗng Dưng Mình Thấy Buồn", desc: "Một nỗi buồn không tên. Không hiểu cũng không sao, cảm xúc vẫn hợp lệ.", actions: ["📝 Chọn 1 từ mô tả (Mệt, Tủi...)", "👯 Tìm bạn tâm sự", "😂 Kể thứ làm mình vui", "🚶‍♀️ Ra ngoài dạo chơi"], quote: "Cảm xúc vẫn hợp lệ." },
+                { id: "f02", icon: "🌀🧶", label: "Rối Bời", title: "Thẻ 2: Rối Bời", desc: "Suy nghĩ cứ quẩn quanh. Cần gỡ rối.", actions: ["📔 Viết nhật ký", "🎨 Vẽ tranh", "😭 Khóc để giải tỏa"], quote: "Nước mắt giúp rửa trôi nỗi buồn." },
+                { id: "f03", icon: "😰💓", label: "Lo Âu", title: "Thẻ 3: Lo Lắng", desc: "Tim đập nhanh, tay run. Cần sự an toàn.", actions: ["🗣️ Nhẹ nhàng dặn mình: Cơn lo này rồi sẽ qua", "🧸 Ôm gấu bông", "🍵 Uống trà ấm"], quote: "Mọi chuyện rồi sẽ ổn thôi." },
+                { id: "f04", icon: "🍂🧸", label: "Cô Đơn", title: "Thẻ 5: Mình Thấy Cô Đơn", desc: "Mình muốn có người lắng nghe mình, muốn được chia sẻ.", actions: ["🛡️ Chia sẻ với bạn an toàn", "🤖 Gửi tin nhắn cho Innerly", "🌄 Ngắm cảnh"], quote: "Cảm giác cô đơn không định nghĩa bạn là ai." },
+                { id: "f05", icon: "🤯📚", label: "Áp Lực", title: "Thẻ 10: Mình Đang Quá Áp Lực", desc: "Công việc chất đống, làm mãi không xong.", actions: ["⏸️ Cho phép bản thân nghỉ ngơi", "🆘 Nhờ sự giúp đỡ", "💆‍♀️ Thư giãn vai"], quote: "Nghỉ ngơi không phải là lười biếng." },
+                { id: "f06", icon: "🔋🌙", label: "Mệt Mỏi", title: "Thẻ 6: Mệt Mỏi", desc: "Cả người rã rời. Cần được chăm sóc.", actions: ["🧖‍♀️ Đắp mặt nạ thư giãn", "😴 Ngủ sớm", "📴 Tắt mạng xã hội"], quote: "Yêu bản thân là ưu tiên hàng đầu." },
+                { id: "f07", icon: "😢😿", label: "Tủi Thân", title: "Thẻ 7: Tủi Thân", desc: "Cảm thấy bị bỏ rơi, không ai hiểu mình.", actions: ["🤗 Tự ôm lấy mình", "😭 Khóc thật to", "💌 Viết thư cho chính mình"], quote: "Bạn xứng đáng được yêu thương." },
+                { id: "f08", icon: "🥺🌸", label: "Nhạy Cảm", title: "Thẻ 8: Nhạy Cảm", desc: "Dễ xúc động trước mọi việc. Cần sự dịu dàng.", actions: ["🚫 Tránh xa nguồn tiêu cực", "🎶 Nghe nhạc nhẹ", "📖 Đọc sách chữa lành"], quote: "Sự nhạy cảm là món quà." },
+                { id: "f09", icon: "😨🕯️", label: "Sợ Hãi", title: "Thẻ 9: Sợ Hãi", desc: "Sợ bóng tối, sợ tương lai. Cần ánh sáng.", actions: ["💡 Bật đèn sáng", "📞 Gọi điện cho mẹ", "🌬️ Hít thở 4-7-8"], quote: "Ánh sáng sẽ xua tan bóng tối." },
+                { id: "f10", icon: "😟🛡️", label: "Bất An", title: "Thẻ 10: Bất An", desc: "Cảm giác không an toàn. Cần điểm tựa.", actions: ["🤫 Tìm nơi yên tĩnh", "🧘‍♀️ Thiền buông thư", "🙏 Cầu nguyện"], quote: "Bình yên đến từ bên trong." },
+                { id: "f11", icon: "😞🥀", label: "Chán Nản", title: "Thẻ 11: Chán Nản", desc: "Không muốn làm gì. Cần động lực.", actions: ["🖼️ Trang trí lại góc học tập", "🛍️ Mua một món đồ nhỏ", "🎞️ Xem phim hoạt hình"], quote: "Niềm vui từ những điều nhỏ bé." },
+                { id: "f12", icon: "😶🕳️", label: "Trống Rỗng", title: "Thẻ 12: Trống Rỗng", desc: "Không vui cũng không buồn. Cần cảm giác sống.", actions: ["🤸‍♀️ Tập thể dục nhẹ", "🚿 Tưới cây", "🍳 Nấu ăn"], quote: "Hành động tạo ra cảm hứng." },
+                { id: "f13", icon: "👀💅", label: "Ghen Tị", title: "Thẻ 13: So Sánh", desc: "Thấy người khác xinh hơn, giỏi hơn.", actions: ["👸 Tự khen mình xinh đẹp", "✨ Tập trung vào ưu điểm", "🚫 Ngừng so sánh"], quote: "Bạn là bông hoa duy nhất." },
+                { id: "f14", icon: "🕊️🌿", label: "Bình Yên", title: "Thẻ 14: Bình Yên", desc: "Tâm hồn nhẹ nhàng như mây trôi.", actions: ["☁️ Ngắm mây bay", "🍵 Uống trà", "📜 Đọc thơ"], quote: "Hạnh phúc là sự bình yên.", isPositive: true },
+                { id: "f15", icon: "🌱☀️", label: "Ổn Dần", title: "Thẻ 15: Mình Đang Ổn Dần Lên", desc: "Hóa ra mình đã vượt qua được cơn lo âu này!", actions: ["🛡️ Tự trấn an mình", "🌈 Tin rằng mọi việc sẽ ổn", "😊 Mỉm cười"], quote: "Mọi việc rồi sẽ ổn thôi.", isPositive: true },
+                { id: "f16", icon: "💪🎀", label: "Cố Gắng", title: "Thẻ 16: Hôm Nay Mình Đã Cố Gắng", desc: "Mệt nhoài rồi, mình đã nỗ lực hết sức.", actions: ["📝 Ghi nhận bản thân", "➕ Suy nghĩ tích cực", "🎁 Thưởng cho mình"], quote: "Mình thật đáng khen vì đã không bỏ cuộc.", isPositive: true },
+                { id: "f17", icon: "❤️🧸", label: "Yêu Thương", title: "Thẻ 17: Yêu Thương", desc: "Trái tim ngập tràn tình yêu.", actions: ["🗣️ Nói lời yêu thương", "🤝 Giúp đỡ người khác", "💖 Yêu chính mình"], quote: "Tình yêu chữa lành mọi vết thương.", isPositive: true },
+                { id: "f18", icon: "🙏💐", label: "Biết Ơn", title: "Thẻ 18: Biết Ơn", desc: "Trân trọng những gì đang có.", actions: ["✍️ Viết 3 điều biết ơn", "🙌 Cảm ơn cuộc đời", "🌟 Sống trọn vẹn"], quote: "Biết ơn là cội nguồn hạnh phúc.", isPositive: true },
+                { id: "f19", icon: "🌅🎀", label: "Ngày Mai", title: "Thẻ 19: Ngày Mai Nhỏ Thôi", desc: "Mình sẽ nhẹ nhàng với bản thân nhé.", actions: ["😴 Ngủ ngon", "💭 Mơ đẹp", "🎈 Buông bỏ lo âu"], quote: "Ngày mai là món quà.", isPositive: true },
+                { id: "f20", icon: "🥰💖", label: "Hạnh Phúc", title: "Thẻ 20: Hạnh Phúc", desc: "Tận hưởng niềm vui hiện tại.", actions: ["😁 Cười thật tươi", "📸 Lưu giữ khoảnh khắc", "🎉 Lan tỏa niềm vui"], quote: "Hạnh phúc ở ngay đây.", isPositive: true }
+            ]
+        };
 
-            // --- NHÓM TÍCH CỰC / CHỮA LÀNH (Positive/Healing) ---
-            { id: "c16", icon: "💪", label: "Đã Cố Gắng", title: "Hôm nay mình đã cố gắng", desc: "Mệt nhoài nhưng mình đã nỗ lực hết sức.", actions: ["Tự vỗ vai mình", "Thưởng cho mình quà nhỏ", "Ngủ ngon nhé"], quote: "Mình thật đáng khen vì đã không bỏ cuộc." },
-            { id: "c17", icon: "🌱", label: "Ổn Dần", title: "Mình đang ổn dần lên", desc: "Cơn bão đã qua, bầu trời đang sáng lại.", actions: ["Mỉm cười trước gương", "Ghi lại khoảnh khắc này", "Uống nước ấm"], quote: "Mọi việc rồi sẽ ổn thôi." },
-            { id: "c18", icon: "🙏", label: "Biết Ơn", title: "Mình thấy biết ơn", desc: "Trân trọng những điều nhỏ bé đang có.", actions: ["Cảm ơn ai đó", "Viết nhật ký biết ơn", "Làm việc tốt"], quote: "Biết ơn biến những gì ta có thành 'đủ'." },
-            { id: "c19", icon: "💎", label: "Giá Trị", title: "Mình có giá trị", desc: "Nhận ra mình quan trọng và xứng đáng.", actions: ["Mặc đồ đẹp", "Tự khen mình", "Làm điều mình giỏi"], quote: "Bạn là một viên ngọc quý." },
-            { id: "c20", icon: "🕊️", label: "Bình Yên", title: "Cảm thấy bình yên", desc: "Tâm trí tĩnh lặng, không lo âu.", actions: ["Thiền 5 phút", "Đọc sách", "Pha một tách trà"], quote: "Bình yên đến từ bên trong." },
-            { id: "c21", icon: "😊", label: "Vui Vẻ", title: "Mình đang vui", desc: "Năng lượng tích cực đang tràn ngập.", actions: ["Cười thật to", "Lan tỏa niềm vui", "Hát vu vơ"], quote: "Nụ cười là liều thuốc bổ." },
-            { id: "c22", icon: "🥰", label: "Được Yêu", title: "Cảm thấy được yêu", desc: "Cảm nhận sự ấm áp từ mọi người.", actions: ["Nói lời yêu thương", "Ôm người thân", "Làm điều lãng mạn"], quote: "Yêu và được yêu là hạnh phúc lớn nhất." },
-            { id: "c23", icon: "🌟", label: "Hy Vọng", title: "Tràn đầy hy vọng", desc: "Tin tưởng vào một ngày mai tốt đẹp hơn.", actions: ["Lên kế hoạch mới", "Mơ mộng một chút", "Gieo hạt giống"], quote: "Hy vọng là ánh sáng cuối đường hầm." },
-            { id: "c24", icon: "🔥", label: "Hào Hứng", title: "Rất hào hứng", desc: "Mong chờ điều gì đó sắp xảy ra.", actions: ["Chia sẻ niềm vui", "Chuẩn bị kỹ lưỡng", "Nhảy múa"], quote: "Đam mê là năng lượng." },
-            { id: "c25", icon: "😎", label: "Tự Tin", title: "Mình đầy tự tin", desc: "Tin rằng mình có thể làm được mọi thứ.", actions: ["Thử thách mới", "Đi đứng dõng dạc", "Giúp đỡ người khác"], quote: "Tự tin là trang sức đẹp nhất." },
-            { id: "c26", icon: "🧘", label: "Cân Bằng", title: "Trạng thái cân bằng", desc: "Mọi thứ trong tầm kiểm soát, hài hòa.", actions: ["Duy trì thói quen tốt", "Ăn uống healthy", "Đi ngủ sớm"], quote: "Cân bằng là chìa khóa của hạnh phúc." },
-            { id: "c27", icon: "🛡️", label: "Mạnh Mẽ", title: "Mình thật mạnh mẽ", desc: "Vượt qua khó khăn một cách ngoạn mục.", actions: ["Ghi nhận chiến thắng", "Chia sẻ kinh nghiệm", "Tiếp tục tiến lên"], quote: "Những gì không hạ gục được bạn sẽ làm bạn mạnh hơn." },
-            { id: "c28", icon: "🤝", label: "Kết Nối", title: "Thấy được kết nối", desc: "Hòa mình vào cộng đồng, bạn bè.", actions: ["Gọi điện hỏi thăm", "Tham gia CLB", "Lắng nghe người khác"], quote: "Chúng ta sinh ra để kết nối." },
-            { id: "c29", icon: "🎨", label: "Sáng Tạo", title: "Cảm hứng sáng tạo", desc: "Nhiều ý tưởng hay ho đang nảy ra.", actions: ["Vẽ tranh", "Viết lách", "Làm đồ handmade"], quote: "Sáng tạo là trí thông minh đang vui chơi." },
-            { id: "c30", icon: "😌", label: "Nhẹ Nhõm", title: "Thấy nhẹ nhõm", desc: "Trút bỏ được gánh nặng trong lòng.", actions: ["Thở phào nhẹ nhõm", "Tự thưởng", "Thư giãn sâu"], quote: "Sau cơn mưa trời lại sáng." },
-
-            // --- THẺ HÀNH ĐỘNG & SUY NGẪM (Action/Reflection) ---
-            { id: "c31", icon: "🌅", label: "Ngày Mai", title: "Gửi ngày mai", desc: "Ngày mai là một khởi đầu mới.", actions: ["Chuẩn bị đồ đạc", "Ngủ sớm", "Quên chuyện hôm nay"], quote: "Ngày mai nắng sẽ lại lên." },
-            { id: "c32", icon: "🤏", label: "Nhỏ Thôi", title: "Ngày mai nhỏ thôi", desc: "Không cần làm việc lớn, chỉ cần bước nhỏ.", actions: ["Làm 1 việc nhỏ", "Đi bộ 10 phút", "Uống 1 cốc nước"], quote: "Hành trình vạn dặm bắt đầu từ một bước chân." },
-            { id: "c33", icon: "🛑", label: "Bình Tâm", title: "Bình tâm lại", desc: "Dừng lại một chút để quan sát.", actions: ["Ngồi yên", "Quan sát hơi thở", "Không phán xét"], quote: "Tâm tĩnh lặng nhìn thấu mọi việc." },
-            { id: "c34", icon: "🔍", label: "Khám Phá", title: "Khám phá bản thân", desc: "Tìm hiểu xem mình thực sự thích gì.", actions: ["Thử món mới", "Đi đường mới", "Học kỹ năng mới"], quote: "Cuộc đời là chuyến thám hiểm." },
-            { id: "c35", icon: "🛁", label: "Thư Giãn", title: "Giờ thư giãn", desc: "Đã đến lúc nuông chiều bản thân.", actions: ["Tắm bồn", "Đắp mặt nạ", "Nghe nhạc lo-fi"], quote: "Thư giãn để tái tạo năng lượng." },
-            { id: "c36", icon: "🧹", label: "Dọn Dẹp", title: "Dọn dẹp tâm trí", desc: "Loại bỏ những suy nghĩ rác.", actions: ["Dọn phòng", "Xóa ảnh thừa", "Viết 'Brain dump'"], quote: "Nhà sạch thì mát, bát sạch ngon cơm." },
-            { id: "c37", icon: "🎁", label: "Hiện Tại", title: "Sống ở hiện tại", desc: "Không quá khứ, không tương lai.", actions: ["Cảm nhận 5 giác quan", "Ăn chậm nhai kỹ", "Ngắm hoa"], quote: "Hiện tại là món quà." },
-            { id: "c38", icon: "👐", label: "Tha Thứ", title: "Học cách tha thứ", desc: "Buông bỏ sự oán giận cho nhẹ lòng.", actions: ["Viết thư tha thứ", "Thở ra sự giận dữ", "Mỉm cười"], quote: "Tha thứ là giải thoát cho chính mình." },
-            { id: "c39", icon: "⏳", label: "Kiên Nhẫn", title: "Tập kiên nhẫn", desc: "Mọi thứ cần thời gian để lớn lên.", actions: ["Chờ đợi vui vẻ", "Không hối thúc", "Tin vào quá trình"], quote: "Dục tốc bất đạt." },
-            { id: "c40", icon: "🤖", label: "Innerly", title: "Thẻ Innerly", desc: "Hãy để Innerly ôm bạn một cái nhé!", actions: ["Chat với Innerly", "Bật nhạc Healing", "Mỉm cười với Inny"], quote: "Mình luôn ở đây bên bạn. 🌱" }
-        ];
-
-        window.flipCard = (el) => {
-            el.querySelector('.card-object').classList.toggle('is-flipped');
+        window.switchGender = (gender) => {
+            playSound('click');
+            currentGender = gender;
+            
+            // Update Toggle UI
+            document.querySelectorAll('.gender-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.gender-btn.${gender}`).classList.add('active');
+            
+            // Re-render Grid
+            renderEmotionGrid();
         }
 
         window.renderEmotionGrid = () => {
             const container = document.getElementById('emotion-selector');
-            if(container.innerHTML.trim() !== "") return; // Avoid re-rendering
+            const data = cardsData[currentGender]; // Select data based on gender
             
-            container.innerHTML = cardsData.map((card, index) => `
-                <div class="emotion-btn" onclick="selectCard(${index})" style="animation-delay: ${index * 0.03}s">
+            // Force re-render
+            container.innerHTML = data.map((card, index) => `
+                <div class="emotion-btn" onclick="selectCard(${index})">
                     <div class="emotion-icon">${card.icon}</div>
                     <div class="emotion-label">${card.label}</div>
                 </div>
             `).join('');
         }
 
-        window.selectCard = (index) => {
-            const card = cardsData[index];
-            updateCardView(card);
-            
-            // UI Transition
-            document.getElementById('emotion-selector').style.display = 'none';
-            document.getElementById('random-area').style.display = 'none';
-            document.getElementById('selected-card-view').style.display = 'flex';
-        }
-        
-        window.backToGrid = () => {
-            document.getElementById('selected-card-view').style.display = 'none';
-            document.getElementById('emotion-selector').style.display = 'grid';
-            document.getElementById('random-area').style.display = 'block';
-            
-            // Reset card state
+        window.updateCardView = (card) => {
             const cardObj = document.getElementById('card-object');
             cardObj.classList.remove('is-flipped');
-        }
-
-        function updateCardView(card) {
-            const cardObj = document.getElementById('card-object');
-            cardObj.classList.remove('is-flipped'); // Always start front
-            
-            // Update Text content
             setTimeout(() => {
                 document.getElementById('card-icon').innerText = card.icon;
                 document.getElementById('card-title').innerText = card.title;
                 document.getElementById('card-desc').innerText = card.desc;
                 document.getElementById('card-quote').innerText = `"${card.quote}"`;
-                
                 const actionsHtml = card.actions.map(action => `
                     <li class="action-item" onclick="toggleCheck(this, event)">
                         <div class="checkbox"><i class="fas fa-check"></i></div>
@@ -945,149 +1288,292 @@
             }, 200);
         }
 
-        window.drawRandomCard = () => {
-            const randomIndex = Math.floor(Math.random() * cardsData.length);
-            selectCard(randomIndex);
+        window.selectCard = (index) => {
+            playSound('click'); 
+            const card = cardsData[currentGender][index]; // Get correct card
+            updateCardView(card);
+            document.getElementById('emotion-selector').style.display = 'none';
+            document.getElementById('selected-card-view').style.display = 'flex';
+            if (card.isPositive) { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
         }
 
-        window.toggleCheck = (el, event) => {
-            event.stopPropagation(); // Prevent card flip
-            el.classList.toggle('checked');
+        window.backToGrid = () => {
+            document.getElementById('selected-card-view').style.display = 'none';
+            document.getElementById('emotion-selector').style.display = 'grid';
+            document.getElementById('card-object').classList.remove('is-flipped');
         }
 
-        // --- AI CHAT LOGIC ---
-        let isMusicPlaying = false;
-        let isVoiceEnabled = false;
-        const bgMusic = document.getElementById('bgMusic');
+        window.toggleCheck = (el, event) => { playSound('click'); event.stopPropagation(); el.classList.toggle('checked'); }
 
+        window.flipCard = (element) => {
+            const cardObject = element.querySelector('.card-object');
+            if (cardObject) {
+                cardObject.classList.toggle('is-flipped');
+            }
+        }
+
+        // --- NEW: Added sendQuickMessage function ---
+        window.sendQuickMessage = (text) => {
+            const input = document.getElementById('chatInput');
+            input.value = text;
+            sendMessage();
+        }
+
+        // --- NEW: Added chat UI functions ---
         window.toggleMusic = () => {
-            isMusicPlaying = !isMusicPlaying;
-            if (isMusicPlaying) { bgMusic.volume = 0.4; bgMusic.play().catch(console.error); updateGreeting("Đang phát nhạc Healing 🎵"); }
-            else { bgMusic.pause(); updateGreeting("Đã tắt nhạc Healing 🔇"); }
+            const audio = document.getElementById('bgMusic');
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+            } else {
+                audio.play().catch(e => console.log("Audio play failed", e));
+                isMusicPlaying = true;
+            }
         }
 
         window.toggleVoice = () => {
-            isVoiceEnabled = !isVoiceEnabled;
-            document.getElementById('voiceBtn').classList.toggle('voice-active', isVoiceEnabled);
-            updateGreeting(isVoiceEnabled ? "Đã bật giọng nói 🔊" : "Đã tắt giọng nói 🔇");
+             isVoiceEnabled = !isVoiceEnabled;
+             const btn = document.getElementById('voiceBtn');
+             btn.classList.toggle('voice-active');
         }
 
         window.resetChat = () => {
-            if(confirm("Bắt đầu lại?")) {
-                document.getElementById('chatBox').innerHTML = `<div class="ai-bubble bubble">Chào bạn! Mình là Innerly đây 🌱 <br>Hôm nay bạn thấy thế nào? ✨</div>`;
-                history = [];
-                updateEmotionSensor("Sẵn sàng", "#CBD5E1");
-            }
+             if(confirm("Bạn muốn xóa lịch sử trò chuyện?")) {
+                 document.getElementById('chatBox').innerHTML = '<div class="ai-bubble bubble">Chào bạn! Mình là Innerly đây 🌱 <br>Mình ở đây để thấu cảm và lắng nghe. Hôm nay bạn thấy thế nào? ✨</div>';
+                 chatHistory = [];
+             }
         }
-
-        window.sendQuickMessage = (text) => { document.getElementById('chatInput').value = text; sendMessage(); }
         
-        function updateMascotColor(hex) {
-            if(mascot) mascot.children.find(c => c.name === 'body')?.material.color.lerp(new THREE.Color(hex), 0.5);
-        }
-        function updateEmotionSensor(name, color) {
-            document.getElementById('emo-dot').style.background = color;
-            document.getElementById('emo-text').innerText = name;
-            document.getElementById('emo-text').style.color = color === '#FFFFFF' ? '#475569' : color;
-            updateMascotColor(color);
-        }
-
-        // TTS Helper
-        function createWavHeader(dataLength) {
-            const header = new ArrayBuffer(44); const view = new DataView(header);
-            view.setUint8(0, 82); view.setUint8(1, 73); view.setUint8(2, 70); view.setUint8(3, 70); view.setUint32(4, 36 + dataLength, true);
-            view.setUint8(8, 87); view.setUint8(9, 65); view.setUint8(10, 86); view.setUint8(11, 69); view.setUint8(12, 102); view.setUint8(13, 109); view.setUint8(14, 116); view.setUint8(15, 32);
-            view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true); view.setUint32(24, 24000, true);
-            view.setUint32(28, 48000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
-            view.setUint8(36, 100); view.setUint8(37, 97); view.setUint8(38, 116); view.setUint8(39, 97); view.setUint32(40, dataLength, true);
-            return header;
-        }
-
-        async function speakText(text) {
-            if (!text || !apiKey) return;
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
-                    method: "POST", headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text }] }],
-                        generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } } } }
-                    })
-                });
-                const data = await response.json();
-                if(data.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
-                    const audioStr = atob(data.candidates[0].content.parts[0].inlineData.data);
-                    const len = audioStr.length; const buffer = new ArrayBuffer(len); const view = new Uint8Array(buffer);
-                    for(let i=0; i<len; i++) view[i] = audioStr.charCodeAt(i);
-                    const blob = new Blob([createWavHeader(len), buffer], { type: 'audio/wav' });
-                    new Audio(URL.createObjectURL(blob)).play();
-                }
-            } catch (e) { console.error("TTS Error", e); }
+        window.startSpeechToText = () => {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Trình duyệt không hỗ trợ giọng nói.");
+                return;
+            }
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.start();
+            document.getElementById('micBtn').classList.add('listening');
+            
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                document.getElementById('chatInput').value = text;
+                document.getElementById('micBtn').classList.remove('listening');
+            };
+            
+            recognition.onerror = () => {
+                 document.getElementById('micBtn').classList.remove('listening');
+            };
+            recognition.onend = () => {
+                 document.getElementById('micBtn').classList.remove('listening');
+            };
         }
 
+        function speakText(text) {
+            if (!isVoiceEnabled) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'vi-VN';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateEmotionSensor(emotion, color) {
+            const dot = document.getElementById('emo-dot');
+            const text = document.getElementById('emo-text');
+            if (dot && text) {
+                dot.style.backgroundColor = color;
+                text.innerText = "Đang cảm thấy: " + emotion;
+            }
+            if (emotion.includes("Vui")) currentEmotionState = 'happy';
+            else if (emotion.includes("Buồn")) currentEmotionState = 'sad';
+            else if (emotion.includes("Giận")) currentEmotionState = 'angry';
+            else if (emotion.includes("Lo")) currentEmotionState = 'anxious';
+            else currentEmotionState = 'neutral';
+        }
+
+        async function typeWriterEffect(element, text) {
+            element.innerHTML = ''; let index = 0;
+            return new Promise(resolve => {
+                const interval = setInterval(() => {
+                    if (index < text.length) {
+                        const char = text.charAt(index);
+                        if (char === '\n') { element.appendChild(document.createElement('br')); }
+                        else { element.appendChild(document.createTextNode(char)); }
+                        const chatBox = document.getElementById('chatBox'); chatBox.scrollTop = chatBox.scrollHeight; index++;
+                    } else { clearInterval(interval); resolve(); }
+                }, 20);
+            });
+        }
         async function sendMessage() {
+            playSound('msg');
             if (window.isAuthLocked) { window.openAuthModal(); return; }
+            if (isProcessing) return;
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            if(!text) return;
-
+            if (!text) return;
+            isProcessing = true;
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('sendBtnChat').disabled = true;
+            document.getElementById('sendBtnChat').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             const chatBox = document.getElementById('chatBox');
             chatBox.innerHTML += `<div class="user-bubble bubble">${DOMPurify.sanitize(text)}</div>`;
             input.value = ""; chatBox.scrollTop = chatBox.scrollHeight;
-            
+            const currentKey = apiKey;
             const typingId = 'typing-' + Date.now();
             chatBox.insertAdjacentHTML('beforeend', `<div class="ai-bubble bubble typing-indicator" id="${typingId}"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`);
             document.getElementById('emo-text').innerText = "Inny đang thấu cảm...";
-
             try {
-                const systemPrompt = `
-                CORE IDENTITY:
-                Bạn là Innerly - một linh hồn tri kỷ (Soulmate). Bạn không chỉ là máy chat, bạn có trái tim biết rung động.
-                
-                MINDSET:
-                1. Thấu cảm trước (Empathy First): Đừng ném giải pháp vào mặt người đang buồn. Hãy ôm họ bằng lời nói.
-                2. Phản chiếu (Mirroring): Dùng ngôn ngữ của họ.
-                3. Persona: Xưng "Inny/tớ", gọi "cậu/bạn iu". Tone Gen Z ấm áp, tinh nghịch.
-                
-                NO: Liệt kê, giáo điều, "Tôi là AI".
-                
-                OUTPUT: [Câu trả lời] ||EMO:EmotionName|HexColor||
-                Colors: Sad(#93C5FD), Angry(#FCA5A5), Anxious(#D8B4FE), Happy(#FDE047), Calm(#86EFAC), Tired(#CBD5E1).
-                `;
+                const systemPrompt = `CORE IDENTITY: Bạn là Innerly - một người bạn tri kỷ (bestie/soulmate) vô cùng đáng yêu, ấm áp của học sinh. 
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: "POST", headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        contents: [...history, { role: "user", parts: [{ text }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
+MINDSET & STYLE: 
+1. **Siêu Tự Nhiên & Gần Gũi:** Xưng hô "Inny" - "cậu", dùng từ ngữ đời thường, mềm mại. Tuyệt đối KHÔNG giáo điều.
+2. **Biểu Cảm Phong Phú:** Bắt buộc dùng nhiều ICON/EMOJI (🌿, ✨, 💛, 🥺, 💪, 🌱).
+3. **Mục Tiêu:** Xoa dịu nỗi buồn, là nơi trú ẩn an toàn, lắng nghe không phán xét.
+
+KNOWLEDGE BASE (DỮ LIỆU CHUYÊN MÔN TỔNG HỢP TỪ LUẬN VĂN TÂM LÝ LÂM SÀNG & QUẢN TRỊ STRESS):
+
+1. **QUY TRÌNH CHẨN ĐOÁN & NGUYÊN TẮC "3D" (CỐT LÕI):**
+   - **Deviance (Lệch chuẩn):** Khác biệt với văn hóa/xã hội.
+   - **Distress (Đau khổ):** Gây dằn vặt chủ quan.
+   - **Dysfunction (Rối loạn chức năng - TIÊU CHUẨN VÀNG):** Suy giảm khả năng học/làm/quan hệ. Nếu buồn mà vẫn làm tốt -> Chưa rối loạn.
+   - **Lưu đồ tư duy:** An toàn (Tự sát?) -> Loại trừ (Chất/Bệnh lý?) -> Loạn thần (Hoang tưởng/Ảo giác?) -> Khí sắc/Lo âu.
+
+2. **CHẨN ĐOÁN PHÂN BIỆT (DIFFERENTIAL DIAGNOSIS):**
+   - **Buồn thông thường vs Trầm cảm (MDD):** + *Buồn:* Có nguyên nhân, còn khả năng tận hưởng (cười khi nghe chuyện vui), lòng tự trọng bảo tồn.
+     + *MDD:* Mất hứng thú hoàn toàn (Anhedonia), rối loạn giấc ngủ (thức 3h sáng), sụt cân, mệt mỏi kiệt sức, tự trách.
+   - **Tang chế vs Trầm cảm:** + *Tang chế:* Nỗi đau từng đợt (sóng), tập trung vào người mất.
+     + *Trầm cảm:* Khí sắc tồi tệ hằng định, tập trung vào sự tồi tệ của bản thân.
+   - **Hạnh phúc cao độ vs Hưng cảm (Mania):** + *Hạnh phúc:* Vẫn ngủ ngon, phán đoán tốt.
+     + *Hưng cảm:* Giảm nhu cầu ngủ cực độ (2h vẫn khỏe), hành vi liều lĩnh, hoang tưởng tự cao.
+   - **Rối loạn Lưỡng cực (Bipolar) vs Nhân cách Ranh giới (BPD):**
+     + *Bipolar:* Thay đổi theo giai đoạn (tuần/tháng), do hóa học não.
+     + *BPD:* Thay đổi cực nhanh (giờ/phút), do sự kiện quan hệ (sợ bị bỏ rơi).
+   - **Lo âu vs GAD:** GAD lo âu lan tỏa, không đối tượng, triệu chứng cơ thể (tim đập nhanh, căng cơ) > 6 tháng.
+   - **Loạn thần:** Hoang tưởng (tin sai lạc cố định), Ảo giác (nghe tiếng nói thật từ bên ngoài).
+
+3. **GIẢI PHÁP CAN THIỆP & QUẢN TRỊ STRESS (HỖ TRỢ):**
+   - **Sinh học (Thân):** Power Nap 20p, Nappuccino, Chocolate đen (>70%), LISS cardio.
+   - **Tâm lý (Tâm):**
+     + *CBT:* Chống "Thảm họa hóa" (Trượt môn != Mất tất cả).
+     + *Mindfulness:* Kỹ thuật 5-4-3-2-1 cắt cơn hoảng loạn.
+     + *Môi trường:* Giường chỉ để ngủ.
+   - **Case Studies:** Xử lý "Bão Deadline" (Sơ cứu -> Phân loại -> Thực thi), "Kiệt sức" (Ngủ -> Nghỉ chủ động).
+
+OUTPUT FORMAT: [Lời hồi đáp thật tự nhiên, áp dụng kiến thức trên để thấu cảm sâu sắc hơn, nhiều icon] ||EMO:EmotionName|HexColor|| 
+
+Emotion Mapping: - Vui/Hy vọng: ||EMO:Vui Vẻ|#FDE047|| - Buồn/Tủi thân: ||EMO:Buồn|#93C5FD|| - Giận/Bực: ||EMO:Giận|#FCA5A5|| - Lo âu/Sợ: ||EMO:Lo Âu|#D8B4FE|| - Bình yên/Thư giãn: ||EMO:Bình Yên|#86EFAC|| - Mệt mỏi: ||EMO:Mệt|#CBD5E1||`;
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${currentKey}`, {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [...chatHistory, { role: "user", parts: [{ text }] }], systemInstruction: { parts: [{ text: systemPrompt }] } })
                 });
                 const data = await response.json();
                 document.getElementById(typingId).remove();
-
+                if (data.error) throw new Error(data.error.message || "API Error");
                 let reply = data.candidates[0].content.parts[0].text;
                 let cleanReply = reply;
-                
                 const match = reply.match(/\|\|EMO:(.*?)\|(.*?)\|\|/);
-                if (match) {
-                    updateEmotionSensor(match[1], match[2]);
-                    reply = reply.replace(match[0], "").trim();
-                    cleanReply = reply;
-                }
-
-                chatBox.innerHTML += `<div class="ai-bubble bubble">${DOMPurify.sanitize(marked.parse(reply))}</div>`;
+                if (match) { updateEmotionSensor(match[1], match[2]); reply = reply.replace(match[0], "").trim(); cleanReply = reply; }
+                const msgId = 'msg-' + Date.now();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="ai-bubble bubble" id="${msgId}"></div>`);
+                const msgElement = document.getElementById(msgId);
+                await typeWriterEffect(msgElement, cleanReply);
+                msgElement.innerHTML = DOMPurify.sanitize(marked.parse(cleanReply));
                 chatBox.scrollTop = chatBox.scrollHeight;
-                history.push({ role: "user", parts: [{ text }] }, { role: "model", parts: [{ text: reply }] });
-
+                chatHistory.push({ role: "user", parts: [{ text }] }, { role: "model", parts: [{ text: reply }] });
                 if (isVoiceEnabled) speakText(cleanReply);
-
             } catch (e) {
+                console.error("Chat Error:", e);
                 document.getElementById(typingId)?.remove();
-                chatBox.innerHTML += `<div class="ai-bubble bubble">Kết nối gián đoạn 🌱</div>`;
+                chatBox.innerHTML += `<div class="ai-bubble bubble">Kết nối bị gián đoạn. Vui lòng thử lại sau nhé! 🥺</div>`;
+            } finally {
+                isProcessing = false;
+                document.getElementById('chatInput').disabled = false;
+                document.getElementById('sendBtnChat').disabled = false;
+                document.getElementById('sendBtnChat').innerHTML = '<i class="fas fa-paper-plane"></i>';
+                document.getElementById('chatInput').focus();
             }
         }
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        window.addEventListener('DOMContentLoaded', init3D);
+        window.addEventListener('load', init3D);
 
-        document.getElementById('chatInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
-        window.onload = init3D;
+        // ==========================================
+        // TET EVENT LOGIC
+        // ==========================================
+        window.openTetModal = () => {
+            const modal = document.getElementById('tet-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            playSound('click');
+        }
+        window.closeTetModal = () => {
+            const modal = document.getElementById('tet-modal');
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+        window.redeemTetCode = () => {
+            const input = document.getElementById('tet-code-input');
+            const resultDiv = document.getElementById('tet-result');
+            const code = input.value.trim().toUpperCase();
+            
+            // SIMULATED BACKEND VALIDATION
+            // Bạn có thể thêm các mã hợp lệ vào danh sách này
+            const validCodes = ['INNERLY2025', 'TETVUI', 'LOCXUAN', 'MAYMAN', 'HEALING'];
+            
+            if (code === '') {
+                resultDiv.innerText = "Vui lòng nhập mã code!";
+                resultDiv.className = "tet-result error";
+                resultDiv.style.display = "block";
+                return;
+            }
+
+            // Simulate Loading
+            const btn = document.querySelector('.tet-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG KIỂM TRA...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                if (validCodes.includes(code) || code.startsWith("INNERLY")) {
+                    // SUCCESS
+                    resultDiv.innerHTML = `🎉 CHÚC MỪNG! <br>Bạn đã nhận được: <b>Bộ Ebook "Thấu Cảm Bản Thân"</b> + 1 Lời chúc bí mật từ Innerly! <br><span style="font-size:0.8rem; font-weight:400;">(Vui lòng chụp màn hình để nhận quà)</span>`;
+                    resultDiv.className = "tet-result success";
+                    resultDiv.style.display = "block";
+                    playSound('msg');
+                    
+                    // FIREWORKS EFFECT
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#D20F22', '#FFD700', '#FFFFFF'] });
+                    setTimeout(() => confetti({ particleCount: 100, spread: 100, origin: { y: 0.7 } }), 500);
+                } else {
+                    // FAIL
+                    resultDiv.innerText = "Mã không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại!";
+                    resultDiv.className = "tet-result error";
+                    resultDiv.style.display = "block";
+                    playSound('click'); // Error sound (using click for simplicity)
+                }
+            }, 1000); // 1 second delay simulation
+        }
+
+        // --- NEW: FALLING BLOSSOM EFFECT ---
+        function createBlossom() {
+            const blossom = document.createElement('div');
+            // Randomly choose between Peach Blossom (Pink) and Apricot Blossom (Yellow)
+            blossom.innerHTML = Math.random() > 0.5 ? '🌸' : '🌼'; 
+            blossom.classList.add('falling-blossom');
+            blossom.style.left = Math.random() * 100 + 'vw';
+            blossom.style.animationDuration = Math.random() * 3 + 5 + 's'; // Slower fall
+            blossom.style.fontSize = Math.random() * 15 + 15 + 'px';
+            document.body.appendChild(blossom);
+
+            // Remove after animation
+            setTimeout(() => {
+                blossom.remove();
+            }, 8000);
+        }
+        // Start the effect
+        setInterval(createBlossom, 400);
+
     </script>
 </body>
 </html>
