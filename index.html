@@ -912,12 +912,14 @@
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             transform-origin: top;
             transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother opening */
-            z-index: 5;
+            z-index: 20; /* Flap must be on top initially */
             border-top: 4px solid #FCD34D;
             filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+            backface-visibility: hidden;
         }
         .tet-envelope-card.opened .envelope-flap {
             transform: rotateX(180deg);
+            z-index: 1; /* Move behind when opened */
         }
         
         /* Gold Seal on Flap */
@@ -928,6 +930,58 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: #991B1B; font-weight: 800; font-family: 'Dancing Script'; font-size: 1.4rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid #FFFBEB;
+        }
+
+        /* --- NEW: WINNING TICKET STYLES (THE SMALL BOX) --- */
+        .winning-ticket {
+            position: absolute;
+            top: 40%; left: 50%;
+            transform: translate(-50%, 0) scale(0.8);
+            width: 85%;
+            background: #FFFBEB;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy effect */
+            z-index: 5; /* Inside envelope */
+            text-align: center;
+            border: 2px solid var(--tet-gold);
+            pointer-events: none; /* Initially non-interactive */
+            
+            /* Họa tiết chìm cho thẻ */
+            background-image: radial-gradient(#FCD34D 1px, transparent 1px);
+            background-size: 12px 12px;
+        }
+
+        .tet-envelope-card.opened .winning-ticket {
+            opacity: 1;
+            /* Slide UP out of the envelope */
+            transform: translate(-50%, -80%) scale(1);
+            pointer-events: auto;
+            z-index: 15; /* Above envelope body when out */
+        }
+
+        .ticket-icon { font-size: 3.5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+        .ticket-title { font-weight: 800; color: #B45309; font-size: 1.2rem; margin-bottom: 0.5rem; text-transform: uppercase; line-height: 1.3; }
+        .ticket-sub { font-size: 0.9rem; color: #92400E; font-weight: 500; }
+        
+        .ticket-close-btn {
+            margin-top: 1rem;
+            background: var(--tet-red); color: white; border: none;
+            padding: 8px 20px; border-radius: 99px; font-weight: 700; cursor: pointer;
+            font-size: 0.85rem; box-shadow: 0 4px 10px rgba(210, 15, 34, 0.3);
+            transition: 0.2s;
+        }
+        .ticket-close-btn:hover { transform: scale(1.05); background: #991B1B; }
+
+        /* Wrapper to hide inputs when opened */
+        #tet-content-wrapper {
+            transition: opacity 0.5s ease;
+        }
+        .tet-envelope-card.opened #tet-content-wrapper {
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* God Rays Effect */
@@ -1116,7 +1170,8 @@
     </div>
 
     <!-- PAGE 1: LANDING PAGE -->
-    <div id="landing-page">
+    <!-- Added "active" class here to make it the default page -->
+    <div id="landing-page" class="active">
         <header>
             <div class="container">
                 <nav>
@@ -1274,8 +1329,9 @@
         </footer>
     </div>
 
-    <!-- PAGE 2: CARD DECK SECTION (ACTIVE BY DEFAULT) -->
-    <div id="card-deck-section" class="active">
+    <!-- PAGE 2: CARD DECK SECTION (REMOVED ACTIVE CLASS) -->
+    <!-- Removed "active" class so it's hidden by default -->
+    <div id="card-deck-section">
         <header style="background:transparent; border:none; margin-bottom: 2rem;">
             <div class="container">
                 <nav>
@@ -1425,31 +1481,35 @@
                       <div class="ray" style="transform: rotate(315deg);"></div>
                 </div>
 
-                <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); animation: float 3s infinite; margin-top: 1rem;">🧧</div>
-                <h2 class="tet-title-large">Hái Lộc Đầu Năm</h2>
-                <p class="tet-subtitle">Vòng Quay May Mắn Innerly 2025</p>
+                <!-- WRAPPER FOR INPUTS (To hide when opened) -->
+                <div id="tet-content-wrapper">
+                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); animation: float 3s infinite; margin-top: 1rem;">🧧</div>
+                    <h2 class="tet-title-large">Hái Lộc Đầu Năm</h2>
+                    <p class="tet-subtitle">Vòng Quay May Mắn Innerly 2025</p>
 
-                <div class="tet-input-group">
-                    <input type="text" id="tet-code-input" class="tet-input" placeholder="NHẬP MÃ CODE" maxlength="15" onkeyup="this.value = this.value.toUpperCase();">
+                    <div class="tet-input-group">
+                        <input type="text" id="tet-code-input" class="tet-input" placeholder="NHẬP MÃ CODE" maxlength="15" onkeyup="this.value = this.value.toUpperCase();">
+                    </div>
+
+                    <button class="tet-submit-btn" onclick="redeemTetCode()">
+                        <i class="fas fa-dice"></i> MỞ LÌ XÌ NGAY
+                    </button>
+                    
+                    <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8; color: #FEF2F2;">
+                        *Mã code được tìm thấy bên trong mỗi hộp sản phẩm Innerly.
+                    </p>
                 </div>
 
-                <button class="tet-submit-btn" onclick="redeemTetCode()">
-                    <i class="fas fa-dice"></i> MỞ LÌ XÌ NGAY
-                </button>
-                
-                <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8; color: #FEF2F2;">
-                    *Mã code được tìm thấy bên trong mỗi hộp sản phẩm Innerly.
-                </p>
+                <!-- NEW: THE WINNING TICKET (Hidden inside envelope) -->
+                <div class="winning-ticket" id="winning-ticket">
+                    <div class="ticket-icon" id="ticket-icon">🎁</div>
+                    <div class="ticket-title" id="ticket-title">PHẦN QUÀ CỦA BẠN</div>
+                    <div class="ticket-sub" id="ticket-sub">Mô tả quà tặng</div>
+                    <button class="ticket-close-btn" onclick="resetTetEnvelope()">Nhận Lộc & Đóng</button>
+                </div>
             </div>
 
-            <!-- Result Card (Pop up) -->
-            <div class="tet-result-card" id="tet-result-card">
-                <div class="result-title">🎉 Chúc Mừng Năm Mới! 🎉</div>
-                <div class="result-body" id="tet-result-content">
-                    Bạn đã nhận được phần quà may mắn.
-                </div>
-                <button class="btn-close-result" onclick="closeTetResult()">Nhận Quà & Đóng</button>
-            </div>
+            <!-- Removed Old Result Card Popup -->
         </div>
     </div>
 
@@ -2153,9 +2213,12 @@ Ví dụ: "Hít thở sâu nào, bài toán khó đến mấy cũng có lời gi
         window.redeemTetCode = () => {
             const input = document.getElementById('tet-code-input');
             const envelope = document.getElementById('tet-envelope');
-            const resultCard = document.getElementById('tet-result-card');
-            const resultContent = document.getElementById('tet-result-content');
             const godRays = document.getElementById('god-rays');
+            
+            // Ticket Elements
+            const ticketIcon = document.getElementById('ticket-icon');
+            const ticketTitle = document.getElementById('ticket-title');
+            const ticketSub = document.getElementById('ticket-sub');
 
             const code = input.value.trim().toUpperCase();
             // Expanded valid codes for testing
@@ -2178,96 +2241,43 @@ Ví dụ: "Hít thở sâu nào, bài toán khó đến mấy cũng có lời gi
                 if (validCodes.includes(code) || code.startsWith("INNERLY")) {
                     playSound('msg');
                     
-                    // 1. Open Envelope Animation
-                    envelope.classList.add('opened');
-                    
-                    // 2. God Rays
-                    godRays.classList.add('active');
-                    
-                    // 3. Fireworks Effect
-                    const duration = 3000;
-                    const end = Date.now() + duration;
-                    playFireworksSound();
-
-                    if (typeof confetti === 'function') {
-                        (function frame() {
-                            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#FFD700', '#D20F22'] });
-                            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#FFD700', '#D20F22'] });
-
-                            if (Date.now() < end) {
-                                requestAnimationFrame(frame);
-                            }
-                        }());
-                    }
-
-                    // --- NEW REWARD LOGIC v3.9.7 (WEIGHTED PROBABILITY) - PRESERVED ---
-                    // Rank 1: Highest (Most Common) -> Rank 6: Lowest (Rarest)
+                    // --- NEW REWARD LOGIC (WEIGHTED PROBABILITY) ---
                     const rewards = [
-                        // Rank 1: 50% chance
-                        { weight: 500, type: 'luck', icon: "🍀", text: "CHÚC BẠN MAY MẮN LẦN SAU", sub: "Đừng buồn nhé, Innerly vẫn luôn bên bạn! 💛" },
-                        
-                        // Rank 2: 30% chance
+                        { weight: 500, type: 'luck', icon: "🍀", text: "CHÚC BẠN MAY MẮN LẦN SAU", sub: "Đừng buồn, Inny luôn bên bạn! 💛" },
                         { weight: 300, type: 'gift', icon: "🎟️", text: "VÉ GIẢM GIÁ 10%", sub: "Khi mua sản phẩm Innerly" },
-                        
-                        // Rank 3: 10% chance
                         { weight: 100, type: 'gift', icon: "🪥", text: "BÀN CHẢI ĐIỆN TỰ ĐỘNG", sub: "Quà tặng công nghệ xịn xò" },
-                        
-                        // Rank 4: 5% chance
                         { weight: 50, type: 'gift', icon: "📽️", text: "MÁY CHIẾU MINI", sub: "Biến phòng ngủ thành rạp phim" },
-                        
-                        // Rank 5: 3% chance
                         { weight: 30, type: 'gift', icon: "🌬️", text: "MÁY LỌC KHÔNG KHÍ", sub: "Không gian trong lành, thư thái" },
-                        
-                        // Rank 6: 1% chance (Very Rare)
                         { weight: 10, type: 'gift', icon: "🧹", text: "MÁY HÚT BỤI", sub: "Dọn dẹp thảnh thơi đón Tết" }
                     ];
 
-                    // Weighted Random Selection Logic
-                    let totalWeight = 0;
-                    for (let i = 0; i < rewards.length; i++) {
-                        totalWeight += rewards[i].weight;
-                    }
-
+                    let totalWeight = 0; rewards.forEach(r => totalWeight += r.weight);
                     let random = Math.floor(Math.random() * totalWeight);
                     let selectedReward = null;
-
                     for (let i = 0; i < rewards.length; i++) {
-                        if (random < rewards[i].weight) {
-                            selectedReward = rewards[i];
-                            break;
-                        }
+                        if (random < rewards[i].weight) { selectedReward = rewards[i]; break; }
                         random -= rewards[i].weight;
                     }
 
-                    // 4. Show Result after delay
-                    setTimeout(() => {
-                          let htmlContent = '';
-                          
-                          if (selectedReward.type === 'luck') {
-                              htmlContent = `
-                                <div style="font-size:3.5rem; margin-bottom:1rem; animation: float 3s infinite;">${selectedReward.icon}</div>
-                                <div style="color:#78350F; font-weight:800; font-size:1.5rem; margin-bottom:0.5rem; text-transform:uppercase;">${selectedReward.text}</div>
-                                <div style="font-size:1.1rem; color:#92400E;">${selectedReward.sub}</div>
-                             `;
-                          } else {
-                              htmlContent = `
-                                <div style="font-size:3rem; margin-bottom:0.5rem;">🎁</div>
-                                <div style="font-size:1.1rem; color:#B45309; margin-bottom:10px;">Chúc mừng! Bạn đã nhận được:</div>
-                                <div style="font-size:3rem; margin: 5px 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">${selectedReward.icon}</div>
-                                <div style="color:#D20F22; font-weight:900; font-size:1.4rem; text-transform:uppercase; margin: 10px 0; line-height:1.3;">${selectedReward.text}</div>
-                                <div style="font-size:1rem; color:#78350F; background:rgba(255,215,0,0.2); display:inline-block; padding:5px 15px; border-radius:12px;">${selectedReward.sub}</div>
-                             `;
-                          }
+                    // 1. Update Ticket Content BEFORE opening
+                    ticketIcon.innerText = selectedReward.icon;
+                    ticketTitle.innerText = selectedReward.text;
+                    ticketSub.innerText = selectedReward.sub;
 
-                          resultContent.innerHTML = htmlContent;
-                          resultCard.classList.add('show');
-                          
-                          if (selectedReward.type === 'gift') {
-                              playSound('win');
-                          } else {
-                              playSound('flip'); // Softer sound for "Good luck next time"
-                          }
-                    }, 800);
+                    // 2. Trigger Animations
+                    envelope.classList.add('opened');
+                    godRays.classList.add('active');
+                    
+                    // 3. Play Sound & Effects
+                    playFireworksSound();
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.7 } });
+                    }
+                    if (selectedReward.type === 'gift') {
+                        setTimeout(() => playSound('win'), 600);
+                    } else {
+                        setTimeout(() => playSound('flip'), 600);
+                    }
 
                 } else {
                     playSound('click');
@@ -2279,15 +2289,23 @@ Ví dụ: "Hít thở sâu nào, bài toán khó đến mấy cũng có lời gi
         }
         
         window.closeTetResult = () => {
-             const resultCard = document.getElementById('tet-result-card');
+             // Backward compatibility function if needed, redirects to reset
+             resetTetEnvelope();
+        }
+
+        window.resetTetEnvelope = () => {
              const envelope = document.getElementById('tet-envelope');
              const godRays = document.getElementById('god-rays');
+             const input = document.getElementById('tet-code-input');
              
-             resultCard.classList.remove('show');
+             // Close animation
              envelope.classList.remove('opened');
              godRays.classList.remove('active');
              
-             document.getElementById('tet-code-input').value = '';
+             // Clear input after delay to allow closing animation
+             setTimeout(() => {
+                 input.value = '';
+             }, 500);
         }
 
         // --- NEW: FALLING BLOSSOM EFFECT ---
