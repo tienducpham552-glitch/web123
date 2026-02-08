@@ -1,975 +1,2444 @@
 <!DOCTYPE html>
+<!-- 
+    PROJECT: INNERLY (ULTIMATE TET EDITION)
+    VERSION: 4.0.0 (Tet Visual Remastered)
+    
+    >>> VISUAL UPGRADES <<<
+    1. TET PAGE (Vườn Lộc Xuân):
+       - Background: Thêm họa tiết hoa văn chìm (Pattern) tạo cảm giác giấy dó/gấm.
+       - Envelope: Hiệu ứng 3D chiều sâu, viền vàng kim loại, đổ bóng thực tế.
+       - Effects: Hoa rơi lả lướt (Sway motion), đèn lồng phát sáng (Glow).
+       - Typography: Text shadow và font chữ được trau chuốt hơn.
+    2. CORE PRESERVED:
+       - All logic, content, and structure remain 100% identical.
+-->
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INNERLY - Bộ sản phẩm cân bằng cảm xúc học đường</title>
 
+<head>
+    <!-- ==========================================================================
+          META TAGS & SECURITY CONFIGURATION
+          ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>INNERLY - Bộ sản phẩm cân bằng cảm xúc học đường</title>
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XEELZR1L2D"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XEELZR1L2D');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-XEELZR1L2D');
     </script>
 
-    <!-- Thêm Font Awesome để dùng icon cho đẹp -->
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Libs -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Thư viện Marked.js để convert Markdown sang HTML -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+    <!-- DOMPurify & ThreeJS -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Confetti Lib for Fireworks -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+    <!-- ==========================================================================
+          STYLES (CSS)
+          ========================================================================== -->
     <style>
-
-        /* --- THIẾT LẬP CƠ BẢN (RESET & VARIABLES) --- */
         :root {
-            --primary-blue: #4A90E2; /* Màu logo/hộp xanh */
-            --primary-yellow: #F5A623; /* Màu hộp vàng/năng động */
-            --soft-mint: #E8F5E9; /* Màu nền tường */
-            --text-dark: #333;
-            --text-light: #666;
-            --white: #fff;
-            --ai-bg: #F0F4F8;
-            --purple-accent: #9B59B6;
+            /* --- ORIGINAL COLOR PALETTE --- */
+            --p-blue: #3B82F6;
+            --p-blue-soft: #DBEAFE; 
+            --p-pink: #F472B6;
+            --p-pink-soft: #FCE7F3;
+            --p-green: #34D399;
+            --p-green-soft: #D1FAE5;
+            --p-orange: #FB923C;
+            --p-yellow: #FACC15;
+            --slate-900: #0F172A; /* Darker for professional look */
+            --slate-800: #1E293B;
+            --slate-700: #334155;
+            --slate-500: #64748B;
+            --slate-200: #E2E8F0;
+            --white: #ffffff;
+            --off-white: #F8FAFC;
+            
+            /* --- TET EVENT COLORS --- */
+            --tet-red: #D20F22;
+            --tet-dark-red: #991B1B;
+            --tet-gold: #FFD700;
+            --tet-bg: #FFF5F5;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-card: 0 10px 15px -3px rgba(0,0,0,0.1);
+            
+            --radius-lg: 32px;
+            --radius-md: 20px;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* * GLOBAL RESET * */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; font-size: 16px; }
 
         body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+            background-attachment: fixed;
+            color: var(--slate-700);
             line-height: 1.6;
-            color: var(--text-dark);
-            background-color: #f9f9f9;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        /* * TYPOGRAPHY * */
+        h1, h2, h3, h4, .logo span { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--slate-900); }
+        h1 { font-weight: 800; letter-spacing: -0.03em; }
+        h2 { font-weight: 700; letter-spacing: -0.02em; }
+        p { font-weight: 400; color: var(--slate-700); }
 
-        /* --- HEADER & NAVIGATION --- */
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* * 3D MASCOT (OPTIMIZED FOR SMOOTHNESS) * */
+        #mascot-3d-container {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 280px; height: 320px; z-index: 9999;
+            pointer-events: none; 
+            /* Optimize for performance */
+            will-change: transform;
+            transform: translateZ(0); /* Hardware acceleration */
+            /* Removed slow transition on container itself to prevent fight with JS */
+        }
+        @media (max-width: 1024px) { #mascot-3d-container { width: 220px; height: 260px; } }
+        @media (max-width: 600px) { #mascot-3d-container { width: 140px; height: 180px; bottom: 20px; right: 10px; } }
+
+        #three-canvas {
+            width: 100%; height: 100%; pointer-events: auto; cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother hover effect */
+            filter: drop-shadow(0 15px 35px rgba(59, 130, 246, 0.2));
+        }
+        #three-canvas:active { transform: scale(0.95); }
+
+        .mascot-bubble {
+            position: absolute; top: 0; right: 15%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 10px 18px; border-radius: 20px; border-bottom-right-radius: 4px;
+            box-shadow: var(--shadow-md); font-size: 0.9rem; font-weight: 600;
+            color: var(--p-blue); border: 1px solid rgba(255,255,255,0.8);
+            opacity: 0; transform: translateY(15px) scale(0.9);
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none; max-width: 180px; text-align: center;
+        }
+        .mascot-bubble.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* * HEADER * */
         header {
-            background: var(--white);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }   
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 0.8rem 0;
+            position: sticky; top: 0; z-index: 2000;
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+        
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; }
+        .logo-icon { 
+            width: 40px; height: 40px; 
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); 
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
+            color: white; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .logo span { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .nav-menu { display: flex; align-items: center; gap: 2rem; }
+        .nav-link { 
+            text-decoration: none; color: var(--slate-700); font-weight: 500; font-size: 0.95rem; 
+            transition: 0.2s; position: relative; padding: 0.5rem 0; cursor: pointer;
+        }
+        .nav-link:hover { color: var(--p-blue); }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
+            background: var(--p-blue); transition: width 0.3s; border-radius: 2px;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* SPECIAL TET LINK ON MENU */
+        .tet-link {
+            color: var(--tet-red) !important;
+            font-weight: 800;
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(255, 215, 0, 0.15);
+            padding: 0.5rem 1rem !important;
+            border-radius: 99px;
+            border: 1px solid var(--tet-gold);
+            animation: pulse-gold 2s infinite;
+        }
+        .tet-link:hover {
+            background: var(--tet-red); color: var(--tet-gold) !important;
+            box-shadow: 0 4px 12px rgba(210, 15, 34, 0.3);
+        }
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .btn-cta {
+            background: var(--slate-900);
+            color: white !important; padding: 0.7rem 1.6rem; border-radius: 99px;
+            border: none; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            font-weight: 600; letter-spacing: 0.3px;
+        }
+        .btn-cta:hover { 
+            transform: translateY(-2px); 
+            background: var(--p-blue); 
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
         }
 
-        /* Tạo logo giả lập bằng CSS nếu không có ảnh */
-        .logo-placeholder {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-blue), #81d4fa);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+        @media (max-width: 900px) {
+            .nav-menu { gap: 0.8rem; overflow-x: auto; padding: 0.5rem 0; scrollbar-width: none; justify-content: flex-start; width: 100%; }
+            .nav-menu::-webkit-scrollbar { display: none; }
+            .nav-link, .tet-link { font-size: 0.85rem; white-space: nowrap; padding: 0.5rem 0.8rem !important; background: rgba(255,255,255,0.6); border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); }
+            .btn-cta { padding: 0.5rem 1rem; font-size: 0.85rem; }
+            header { padding: 0.5rem 0; }
+            .container { padding: 0 1rem; }
+            .mission-grid, .footer-grid { grid-template-columns: 1fr !important; }
         }
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            margin-left: 20px;
-            font-weight: 500;
-            transition: color 0.3s;
+        .user-section { display: flex; align-items: center; gap: 0.8rem; }
+        .btn-login {
+            background: white; border: 1px solid var(--slate-200); color: var(--slate-700);
+            padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; transition: 0.3s;
+            font-weight: 600; box-shadow: var(--shadow-sm);
+        }
+        .btn-login:hover { border-color: var(--p-blue); color: var(--p-blue); transform: translateY(-1px); }
+        
+        .user-profile { display: none; align-items: center; gap: 12px; cursor: pointer; padding: 4px 12px; border-radius: 99px; transition: 0.3s; }
+        .user-profile:hover { background: rgba(255,255,255,0.8); }
+        .user-profile.active { display: flex; }
+        .user-avatar { 
+            width: 40px; height: 40px; 
+            background: linear-gradient(135deg, #F472B6, #C084FC); 
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 1rem; font-weight: 700; box-shadow: 0 4px 10px rgba(244, 114, 182, 0.3);
+            border: 2px solid white;
         }
 
-        .nav-links a:hover {
-            color: var(--primary-blue);
+        /* * MODAL * */
+        #auth-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px);
+            z-index: 10001; display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; padding: 1rem;
+        }
+        #auth-modal.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; width: 100%; max-width: 420px;
+            padding: 3rem; border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid white; position: relative; text-align: center;
+        }
+        .auth-form input, .auth-form select {
+            width: 100%; padding: 1rem 1.2rem; margin-bottom: 1rem;
+            border: 2px solid transparent; border-radius: 16px;
+            font-size: 16px; outline: none; transition: 0.3s; 
+            background: #F1F5F9; color: var(--slate-900);
+        }
+        .auth-form input:focus { 
+            background: white; border-color: var(--p-blue); 
+            box-shadow: 0 0 0 4px var(--p-blue-soft); 
+        }
+        .btn-submit-auth { 
+            width: 100%; padding: 1rem; font-size: 1.05rem; border-radius: 16px; 
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); 
+            color: white; border: none; font-weight: 700; cursor: pointer;
+            margin-top: 1rem; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transition: 0.3s;
+        }
+        .btn-submit-auth:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3); }
+
+        /* * HERO & JOURNEY * */
+        #landing-page { display: none; }
+        #landing-page.active { display: block; animation: fadeIn 0.6s ease-out; }
+
+        .hero { padding: 5rem 0 4rem; text-align: center; }
+        .hero h1 { 
+            font-size: clamp(2.8rem, 6vw, 4.2rem); line-height: 1.1; margin-bottom: 1.5rem; 
+            color: var(--slate-900); 
+        }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--p-blue), #EC4899); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        .hero p { 
+            font-size: clamp(1.15rem, 2.5vw, 1.3rem); color: var(--slate-700); 
+            max-width: 700px; margin: 0 auto 3.5rem; opacity: 0.9; 
+        }
+        .hero-img { 
+            width: 100%; max-width: 900px; margin: 0 auto; 
+            border-radius: 32px; overflow: hidden; 
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1); 
+            border: 8px solid rgba(255,255,255,0.5);
+            transform: perspective(1000px) rotateX(1deg);
         }
 
-        .nav-links a.ai-link {
-            color: var(--primary-blue);
-            font-weight: bold;
-            border: 2px solid var(--primary-blue);
-            padding: 5px 15px;
-            border-radius: 20px;
+        /* --- NEW: MISSION SECTION (UPDATED LAYOUT FOR WIDER VIDEO) --- */
+        .mission-section { padding: 5rem 0; background: var(--white); }
+        
+        /* Chuyển sang Flex column để video nằm dưới và rộng hơn */
+        .mission-grid { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 3rem; 
+            align-items: center; 
         }
-
-        .nav-links a.ai-link:hover {
-            background: var(--primary-blue);
-            color: white;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            background: linear-gradient(135deg, var(--soft-mint) 0%, #ffffff 100%);
-            padding: 60px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            color: var(--primary-blue);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .hero h2 {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            font-weight: normal;
-            margin-bottom: 30px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-img-placeholder {
+        
+        .mission-text { 
+            max-width: 900px; 
             width: 100%;
-            max-width: 800px;
-            height: 400px;
-            background-color: #ddd;
-            margin: 0 auto;
-            border-radius: 15px;
+        }
+        .mission-text p { 
+            margin-bottom: 1.5rem; 
+            text-align: justify; 
+            font-size: 1.1rem; 
+            line-height: 1.8;
+        }
+
+        .mission-video {
+            width: 100%;
             display: flex;
+            flex-direction: column; /* Để nút fallback nằm dưới */
             align-items: center;
-            justify-content: center;
-            color: #888;
+            margin-top: 2.5rem;
+        }
+
+        /* --- UPDATED VIDEO CONTAINER STYLES --- */
+        .video-container {
+            width: 100%; 
+            max-width: 100%; 
+            aspect-ratio: 16/9; 
+            border-radius: 24px; 
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .hero-img-placeholder img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* --- MISSION SECTION --- */
-        .mission {
-            padding: 60px 0;
-            background-color: var(--white);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 40px;
-            color: var(--primary-blue);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
+            border: 4px solid var(--slate-200);
+            background: #000;
             position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .mission-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .mission-text p {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-
-        /* --- JOURNEY SECTION --- */
-        .journey {
-            padding: 60px 0;
-            background-color: var(--soft-mint);
-        }
-
-        .journey-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            border-top: 5px solid var(--primary-blue);
-            display: flex;
-            flex-direction: column;
-            
-            /* CẬP NHẬT: Căn giữa nội dung trong thẻ */
-            text-align: center;
-            align-items: center;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card:nth-child(2) { border-top-color: var(--primary-yellow); }
-        .card:nth-child(3) { border-top-color: #27ae60; }
-        .card:nth-child(4) { border-top-color: #e74c3c; }
-
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-        }
-
-        .quote {
-            font-style: italic;
-            color: var(--primary-blue);
-            margin-bottom: 15px;
-            display: block;
-            font-weight: 600;
-        }
-
-        .card-content {
-            margin-top: auto;
-            text-align: center; /* Đảm bảo nội dung chữ bên trong cũng căn giữa */
-        }
-
-        .card-content strong {
-            display: block;
-            margin-top: 10px;
-            color: var(--text-dark);
-        }
-
-        /* --- AI CHATBOT SECTION (Góc Tâm Sự) --- */
-        .ai-section {
-            padding: 60px 0;
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            position: relative;
-        }
-
-        .ai-container {
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 40px;
-            border: 2px solid var(--primary-blue);
-            margin-bottom: 40px;
-        }
-
-        .ai-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .ai-header i {
-            font-size: 3rem;
-            color: var(--primary-yellow);
-            margin-bottom: 15px;
-        }
-
-        .chat-box textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            resize: none;
-            transition: border-color 0.3s;
-            margin-bottom: 15px;
-        }
-
-        .chat-box textarea:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
-        .chat-btn {
-            background-color: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            border-radius: 50px;
             cursor: pointer;
-            transition: background 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 auto;
-        }
-
-        .chat-btn:hover {
-            background-color: #357abd;
+            transition: transform 0.3s ease;
+            z-index: 5;
         }
         
-        .chat-btn.secondary {
-            background-color: var(--primary-yellow);
-            color: #fff;
+        .video-container:hover {
+            transform: translateY(-5px);
+            border-color: var(--p-blue);
         }
         
-        .chat-btn.secondary:hover {
-            background-color: #e09612;
+        /* Thumbnail Image */
+        .video-thumb {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.8; transition: opacity 0.3s;
+            pointer-events: none;
         }
 
-        .chat-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        /* Play Button Overlay */
+        .play-button-overlay {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px; height: 90px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .play-button-overlay i {
+            font-size: 3rem; color: white; margin-left: 6px; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .video-container:hover .play-button-overlay {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: var(--p-blue);
+            border-color: var(--p-blue);
+            box-shadow: 0 10px 50px rgba(37, 99, 235, 0.5);
         }
 
-        .ai-response {
-            margin-top: 25px;
-            padding: 20px;
-            background-color: var(--soft-mint);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary-yellow);
+        /* Loading Spinner */
+        .video-loading-spinner {
+            position: absolute; top: 50%; left: 50%;
+            width: 50px; height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            transform: translate(-50%, -50%);
+            z-index: 3;
             display: none; /* Mặc định ẩn */
         }
-        
-        .loading-dots {
-            text-align: center;
+        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* Direct Link Button (Hidden initially) */
+        #video-fallback-link {
             display: none;
-            margin-top: 20px;
-            color: var(--primary-blue);
-        }
-
-        /* --- NEW AI FEATURES GRID --- */
-        .ai-features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        
-        .ai-feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            transition: transform 0.3s;
-        }
-        
-        .ai-feature-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary-blue);
-        }
-
-        .ai-feature-card h3 {
-            color: var(--primary-blue);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-top: 1rem;
+            color: var(--slate-500);
             font-size: 0.9rem;
-            color: #555;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 500;
         }
+        #video-fallback-link:hover { color: var(--p-blue); }
 
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
+        .video-container iframe { width: 100%; height: 100%; border: none; }
 
-        /* --- HISTORY SECTION --- */
-        .history {
-            padding: 60px 0;
-            background-color: var(--white);
-        }
-
+        /* --- NEW: HISTORY SECTION --- */
+        .history-section { padding: 5rem 0; background: #FDF4FF; }
         .history-content {
-            background: #fdfdfd;
-            padding: 30px;
-            border-radius: 10px;
-            border-left: 5px solid var(--primary-yellow);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: white; padding: 3rem; border-radius: 24px;
+            box-shadow: var(--shadow-sm); border-left: 6px solid var(--p-yellow);
+        }
+        .history-content h3 { color: var(--p-blue); margin-bottom: 1rem; font-size: 1.5rem; }
+
+        .journey-section { padding: 5rem 0; background: transparent; }
+        .section-header h2 { font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: 1.2rem; text-align: center; }
+        
+        .journey-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 2.5rem; 
+            max-width: 1100px; margin: 4rem auto 0; 
+        }
+        @media (max-width: 768px) { .journey-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+        .j-card { 
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 32px; padding: 2.5rem; 
+            border: 1px solid white; 
+            text-align: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%; display: flex; flex-direction: column; align-items: center;
+            box-shadow: var(--shadow-card);
+        }
+        .j-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.15); 
+            background: white;
+        }
+        
+        .j-card img {
+            width: 100%; height: 240px; object-fit: cover; 
+            border-radius: 24px; margin-bottom: 1.8rem;
+            box-shadow: var(--shadow-sm); transition: 0.3s;
+        }
+        .j-card:hover img { transform: scale(1.02); }
+
+        .card-num { 
+            width: 56px; height: 56px; border-radius: 20px; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 1.5rem; font-weight: 800; font-size: 1.3rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-01 .card-num { background: var(--p-blue-soft); color: var(--p-blue); }
+        .card-02 .card-num { background: #FFEDD5; color: var(--p-orange); }
+        .card-03 .card-num { background: var(--p-green-soft); color: var(--p-green); }
+        .card-04 .card-num { background: var(--p-pink-soft); color: var(--p-pink); }
+        
+        .j-card h3 { font-size: 1.4rem; margin-bottom: 0.8rem; font-weight: 800; letter-spacing: 0.5px; }
+        .j-card p { font-size: 1rem; line-height: 1.8; color: var(--slate-700); margin-top: auto; }
+        .j-card .quote { 
+            font-size: 1.1rem; font-style: italic; margin-bottom: 1.2rem; font-weight: 500;
+            display: block; min-height: 30px;
+        }
+        .card-01 .quote { color: var(--p-blue); } 
+        .card-02 .quote { color: var(--p-orange); } 
+        .card-03 .quote { color: var(--p-green); } 
+        .card-04 .quote { color: var(--p-pink); }
+
+        /* --- SCHOOL CONTACT PAGE STYLES --- */
+        #school-contact-page {
+            display: none; animation: fadeIn 0.6s ease-out;
+            min-height: 100vh; background: #F8FAFC; padding-bottom: 6rem;
+        }
+        #school-contact-page.active { display: block; }
+
+        .school-contact-hero {
+            background: linear-gradient(135deg, #020617 0%, #1E3A8A 50%, #2563EB 100%);
+            color: white; padding: 7rem 1.5rem 12rem;
+            text-align: center; position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); 
+            overflow: hidden;
+        }
+        
+        .school-contact-hero h2 { 
+            color: white; font-size: 3.2rem; margin-bottom: 1.2rem; 
+            font-weight: 800; letter-spacing: -0.02em; 
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .school-contact-hero p { 
+            max-width: 680px; margin: 0 auto; opacity: 0.9; 
+            font-size: 1.25rem; line-height: 1.7; font-weight: 300; 
+            color: #E0F2FE;
         }
 
-        /* --- FOOTER (SỬA LỖI ẢNH) --- */
-        footer {
-            background: #2c3e50;
-            color: var(--white);
-            padding: 50px 0;
+        .school-contact-card {
+            max-width: 850px; margin: -140px auto 0;
+            background: white; border-radius: 24px;
+            box-shadow: 0 20px 60px -10px rgba(15, 23, 42, 0.2), 0 10px 20px -10px rgba(15, 23, 42, 0.1);
+            position: relative; z-index: 10;
+            overflow: visible; border: 1px solid rgba(255,255,255,0.8);
+        }
+        
+        .contact-header {
+            padding: 2.5rem 3.5rem; border-bottom: 1px solid #F1F5F9;
+            background: #FAFAFA; border-radius: 24px 24px 0 0;
+        }
+        .contact-header h3 { color: var(--slate-900); font-size: 1.7rem; margin-bottom: 0.6rem; font-weight: 700; }
+        .contact-header p { color: var(--slate-500); font-size: 1.05rem; }
+
+        .contact-body { padding: 3.5rem; background: white; border-radius: 0 0 24px 24px; }
+        .contact-form { display: grid; gap: 1.8rem; }
+        .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+        .form-group { position: relative; }
+
+        .contact-label { font-weight: 600; color: #475569; font-size: 0.95rem; margin-bottom: 0.7rem; display: block; }
+        .input-group { position: relative; }
+        .input-group i {
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+            color: #94A3B8; font-size: 1.1rem; transition: 0.3s ease; pointer-events: none; z-index: 2;
+        }
+        
+        .contact-input {
+            width: 100%; padding: 1rem 1.2rem 1rem 3.2rem;
+            border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC;
+            font-size: 1.05rem; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--slate-800); font-family: 'Inter', sans-serif;
+        }
+        .contact-input:focus { 
+            border-color: var(--p-blue); background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); outline: none; transform: translateY(-1px);
+        }
+        .contact-input:hover:not(:focus) { background: white; border-color: #CBD5E1; }
+        .contact-input:focus + i, .input-group:focus-within i { color: var(--p-blue); transform: translateY(-50%) scale(1.1); }
+        textarea.contact-input { padding: 1.2rem; }
+
+        .school-suggestions-dropdown {
+            position: absolute; top: calc(100% + 8px); left: 0; width: 100%;
+            background: white; border: 1px solid #E2E8F0;
+            border-radius: 16px; box-shadow: 0 20px 40px -5px rgba(15, 23, 42, 0.15);
+            z-index: 100; max-height: 250px; overflow-y: auto;
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .school-suggestions-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .suggestion-item {
+            padding: 12px 20px; cursor: pointer; transition: 0.2s;
+            border-bottom: 1px solid #F8FAFC; font-size: 0.95rem;
+            color: var(--slate-700); display: flex; align-items: center; gap: 12px;
+        }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background: #EFF6FF; color: var(--p-blue); padding-left: 24px; }
+
+        .school-quick-tags { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .school-tag {
+            background: #F1F5F9; color: var(--slate-500);
+            padding: 6px 14px; border-radius: 99px; font-size: 0.85rem; font-weight: 500;
+            cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+        }
+        .school-tag:hover { 
+            border-color: var(--p-blue-soft); color: var(--p-blue); 
+            background: #EFF6FF; transform: translateY(-2px);
+        }
+        .school-tag i { margin-right: 5px; font-size: 0.8em; }
+
+        .btn-submit-contact {
+            width: 100%; padding: 1.2rem; 
+            background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
+            color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 1.1rem; 
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.3); margin-top: 1.5rem; letter-spacing: 0.02em;
+        }
+        .btn-submit-contact:hover { 
+            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 100%); transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4); 
         }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+        /* * CARD DECK PAGE (PROFESSIONAL UPDATE) * */
+        #card-deck-section { 
+            background: linear-gradient(180deg, #F8FAFC 0%, #E2E8F0 100%); 
+            padding: 2rem 0 6rem; min-height: 100vh; display: none; 
+        }
+        #card-deck-section.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        .gender-toggle-container { display: flex; justify-content: center; margin-bottom: 2.5rem; }
+        .gender-switch {
+            background: #E2E8F0; border-radius: 99px; padding: 5px;
+            display: flex; gap: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            border: 1px solid #CBD5E1; position: relative;
+        }
+        .gender-btn {
+            padding: 12px 30px; border-radius: 99px; border: none; font-weight: 700;
+            font-size: 1rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--slate-500); background: transparent; min-width: 110px;
+            position: relative; z-index: 2;
+        }
+        .gender-btn.active.male { 
+            background: white; color: var(--p-blue); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 1px rgba(59, 130, 246, 0.1); 
+        }
+        .gender-btn.active.female { 
+            background: white; color: var(--p-pink); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 1px rgba(244, 114, 182, 0.1); 
+        }
+        .gender-btn:hover:not(.active) { color: var(--slate-700); }
+
+        .deck-container { padding-top: 1rem; }
+        #emotion-selector { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.8rem; }
+
+        .emotion-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 1);
+            border-radius: 24px;
+            padding: 2rem 1.2rem; text-align: center; cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            position: relative; overflow: hidden;
+        }
+        .emotion-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0; transition: 0.3s;
+        }
+        .emotion-btn:hover { 
+            border-color: var(--p-blue-soft); 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.15), 0 0 0 2px rgba(59, 130, 246, 0.05);
+            background: white;
+        }
+        .emotion-icon { 
+            font-size: 3.2rem; 
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1)); 
+            transition: 0.3s;
+        }
+        .emotion-btn:hover .emotion-icon { transform: scale(1.15) rotate(5deg); }
+        .emotion-label { font-weight: 700; color: var(--slate-700); font-size: 1.15rem; letter-spacing: -0.01em; }
+
+        .scene { width: 100%; max-width: 360px; aspect-ratio: 2/3; perspective: 1500px; cursor: pointer; margin: 2rem auto; }
+        .card-object { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .card-object.is-flipped { transform: rotateY(180deg); }
+        
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 30px; padding: 2.5rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: white; 
+            /* Enhanced Shadow for 3D feel */
+            box-shadow: 
+                0 20px 50px -12px rgba(0,0,0,0.25), 
+                0 0 0 1px rgba(0,0,0,0.05); /* Thin crisp border */
+        }
+        
+        .card-front { 
+            background: #ffffff;
+            /* Subtle Pattern for Professional Look */
+            background-image: radial-gradient(#E2E8F0 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            align-items: center; text-align: center; 
+            border: 12px solid white; /* Photo frame effect */
+            outline: 1px solid #F1F5F9; /* Outline outside the border */
+        }
+        
+        .card-back { 
+            transform: rotateY(180deg); text-align: left; 
+            background: linear-gradient(180deg, #FEFCE8 0%, #FFF7ED 100%); 
+            border: 8px solid white;
+        } 
+        
+        .card-icon-lg { 
+            font-size: 6.5rem; margin: 2rem 0; 
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); 
+            animation: float 4s ease-in-out infinite; 
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .card-title { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.8rem; font-weight: 800; color: var(--slate-900); 
+            line-height: 1.25; margin-bottom: 1rem; letter-spacing: -0.03em;
+        }
+        .card-desc { font-size: 1.15rem; color: var(--slate-500); line-height: 1.6; }
+        
+        .action-item { 
+            padding: 16px; background: white; border-radius: 16px; margin-bottom: 12px;
+            color: var(--slate-700); font-weight: 600; display: flex; align-items: center; gap: 16px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03), 0 0 0 1px rgba(0,0,0,0.03); /* Clean refined border */
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .action-item:hover { 
+            transform: translateX(4px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05), 0 0 0 1px var(--p-blue-soft);
+        }
+        .checkbox { 
+            min-width: 26px; height: 26px; border: 2px solid #CBD5E1; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; transition: 0.2s;
+            background: #F8FAFC;
+        }
+        .action-item.checked .checkbox { background: var(--p-green); border-color: var(--p-green); }
+        .action-item.checked span { text-decoration: line-through; color: var(--slate-400); }
+        
+        .back-to-grid-btn {
+            background: white; border: none; padding: 12px 28px; border-radius: 99px;
+            font-weight: 700; color: var(--slate-700); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer;
+            display: flex; align-items: center; gap: 10px; margin: 0 auto; transition: 0.3s;
+            border: 1px solid #F1F5F9;
+        }
+        .back-to-grid-btn:hover { 
+            background: var(--slate-900); color: white; transform: translateY(-2px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-color: var(--slate-900);
         }
 
-        .footer-item h4 {
-            color: var(--primary-yellow);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 10px;
-            display: inline-block;
+        /* * CHAT PAGE * */
+        #chat-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh;
+            background: #F8FAFC; display: none; flex-direction: column; z-index: 5000;
+        }
+        #chat-page.active { display: flex; animation: fadeIn 0.4s ease-out; }
+
+        .chat-header {
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
+            padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.05); flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        .chat-back { cursor: pointer; font-weight: 600; color: var(--slate-700); display: flex; align-items: center; gap: 6px; }
+        .chat-back:hover { color: var(--p-blue); }
+        .chat-title { font-weight: 800; font-size: 1.2rem; color: var(--p-blue); display: flex; align-items: center; gap: 8px; }
+        .emotion-sensor { 
+            display: flex; align-items: center; gap: 8px; background: white; padding: 6px 12px; border-radius: 99px;
+            box-shadow: var(--shadow-sm); font-size: 0.85rem; font-weight: 600;
+        }
+        .emotion-dot { width: 10px; height: 10px; border-radius: 50%; background: #CBD5E1; transition: 0.3s; }
+        .chat-actions .action-btn {
+            background: transparent; border: none; font-size: 1.1rem; color: var(--slate-500);
+            cursor: pointer; padding: 8px; border-radius: 50%; transition: 0.2s;
+        }
+        .chat-actions .action-btn:hover { background: var(--p-blue-soft); color: var(--p-blue); }
+        .voice-active { color: var(--p-blue) !important; animation: pulse 1.5s infinite; }
+        .chat-container {
+            flex: 1; width: 100%; max-width: 900px; margin: 0 auto;
+            padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;
+            overflow-y: auto; scroll-behavior: smooth;
+        }
+        .bubble {
+            max-width: 80%; padding: 1.2rem 1.6rem; border-radius: 24px;
+            font-size: 1.05rem; line-height: 1.6; font-weight: 400;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative;
+        }
+        .ai-bubble { background: white; color: var(--slate-700); border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.03); }
+        .user-bubble {
+            background: linear-gradient(135deg, var(--p-blue), #2563EB); color: white; align-self: flex-end;
+            border-bottom-right-radius: 4px; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+        .input-wrapper {
+            background: white; padding: 1.2rem 1.5rem calc(1.2rem + var(--safe-bottom));
+            border-top: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 1rem; flex-shrink: 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.03);
+        }
+        .quick-replies { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .quick-replies::-webkit-scrollbar { display: none; }
+        .quick-btn {
+            padding: 10px 20px; border-radius: 99px; font-size: 0.9rem; font-weight: 600;
+            border: 1px solid var(--border-color); background: #F8FAFC; color: var(--slate-700);
+            transition: 0.2s; white-space: nowrap;
+        }
+        .quick-btn:hover { border-color: var(--p-blue-soft); background: var(--p-blue-soft); color: var(--p-blue); transform: translateY(-2px); }
+        .input-area { display: flex; gap: 12px; align-items: center; }
+        #chatInput {
+            flex: 1; padding: 1rem 1.5rem; border-radius: 99px;
+            border: 2px solid transparent; outline: none; background: #F1F5F9;
+            font-size: 1rem; transition: 0.3s; height: 56px; color: var(--slate-900);
+        }
+        #chatInput:focus { background: white; border-color: var(--p-blue-soft); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        .mic-btn, .send-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s;
+        }
+        .mic-btn { background: #F1F5F9; color: var(--slate-500); }
+        .mic-btn.listening { background: #FEE2E2; color: #EF4444; animation: pulse 1s infinite; }
+        .send-btn { background: linear-gradient(135deg, var(--p-blue), #2563EB); color: white; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); }
+        .send-btn:hover { transform: scale(1.1) rotate(-10deg); }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        footer { padding: 4rem 0 3rem; background: var(--slate-900); color: white; text-align: center; font-size: 0.95rem; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; margin-bottom: 2rem; }
+        .footer-item h4 { color: var(--p-yellow); margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; display: inline-block; }
+        .footer-item img { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 1rem; border: 2px solid rgba(255,255,255,0.1); }
+        .footer-item p { color: #CBD5E1; }
+
+        /* ==========================================================================
+            TET EVENT STYLES (ENHANCED - DEDICATED PAGE)
+            ========================================================================== */
+        .tet-floating-btn {
+            position: fixed; bottom: 120px; right: 30px;
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--tet-red), #FF4500);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9900;
+            box-shadow: 0 10px 25px rgba(210, 15, 34, 0.4);
+            border: 3px solid var(--tet-gold);
+            animation: shake 2.5s infinite;
+        }
+        .tet-floating-btn i { font-size: 2rem; color: var(--tet-gold); }
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30%, 50% { transform: rotate(-10deg); scale(1.1); }
+            20%, 40%, 60% { transform: rotate(10deg); scale(1.1); }
+            70% { transform: rotate(0deg) scale(1); }
+        }
+        .tet-badge {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--tet-gold); color: var(--tet-red);
+            font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 99px;
+            border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* FIX: CSS cho ảnh trong Footer */
-        .footer-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 2px solid rgba(255,255,255,0.1);
-            transition: transform 0.3s;
+        /* --- NEW: DEDICATED TET PAGE STYLES (VISUAL UPGRADE) --- */
+        #tet-page {
+            display: none; width: 100%; min-height: 100vh;
+            /* Enhanced Background with Pattern */
+            background-color: #FFF5F5;
+            background-image: 
+                radial-gradient(#FECACA 1px, transparent 1px),
+                linear-gradient(180deg, #FFF5F5 0%, #FEF2F2 100%);
+            background-size: 24px 24px, 100% 100%;
+            animation: fadeIn 0.6s ease-out;
+            position: relative; overflow-x: hidden;
+            overflow-y: auto;
+        }
+        #tet-page.active { display: block; }
+        
+        .tet-page-container {
+            display: flex; justify-content: center; align-items: center;
+            min-height: calc(100vh - 80px); /* Adjust for header */
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
         }
 
-        .footer-item img:hover {
-            transform: scale(1.02);
-            border-color: var(--primary-yellow);
+        /* Clouds & Atmosphere */
+        .cloud {
+            position: absolute; width: 200px; height: 60px; background: white; border-radius: 50px;
+            opacity: 0.6; animation: cloudFloat 20s linear infinite; z-index: 1; filter: blur(5px);
+        }
+        .cloud::after, .cloud::before {
+            content: ''; position: absolute; background: inherit; border-radius: 50%;
+        }
+        .cloud::after { width: 80px; height: 80px; top: -40px; left: 30px; }
+        .cloud::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+        
+        @keyframes cloudFloat { from { left: -250px; } to { left: 100%; } }
+
+        /* FIXED: FALLING BLOSSOM CSS (ENHANCED MOTION) */
+        .falling-blossom {
+            position: fixed;
+            top: -50px;
+            z-index: 9998;
+            pointer-events: none;
+            user-select: none;
+            /* Added sway animation combination */
+            animation: blossomFall linear forwards, blossomSway 3s ease-in-out infinite alternate;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+        }
+        @keyframes blossomFall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+        @keyframes blossomSway {
+            from { margin-left: -20px; }
+            to { margin-left: 20px; }
         }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .mission-content, .footer-grid, .journey-grid, .ai-features-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 { font-size: 1.8rem; }
-            .nav-links { display: none; } /* Đơn giản hóa menu mobile */
-            .logo { font-size: 1.2rem; }
-            .ai-container { padding: 20px; }
+        /* Red Envelope Card - PREMIUM UPGRADE */
+        .tet-envelope-card {
+            background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
+            width: 100%; max-width: 500px;
+            padding: 4rem 3rem; border-radius: 24px;
+            /* Gold Border Effect */
+            border: 4px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            text-align: center; 
+            /* Deep luxurious shadow */
+            box-shadow: 
+                0 30px 80px -20px rgba(153, 27, 27, 0.7),
+                0 0 0 6px #FCD34D, /* Outer Gold Ring */
+                inset 0 0 30px rgba(0,0,0,0.2); /* Inner Depth */
+            color: var(--tet-gold);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            z-index: 10;
         }
-			.chat-bubble {
-	    padding: 10px 14px;
-	    border-radius: 16px;
-	    margin-bottom: 8px;
-	    max-width: 75%;
-	    font-size: 14px;
-	    line-height: 1.4;
-	    word-wrap: break-word;
-	    overflow-wrap: break-word;
-		}
-	
-	.chat-bubble.user {
-	    background: #dbeafe;
-	    margin-left: auto;
-	    text-align: right;
-		}
-	
-	.chat-bubble.bot {
-	    background: #e8f5e9;
-	    margin-right: auto;
-	    text-align: left;
-		}
-	
-	/* Style cho markdown content trong chat bubble */
-	.chat-bubble p {
-	    margin: 0.5em 0;
-	}
-	
-	.chat-bubble p:first-child {
-	    margin-top: 0;
-	}
-	
-	.chat-bubble p:last-child {
-	    margin-bottom: 0;
-	}
-	
-	.chat-bubble ul, .chat-bubble ol {
-	    margin: 0.5em 0;
-	    padding-left: 1.5em;
-	    list-style-position: inside;
-	}
-	
-	.chat-bubble li {
-	    margin: 0.3em 0;
-	}
-	
-	.chat-bubble h1, .chat-bubble h2, .chat-bubble h3,
-	.chat-bubble h4, .chat-bubble h5, .chat-bubble h6 {
-	    margin: 0.8em 0 0.4em 0;
-	    font-size: 1.1em;
-	    font-weight: 600;
-	}
-	
-	.chat-bubble code {
-	    background: rgba(0,0,0,0.05);
-	    padding: 2px 5px;
-	    border-radius: 3px;
-	    font-family: 'Courier New', monospace;
-	    font-size: 0.9em;
-	}
-	
-	.chat-bubble pre {
-	    background: rgba(0,0,0,0.05);
-	    padding: 10px;
-	    border-radius: 5px;
-	    overflow-x: auto;
-	    margin: 0.5em 0;
-	}
-	
-	.chat-bubble pre code {
-	    background: none;
-	    padding: 0;
-	}
-	
-	.chat-bubble strong {
-	    font-weight: 600;
-	}
-	
-	.chat-bubble em {
-	    font-style: italic;
-	}
-	
-	.chat-bubble blockquote {
-	    border-left: 3px solid var(--primary-blue);
-	    padding-left: 10px;
-	    margin: 0.5em 0;
-	    color: #555;
-	}
+        /* Texture overlay for envelope paper feel */
+        .tet-envelope-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239e0000' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3; pointer-events: none; border-radius: 20px;
+        }
 
+        /* Top Flap of Envelope */
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 120px;
+            background: #B91C1C;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother opening */
+            z-index: 5;
+            border-top: 4px solid #FCD34D;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+        .tet-envelope-card.opened .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        
+        /* Gold Seal on Flap */
+        .envelope-seal {
+            position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+            width: 54px; height: 54px; 
+            background: radial-gradient(circle, #FCD34D 0%, #F59E0B 100%);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #991B1B; font-weight: 800; font-family: 'Dancing Script'; font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid #FFFBEB;
+        }
+
+        /* God Rays Effect */
+        .god-rays {
+            position: absolute; top: 50%; left: 50%; width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 60%);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.8s;
+            pointer-events: none;
+        }
+        .god-rays.active { opacity: 1; animation: spinRays 12s linear infinite; }
+        .ray {
+            position: absolute; top: 50%; left: 50%; width: 50%; height: 3px; /* Thicker rays */
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.6), transparent);
+            transform-origin: left;
+            filter: blur(1px);
+        }
+        @keyframes spinRays { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        .tet-title-large { 
+            color: var(--tet-gold); font-family: 'Dancing Script', cursive; 
+            font-weight: 700; font-size: 3.8rem; margin-bottom: 0.5rem; 
+            text-shadow: 0 4px 0 #7F1D1D, 0 0 25px rgba(255, 215, 0, 0.6); /* Enhanced Glow */
+            line-height: 1.2;
+            margin-top: 2rem; /* Spacing for flap */
+        }
+        .tet-subtitle { 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #FECACA; margin-bottom: 2.5rem; font-size: 1.1rem; 
+            text-transform: uppercase; letter-spacing: 2.5px; font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .tet-input-group { position: relative; margin-bottom: 2rem; z-index: 6; }
+        .tet-input { 
+            width: 100%; padding: 1.2rem; border-radius: 12px;
+            border: 2px solid #FCD34D; background: #FFF5F5; 
+            font-size: 1.2rem; text-align: center; font-weight: 800; color: #B91C1C;
+            outline: none; transition: 0.3s; letter-spacing: 2px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tet-input:focus { 
+            transform: scale(1.02); 
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); 
+            border-color: #F59E0B;
+        }
+        .tet-input::placeholder { color: #FCA5A5; font-weight: 600; font-size: 1rem; }
+        
+        .tet-submit-btn {
+            background: linear-gradient(180deg, #FCD34D 0%, #F59E0B 100%);
+            color: #991B1B; border: none; padding: 1.2rem 3rem;
+            border-radius: 99px; font-weight: 900; font-size: 1.3rem;
+            cursor: pointer; width: 100%; 
+            box-shadow: 
+                0 6px 0 #B45309, 
+                0 15px 30px rgba(245, 158, 11, 0.3),
+                inset 0 2px 0 rgba(255,255,255,0.4); /* Shine at top */
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 12px;
+            text-transform: uppercase; position: relative; overflow: hidden; z-index: 6;
+        }
+        .tet-submit-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 0 #B45309, 0 25px 40px rgba(245, 158, 11, 0.4), inset 0 2px 0 rgba(255,255,255,0.4); 
+            filter: brightness(1.1); 
+        }
+        .tet-submit-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #B45309; }
+
+        .tet-result-card {
+            display: none; position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, 50%) scale(0.5); 
+            width: 90%; background: #FFFBEB; 
+            padding: 2.5rem; border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            text-align: center; border: 4px solid var(--tet-gold);
+            z-index: 20; opacity: 0; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Added Pattern to result card too */
+            background-image: radial-gradient(#FEF3C7 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        .tet-result-card.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        
+        .result-title { font-size: 2rem; color: #D97706; margin-bottom: 1rem; font-family: 'Dancing Script'; font-weight: 700; text-shadow: 0 2px 0 rgba(255,255,255,0.5); }
+        .result-body { font-size: 1.15rem; color: #78350F; line-height: 1.6; margin-bottom: 2rem; }
+        .btn-close-result {
+            background: var(--tet-red); color: white; padding: 1rem 2.5rem; border-radius: 99px; 
+            border: none; font-weight: 700; cursor: pointer; font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(210, 15, 34, 0.3); transition: 0.3s;
+        }
+        .btn-close-result:hover { background: #B91C1C; transform: translateY(-2px); }
+
+        /* Lanterns (Specific to Tet Page) */
+        .lantern-container {
+            position: fixed; top: -10px; width: 100%; z-index: 9997; pointer-events: none;
+            display: flex; justify-content: space-between; padding: 0 50px;
+        }
+        .lantern {
+            font-size: 4rem; animation: swing 4s infinite ease-in-out; 
+            transform-origin: top center; color: var(--tet-red);
+            filter: drop-shadow(0 0 15px rgba(255, 50, 50, 0.6)); /* Added Glow */
+        }
+        .lantern:nth-child(2) { 
+            animation-delay: 1s; color: var(--tet-gold); 
+            font-size: 3.5rem; margin-top: 15px; 
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); /* Gold Glow */
+        }
+        @keyframes swing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+
+        @media (max-width: 600px) {
+            .tet-floating-btn { width: 55px; height: 55px; bottom: 100px; right: 20px; }
+            .tet-envelope-card { padding: 3rem 1.5rem 2rem; max-width: 92%; }
+            .tet-title-large { font-size: 2.5rem; margin-top: 1.5rem; }
+            .lantern { font-size: 3rem; }
+            .lantern-container { padding: 0 10px; }
+            .tet-result-card { width: 95%; padding: 1.5rem; }
+        }
     </style>
 </head>
+
 <body>
 
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-					<img src="INNERLY/Logo.jpg" alt="Logo Innerly" style="height: 80px; width: auto;">
-				</div>
-                <div class="nav-links">
-                    <a href="#">TRANG CHỦ</a>
-                    <a href="#mission">DỰ ÁN</a>
-                    <a href="#journey">HÀNH TRÌNH</a>
-                    <a href="#ai-bot" class="ai-link">GÓC TÂM SỰ AI</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="container">
-            <h1>INNERLY</h1>
-            <h2>Bộ sản phẩm cân bằng cảm xúc học đường<br>Nơi mỗi cảm xúc của tuổi teen đều được trân trọng và lắng nghe</h2>
-           
-            <div class="hero-img-placeholder" style="position: relative;">
-				  <iframe
-					src="https://drive.google.com/file/d/1n4QAiCz-0hFvYzey8Qxj2rb1c0gyZeF3/preview"
-					title="Giới thiệu dự án INNERLY"
-					allow="autoplay"
-					loading="lazy"
-					style="width:100%; height:100%; border:none; border-radius:15px;">
-				  </iframe>
-	        </div>
-    </section>
-
-    <section id="mission" class="mission">
-        <div class="container">
-            <h2 class="section-title">Nhiệm Vụ Của Dự Án</h2>
-            <div class="mission-content">
-                <div class="mission-text">
-                    <p><strong>INNERLY</strong> ra đời để đồng hành cùng tuổi teen trong những chuyển động cảm xúc thường nhật của đời sống học đường – khi cảm xúc còn mơ hồ nhưng đủ mạnh để ảnh hưởng đến cách các em nghĩ, cảm nhận và lớn lên.</p>
-                    <p>Thông qua những công cụ nhỏ, gần gũi và dễ tiếp cận, INNERLY mở ra một cách nhẹ nhàng để teen nhận diện cảm xúc, giải tỏa an toàn và dần tìm lại sự cân bằng mỗi ngày.</p>
-                </div>
-                <div class="mission-text">
-                    <p>Chúng tôi tin rằng chăm sóc sức khỏe tinh thần bắt đầu từ việc được lắng nghe và tôn trọng trong một không gian không phán xét.</p>
-                    <p>Khi mỗi trải nghiệm cá nhân được nhìn nhận đúng giá trị, sự thấu cảm sẽ lan tỏa, kết nối được hình thành và một cộng đồng an toàn, bền vững dần lớn lên cùng nhau.</p>
-                </div>
+    <!-- AUTH MODAL -->
+    <div id="auth-modal">
+        <div class="modal-content">
+            <div class="modal-close" style="position:absolute; top:20px; right:20px; cursor:pointer; color:var(--slate-500);" onclick="closeAuthModal()">
+                <i class="fas fa-times" style="font-size:1.2rem;"></i>
             </div>
-        </div>
-    </section>
-
-    <section id="journey" class="journey">
-        <div class="container">
-            <h2 class="section-title">🌈 Hành Trình Cảm Xúc Cùng Innerly</h2>
             
-            <div class="journey-grid">
-                <div class="card">
-                    <h3>1. CHẠM</h3>
-                    <!-- Ảnh Unsplash thay thế -->
-                    <img src="INNERLY/1. Cham.png" alt="Hoạt động Chạm">
-                    <span class="quote">“Mình đang cảm thấy gì vậy?”</span>
-                    <div class="card-content">
-                        <p><strong>Hoạt động:</strong> Teen chọn thẻ cảm xúc, viết ra suy nghĩ bằng giấy stick và bút chì của INNERLY – chỉ để hiểu mình hơn.</p>
-                        <p><strong>Vì sao quan trọng?</strong> Khi cảm xúc được gọi tên, teen không còn thấy mình lạc lõng.</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>2. GIẢI TỎA</h3>
-                    <img src="INNERLY/2. Giai toa.png" alt="Hoạt động Giải tỏa">
-                    <span class="quote">“Mình không cần giữ tất cả trong lòng.”</span>
-                    <div class="card-content">
-                        <p><strong>Hoạt động:</strong> Viết điều đang nặng lòng và đặt vào Hộp ghi cảm xúc. Stress ball và kẹo nhỏ giúp cơ thể dịu lại.</p>
-                        <p><strong>Vì sao quan trọng?</strong> Giải tỏa đúng cách giúp cảm xúc không bị dồn nén.</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>3. ỔN ĐỊNH</h3>
-                    <img src="INNERLY/3. On dinh.png" alt="Hoạt động Ổn định">
-                    <span class="quote">“Mình đang dần ổn hơn rồi.”</span>
-                    <div class="card-content">
-                        <p><strong>Hoạt động:</strong> Teen nhìn lại cảm xúc đã viết, sắp xếp lại suy nghĩ và được dẫn dắt nhẹ nhàng qua landing page.</p>
-                        <p><strong>Vì sao quan trọng?</strong> Khi cảm xúc ổn định, teen dễ tập trung và an toàn hơn.</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>4. PHÁT TRIỂN</h3>
-					<img src="INNERLY/4. Phat trien.png" alt="Hoạt động Phát triển">
-                    <span class="quote">“Mình học cách chăm sóc cảm xúc mỗi ngày.”</span>
-                    <div class="card-content">
-                        <p><strong>Hoạt động:</strong> Hình thành thói quen viết – giải tỏa – tự xoa dịu và kết nối với cộng đồng.</p>
-                        <p><strong>Vì sao quan trọng?</strong> Nền tảng để teen tự tin, trưởng thành.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW SECTION: AI CHATBOT & TOOLS -->
-    <section id="ai-bot" class="ai-section">
-        <div class="container">
-            <!-- 1. MAIN CHATBOT -->
-            <div class="ai-container">
-                <div class="ai-header">
-                    <i class="fas fa-robot"></i>
-                    <h2 style="color: var(--primary-blue);">Góc Tâm Sự INNERLY AI</h2>
-                    <p style="color: var(--text-light);">Bạn có tâm sự gì không? Hãy chia sẻ với Innerly nhé, mình ở đây để lắng nghe bạn.</p>
+            <h2 class="modal-title" id="auth-title" style="font-size:1.8rem; margin-bottom:0.5rem; font-weight:800;">Chào bạn!</h2>
+            <p class="modal-subtitle" style="margin-bottom:2rem; color:var(--slate-500);">Đăng nhập để lưu lại hành trình cảm xúc nhé.</p>
+            
+            <form class="auth-form" onsubmit="handleAuth(event)">
+                <input type="text" id="username" class="register-field" placeholder="Tên tài khoản (Chỉ chữ và số)" maxlength="20">
+                <div id="username-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Tên tài khoản không hợp lệ</div>
+                
+                <input type="text" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" id="dob" class="register-field" placeholder="Ngày sinh (Không bắt buộc)">
+                
+                <select id="gender" class="register-field">
+                    <option value="" disabled selected>Giới tính (Không bắt buộc)</option>
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                    <option value="other">Khác</option>
+                </select>
+                
+                <input type="email" id="email" placeholder="Email của bạn">
+                <input type="password" id="password" placeholder="Mật khẩu">
+                
+                <div id="password-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Mật khẩu yếu! Cần 8 ký tự, chữ hoa, số & ký tự đặc biệt.</div>
+                
+                <div class="security-note register-field" style="text-align:left; font-size:0.85rem; color:var(--slate-500); margin-bottom:1rem; padding:10px; background:#F8FAFC; border-radius:12px;">
+                    <i class="fas fa-shield-alt"></i> Mật khẩu yêu cầu chuẩn bảo mật cao:
+                    <br>- Tối thiểu 8 ký tự, 1 Chữ in hoa, 1 Số & 1 Ký tự đặc biệt
                 </div>
                 
-                <div class="chat-box">
-					<div id="chatBox" class="chat-box"></div>
-                    <textarea id="userInput" rows="4" placeholder="Ví dụ: Mình cảm thấy hơi áp lực vì bài kiểm tra ngày mai..."></textarea>
-                    <button onclick="askGemini()" id="sendBtn" class="chat-btn">
-                        <i class="fas fa-paper-plane"></i> Gửi tâm sự
-                    </button>
-                </div>
-				
-                <div id="loading" class="loading-dots">
-                    <i class="fas fa-circle-notch fa-spin"></i> Innerly đang suy nghĩ...
-                </div>
-
-                <div id="responseArea" class="ai-response">
-                    <h4 style="color: var(--primary-blue); margin-bottom: 10px;">Innerly nhắn bạn:</h4>
-                    <p id="responseText" style="white-space: pre-line;"></p>
-                </div>
-            </div>
-
-            <!-- 2. AI MINI TOOLS -->
-            <div class="ai-features-grid">
-                <!-- Tool 1: Từ Điển Cảm Xúc -->
-                <div class="ai-feature-card">
-                    <h3><i class="fas fa-book-open"></i> Từ Điển Cảm Xúc ✨</h3>
-                    <p class="text-sm mb-4" style="color:#666; font-size:0.9rem;">Cảm xúc của bạn khó gọi tên? Hãy mô tả nó, AI sẽ đặt cho bạn một cái tên thật hay.</p>
-                    
-                    <div class="input-group">
-                        <input type="text" id="emotionDesc" placeholder="VD: Vừa vui mà lại vừa lo...">
-                    </div>
-                    
-                    <button onclick="defineEmotion()" id="btnDefine" class="chat-btn secondary" style="width:100%; justify-content:center;">
-                        <i class="fas fa-magic"></i> Đặt tên cảm xúc
-                    </button>
-
-                    <div id="resultDefine" class="mt-4 hidden" style="margin-top:15px; background:#f0f8ff; padding:15px; border-radius:8px; display:none;">
-                        <strong id="emotionTitle" style="color:var(--primary-blue); display:block; font-size:1.1rem;"></strong>
-                        <p id="emotionDef" style="font-size:0.9rem; margin-top:5px;"></p>
-                    </div>
-                </div>
-
-                <!-- Tool 2: Gợi Ý Hoạt Động -->
-                <div class="ai-feature-card">
-                    <h3><i class="fas fa-lightbulb"></i> Gợi Ý Giải Tỏa ✨</h3>
-                    <p class="text-sm mb-4" style="color:#666; font-size:0.9rem;">Bạn đang cảm thấy thế nào? Innerly sẽ gợi ý một việc làm nhỏ để bạn thấy khá hơn.</p>
-                    
-                    <div class="input-group">
-                        <select id="moodSelect">
-                            <option value="Căng thẳng">Căng thẳng / Stress</option>
-                            <option value="Buồn chán">Buồn chán / Trống rỗng</option>
-                            <option value="Tức giận">Tức giận / Bực bội</option>
-                            <option value="Lo lắng">Lo lắng / Hồi hộp</option>
-                            <option value="Mệt mỏi">Mệt mỏi / Cạn năng lượng</option>
-                        </select>
-                    </div>
-                    
-                    <button onclick="suggestActivity()" id="btnSuggest" class="chat-btn secondary" style="width:100%; justify-content:center;">
-                        <i class="fas fa-hand-sparkles"></i> Tìm hoạt động
-                    </button>
-
-                    <div id="resultSuggest" class="mt-4 hidden" style="margin-top:15px; background:#fff8e1; padding:15px; border-radius:8px; display:none;">
-                        <strong style="color:var(--primary-yellow); display:block;">💡 Gợi ý cho bạn:</strong>
-                        <p id="activityText" style="font-size:0.9rem; margin-top:5px;"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="history">
-        <div class="container">
-            <h2 class="section-title">Câu Chuyện Của Chúng Tôi</h2>
-            <div class="history-content">
-                <h3>Lịch Sử</h3>
-                <p>INNERLY là một bộ sản phẩm giúp tụi mình hiểu cảm xúc của chính mình hơn, nhất là những lúc áp lực học hành hay rối bời không biết nói với ai. Chỉ từ những công cụ rất nhỏ, INNERLY giúp xả bớt cảm xúc, bình tĩnh lại và cảm thấy mình không hề cô đơn trong quá trình lớn lên.</p>
+                <input type="password" id="confirm-password" class="register-field" placeholder="Nhập lại mật khẩu">
+                <div id="confirm-error" class="error-msg" style="display:none; color:red; font-size:0.8rem;">Mật khẩu không khớp!</div>
                 
-                <h3 style="margin-top: 20px;">Thành tựu hiện tại</h3>
-                <p>Từ những ý tưởng rất nhỏ xoay quanh cảm xúc học đường, INNERLY đã dần hình thành một bộ sản phẩm hoàn chỉnh, được thiết kế riêng cho tuổi teen. Chúng tôi đã xây dựng thành công bộ sản phẩm cân bằng cảm xúc học đường INNERLY, bao gồm landing page, hộp ghi cảm xúc, bộ thẻ cảm xúc, stress ball và các vật dụng hỗ trợ đi kèm.</p>
-                <p style="margin-top: 10px;"><em>"Quan trọng hơn cả, INNERLY không chỉ là một bộ sản phẩm, mà đang dần trở thành một không gian tinh thần an toàn, nơi cảm xúc của tuổi teen được nhìn nhận nghiêm túc và tôn trọng."</em></p>
+                <button type="submit" class="btn-submit-auth" id="auth-action-btn">Đăng nhập</button>
+            </form>
+            
+            <div class="auth-toggle" style="margin-top:1.5rem; font-size:0.95rem;">
+                <span id="auth-toggle-text">Chưa có tài khoản? </span>
+                <span onclick="toggleAuthMode()" id="auth-toggle-link" style="color:var(--p-blue); font-weight:700; cursor:pointer;">Đăng ký ngay</span>
             </div>
         </div>
-    </section>
-	<section id="school-contact" style="
-  max-width: 800px;
-  margin: 80px auto;
-  padding: 40px;
-  background: #f8f9fb;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  font-family: system-ui, sans-serif;
-">
+    </div>
 
-  <h2 style="text-align:center; margin-bottom:10px;">
-    🎓 Dành cho Giáo viên & Nhà trường
-  </h2>
+    <!-- TET LANTERNS (Now Global but less intrusive on standard pages) -->
+    <!-- Display logic handled in JS -->
+    <div class="lantern-container" id="global-lanterns" style="display:none;">
+        <div class="lantern">🏮</div>
+        <div class="lantern">🏮</div>
+    </div>
 
-  <p style="text-align:center; color:#555; margin-bottom:30px;">
-    Nếu các bạn học sinh/phụ huynh hoặc các Thầy Cô giáo/nhà trường quan tâm đến việc sử dụng sản phẩm của chúng tôi INNERLY <b>INNERLY</b>. Chúng tôi sẽ liên hệ hỗ trợ triển khai và chuyển giao mô hình.
-  </p>
+    <!-- TET FLOATING BUTTON -->
+    <div class="tet-floating-btn" onclick="showPage('tet')">
+        <i class="fas fa-envelope-open-text"></i>
+        <div class="tet-badge">Tết</div>
+    </div>
 
-  <form id="schoolForm" style="display:grid; gap:16px;">
+    <!-- 3D MASCOT CONTAINER -->
+    <div id="mascot-3d-container">
+        <div class="mascot-bubble" id="mascotGreeting">Xin chào! Mình là Inny 👋</div>
+        <canvas id="three-canvas" onclick="showPage('chat')"></canvas>
+    </div>
+
+    <!-- PAGE 1: LANDING PAGE -->
+    <div id="landing-page">
+        <header>
+            <div class="container">
+                <nav>
+                    <a class="logo" onclick="showPage('landing')">
+                        <div class="logo-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <span>INNERLY</span>
+                    </a>
+                    
+                    <div class="nav-menu">
+                        <a onclick="showPage('landing')" class="nav-link">TRANG CHỦ</a>
+                        <a onclick="showPage('cardDeck')" class="nav-link">THẺ CẢM XÚC</a>
+                        <a onclick="showPage('schoolContact')" class="nav-link">HỢP TÁC</a>
+                        
+                        <!-- Updated Link: Goes to Page instead of Modal -->
+                        <a onclick="showPage('tet')" class="nav-link tet-link">🧧 HÁI LỘC</a>
+
+                        <div class="user-section">
+                            <div id="login-btn-group">
+                                <button class="btn-login" onclick="openAuthModal()">Đăng nhập</button>
+                            </div>
+                            
+                            <div id="user-profile-group" class="user-profile" onclick="handleLogout()">
+                                <div class="user-name" id="display-name">User</div>
+                                <div class="user-avatar" id="avatar-char">U</div>
+                            </div>
+                            
+                            <button class="btn-cta" onclick="showPage('chat')">GÓC TÂM SỰ</button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="container">
+                <h1>INNERLY<br><span>Thấu cảm & Lắng nghe</span></h1>
+                <p>Nơi mỗi tâm hồn teen đều được trân trọng, thấu cảm và xoa dịu bằng công nghệ AI giàu lòng trắc ẩn nhất.</p>
+                <div class="hero-img">
+                    <img src="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2083&auto=format&fit=crop" alt="Empathy">
+                </div>
+            </div>
+        </section>
+
+        <!-- MISSION SECTION -->
+        <section id="mission" class="mission-section">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+                    <h2 style="color: var(--p-blue);">NHIỆM VỤ CỦA DỰ ÁN</h2>
+                </div>
+                <div class="mission-grid">
+                    <div class="mission-text">
+                        <p><strong>INNERLY</strong> ra đời để đồng hành cùng tuổi teen trong những chuyển động cảm xúc thường nhật của đời sống học đường – khi cảm xúc còn mơ hồ nhưng đủ mạnh để ảnh hưởng đến cách các em nghĩ, cảm nhận và lớn lên.</p>
+                        <p>Thông qua những công cụ nhỏ, gần gũi và dễ tiếp cận, INNERLY mở ra một cách nhẹ nhàng để teen nhận diện cảm xúc, giải tỏa an toàn và dần tìm lại sự cân bằng mỗi ngày.</p>
+                        <p>Chúng tôi tin rằng chăm sóc sức khỏe tinh thần bắt đầu từ việc được lắng nghe và tôn trọng trong một không gian không phán xét.</p>
+                    </div>
+                    
+                    <div class="mission-video">
+                        <!-- Updated Video Wrapper -->
+                        <div class="video-container" id="video-wrapper" onclick="playProjectVideo()">
+                            <!-- Cover Image -->
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" alt="Xem Video Dự Án" class="video-thumb">
+                            
+                            <!-- Play Button -->
+                            <div class="play-button-overlay" id="play-btn-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+
+                            <!-- Loading Spinner -->
+                            <div class="video-loading-spinner" id="video-spinner"></div>
+                        </div>
+                        
+                        <!-- Fallback Link (Direct to Drive) -->
+                        <a id="video-fallback-link" href="https://drive.google.com/file/d/1n4QAiCz-0hFvYzey8Qxj2rb1c0gyZeF3/view" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Video không phát? Xem trực tiếp tại Google Drive
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey" class="journey-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Rainbow Journey cùng Innerly</h2>
+                </div>
+                <div class="journey-grid">
+                    <div class="j-card card-01">
+                        <div class="card-num">01</div>
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1840&auto=format&fit=crop" alt="Chạm">
+                        <h3>CHẠM</h3>
+                        <span class="quote">“Mình đang cảm thấy gì vậy?”</span>
+                        <p>Teen chọn thẻ cảm xúc, viết ra suy nghĩ bằng giấy stick để hiểu mình hơn.</p>
+                    </div>
+                    <div class="j-card card-02">
+                        <div class="card-num">02</div>
+                        <img src="https://images.unsplash.com/photo-1516589174184-c68526617af0?q=80&w=1887&auto=format&fit=crop" alt="Giải Tỏa">
+                        <h3>GIẢI TỎA</h3>
+                        <span class="quote">“Không cần giữ lấy một mình.”</span>
+                        <p>Viết điều nặng lòng vào Hộp ghi cảm xúc để cơ thể dịu lại.</p>
+                    </div>
+                    <div class="j-card card-03">
+                        <div class="card-num">03</div>
+                        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1770&auto=format&fit=crop" alt="Ổn Định">
+                        <h3>ỔN ĐỊNH</h3>
+                        <span class="quote">“Tìm lại nhịp thở bình yên.”</span>
+                        <p>Nhìn lại cảm xúc, sắp xếp tư duy qua những tấm thẻ bài chữa lành.</p>
+                    </div>
+                    <div class="j-card card-04">
+                        <div class="card-num">04</div>
+                        <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1770&auto=format&fit=crop" alt="Phát Triển">
+                        <h3>PHÁT TRIỂN</h3>
+                        <span class="quote">“Lớn lên cùng thấu cảm.”</span>
+                        <p>Hình thành thói quen viết - giải tỏa - tự xoa dịu.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="history-section">
+            <div class="container">
+                <div class="section-header"><h2>Câu Chuyện Của Chúng Tôi</h2></div>
+                <div class="history-content">
+                    <h3>Lịch Sử</h3>
+                    <p>INNERLY là một bộ sản phẩm giúp tụi mình hiểu cảm xúc của chính mình hơn, nhất là những lúc áp lực học hành hay rối bời không biết nói với ai. Chỉ từ những công cụ rất nhỏ, INNERLY giúp xả bớt cảm xúc, bình tĩnh lại và cảm thấy mình không hề cô đơn trong quá trình lớn lên.</p>
+                    <br>
+                    <h3>Thành tựu hiện tại</h3>
+                    <p>Từ những ý tưởng rất nhỏ xoay quanh cảm xúc học đường, INNERLY đã dần hình thành một bộ sản phẩm hoàn chỉnh, được thiết kế riêng cho tuổi teen. Chúng tôi đã xây dựng thành công bộ sản phẩm cân bằng cảm xúc học đường INNERLY, bao gồm landing page, hộp ghi cảm xúc, bộ thẻ cảm xúc, stress ball và các vật dụng hỗ trợ đi kèm.</p>
+                    <p style="margin-top: 15px; font-style: italic; color: var(--p-blue);">"Quan trọng hơn cả, INNERLY không chỉ là một bộ sản phẩm, mà đang dần trở thành một không gian tinh thần an toàn, nơi cảm xúc của tuổi teen được nhìn nhận nghiêm túc và tôn trọng."</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-item">
+                        <h4>INNERLY trong đời sống học đường</h4>
+                        <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2069&auto=format&fit=crop" alt="Đời sống học đường">
+                        <p>Những công cụ nhỏ giúp tuổi teen chạm vào cảm xúc của mình, giải tỏa nhẹ nhàng và cảm thấy không còn một mình trong quá trình lớn lên.</p>
+                    </div>
+                    <div class="footer-item">
+                        <h4>Bộ sản phẩm INNERLY</h4>
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2022&auto=format&fit=crop" alt="Bộ sản phẩm">
+                        <p>Được thiết kế gần gũi, dễ sử dụng mỗi ngày – đồng hành cùng tuổi teen trong hành trình hiểu cảm xúc và cân bằng tinh thần từ những điều rất nhỏ.</p>
+                    </div>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <a onclick="showPage('schoolContact')" style="color: var(--p-blue-soft); text-decoration: underline; cursor: pointer;">Dành cho Giáo viên & Nhà trường: Liên hệ hợp tác</a>
+                </div>
+                <p style="opacity: 0.6; font-size: 0.85rem;">© 2024 INNERLY Project. All Rights Reserved.</p>
+                <p style="margin-top: 10px; font-weight: 700; color: var(--p-yellow);">INNERLY là dự án học sinh vì sức khỏe cảm xúc học đường</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PAGE 2: CARD DECK SECTION (ACTIVE BY DEFAULT) -->
+    <div id="card-deck-section" class="active">
+        <header style="background:transparent; border:none; margin-bottom: 2rem;">
+            <div class="container">
+                <nav>
+                    <a class="logo" onclick="showPage('landing')">
+                        <div class="logo-icon"><i class="fas fa-arrow-left"></i></div>
+                        <span>Quay lại</span>
+                    </a>
+                    <div class="nav-menu" style="margin-left:auto; margin-right:1rem;">
+                        <a onclick="showPage('tet')" class="nav-link tet-link">🧧 HÁI LỘC</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="section-header" style="text-align:center;">
+                <h2>Góc Thẻ Cảm Xúc</h2>
+                <p style="color:var(--slate-500); max-width:600px; margin:0 auto; font-size:1.1rem; padding: 0 1rem;">Lắng nghe tiếng nói bên trong bạn. Hãy gọi tên cảm xúc hiện tại để nhận thông điệp phù hợp.</p>
+            </div>
+            
+            <div class="gender-toggle-container">
+                <div class="gender-switch">
+                    <button class="gender-btn active male" onclick="switchGender('male')"><i class="fas fa-mars"></i> Nam</button>
+                    <button class="gender-btn female" onclick="switchGender('female')"><i class="fas fa-venus"></i> Nữ</button>
+                </div>
+            </div>
+
+            <div class="deck-container">
+                <div id="emotion-selector"></div>
+                <div id="selected-card-view" style="display:none; flex-direction:column; align-items:center;">
+                    <button class="back-to-grid-btn" onclick="backToGrid(); playSound('click');"><i class="fas fa-th"></i> Chọn cảm xúc khác</button>
+                    <div class="scene" onclick="flipCard(this); playSound('flip');">
+                        <div class="card-object" id="card-object">
+                            <div class="card-face card-front">
+                                <div style="width:100%; text-align:right; color:#CBD5E1; font-weight:700; letter-spacing:1px; font-size:0.8rem;">INNERLY CARD</div>
+                                <div class="card-icon-lg" id="card-icon">😤</div>
+                                <div class="card-title" id="card-title">Mình đang cảm thấy bực bội</div>
+                                <div class="card-desc" id="card-desc">Bên trong mình đang cảm thấy khó chịu. Cảm giác nóng nảy xuất hiện.</div>
+                                <div class="tap-hint" style="margin-top:auto; font-size:0.9rem; color:var(--p-blue); font-weight:600; opacity:0.8;"><i class="fas fa-hand-pointer"></i> Chạm để lật thẻ</div>
+                            </div>
+                            <div class="card-face card-back">
+                                <div class="back-title" style="font-weight:800; color:var(--p-blue); margin-bottom:1rem; font-size:1.1rem;">Việc cần làm ngay:</div>
+                                <ul class="action-list" id="card-actions" style="list-style:none;"></ul>
+                                <div class="affirmation" id="card-quote" style="margin-top:auto; text-align:center; font-style:italic; color:var(--p-orange); font-weight:600;">"Khi gọi được tên cảm xúc, bạn đã trở nên mạnh mẽ hơn nó."</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: SCHOOL CONTACT PAGE -->
+    <div id="school-contact-page">
+        <header>
+            <div class="container">
+                <nav>
+                    <a class="logo" onclick="showPage('landing')">
+                        <div class="logo-icon"><i class="fas fa-arrow-left"></i></div>
+                        <span>Quay lại</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="school-contact-hero">
+            <div class="container">
+                <h2>🎓 Dành cho Nhà trường</h2>
+                <p>Innerly sẵn sàng đồng hành cùng Nhà trường trong việc xây dựng môi trường học đường an toàn, thấu cảm và hạnh phúc.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="school-contact-card">
+                <div class="contact-header">
+                    <h3>Liên hệ hợp tác</h3>
+                    <p>Vui lòng điền thông tin bên dưới, chúng tôi sẽ liên hệ lại sớm nhất.</p>
+                </div>
+                <div class="contact-body">
+                    <form id="schoolForm" class="contact-form">
+                        <div class="form-group" style="position: relative;">
+                            <label class="contact-label">Tên trường / Đơn vị</label>
+                            <div class="input-group">
+                                <input type="text" id="schoolName" class="contact-input" placeholder="Nhập tên trường để tìm kiếm..." required autocomplete="off" />
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div id="schoolSuggestions" class="school-suggestions-dropdown"></div>
+                            <div class="school-quick-tags">
+                                <span class="school-tag" onclick="selectSchool('THPT Chuyên Lê Hồng Phong')"><i class="fas fa-star"></i> THPT Chuyên Lê Hồng Phong</span>
+                                <span class="school-tag" onclick="selectSchool('THPT Nguyễn Thượng Hiền')"><i class="fas fa-star"></i> THPT Nguyễn Thượng Hiền</span>
+                                <span class="school-tag" onclick="selectSchool('THPT Marie Curie')"><i class="fas fa-star"></i> THPT Marie Curie</span>
+                                <span class="school-tag" onclick="selectSchool('Vinschool Central Park')"><i class="fas fa-star"></i> Vinschool</span>
+                            </div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="form-group"><label class="contact-label">Người liên hệ</label><div class="input-group"><input type="text" id="teacherName" class="contact-input" placeholder="Họ và tên" required /><i class="fas fa-user"></i></div></div>
+                            <div class="form-group"><label class="contact-label">Số điện thoại</label><div class="input-group"><input type="tel" id="contactPhone" class="contact-input" placeholder="09xxxxxxxx" /><i class="fas fa-phone"></i></div></div>
+                        </div>
+                        <div class="form-group"><label class="contact-label">Email công việc</label><div class="input-group"><input type="email" id="contactEmail" class="contact-input" placeholder="email@truong.edu.vn" required /><i class="fas fa-envelope"></i></div></div>
+                        <div class="form-group"><label class="contact-label">Nội dung quan tâm</label><textarea id="interest" class="contact-input" rows="4" placeholder="Thầy/cô quan tâm INNERLY cho hoạt động nào? (Tư vấn tâm lý, workshop, bộ công cụ...)" style="resize: vertical;"></textarea></div>
+                        <button type="submit" class="btn-submit-contact"><i class="fas fa-paper-plane"></i> Gửi thông tin quan tâm</button>
+                        <p id="schoolStatus" style="text-align:center; color:var(--p-green); display:none; font-weight: 600; margin-top: 1rem;"><i class="fas fa-check-circle"></i> Thông tin đã được gửi thành công. Chúng tôi sẽ liên hệ sớm!</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: NEW TET EVENT PAGE (Vườn Lộc Xuân) -->
+    <div id="tet-page">
+        <header>
+            <div class="container">
+                <nav>
+                    <a class="logo" onclick="showPage('landing')">
+                        <div class="logo-icon"><i class="fas fa-arrow-left"></i></div>
+                        <span>Quay lại</span>
+                    </a>
+                    <div class="nav-menu">
+                        <span style="color:var(--tet-red); font-weight:800; font-family:'Dancing Script'; font-size:1.5rem;">Vườn Lộc Xuân</span>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <div class="tet-page-container">
+            <!-- Clouds -->
+            <div class="cloud" style="top: 15%; animation-duration: 25s;"></div>
+            <div class="cloud" style="top: 25%; animation-duration: 18s; transform: scale(0.8); opacity: 0.4;"></div>
+            <div class="cloud" style="top: 10%; animation-duration: 30s; transform: scale(1.2);"></div>
+
+            <!-- Envelope Card -->
+            <div class="tet-envelope-card" id="tet-envelope">
+                <!-- Flap -->
+                <div class="envelope-flap">
+                    <div class="envelope-seal">Lộc</div>
+                </div>
+                
+                <!-- God Rays behind (inside card context in CSS, but positioned z-index -1) -->
+                <div class="god-rays" id="god-rays">
+                      <div class="ray" style="transform: rotate(0deg);"></div>
+                      <div class="ray" style="transform: rotate(45deg);"></div>
+                      <div class="ray" style="transform: rotate(90deg);"></div>
+                      <div class="ray" style="transform: rotate(135deg);"></div>
+                      <div class="ray" style="transform: rotate(180deg);"></div>
+                      <div class="ray" style="transform: rotate(225deg);"></div>
+                      <div class="ray" style="transform: rotate(270deg);"></div>
+                      <div class="ray" style="transform: rotate(315deg);"></div>
+                </div>
+
+                <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); animation: float 3s infinite; margin-top: 1rem;">🧧</div>
+                <h2 class="tet-title-large">Hái Lộc Đầu Năm</h2>
+                <p class="tet-subtitle">Vòng Quay May Mắn Innerly 2025</p>
+
+                <div class="tet-input-group">
+                    <input type="text" id="tet-code-input" class="tet-input" placeholder="NHẬP MÃ CODE" maxlength="15" onkeyup="this.value = this.value.toUpperCase();">
+                </div>
+
+                <button class="tet-submit-btn" onclick="redeemTetCode()">
+                    <i class="fas fa-dice"></i> MỞ LÌ XÌ NGAY
+                </button>
+                
+                <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8; color: #FEF2F2;">
+                    *Mã code được tìm thấy bên trong mỗi hộp sản phẩm Innerly.
+                </p>
+            </div>
+
+            <!-- Result Card (Pop up) -->
+            <div class="tet-result-card" id="tet-result-card">
+                <div class="result-title">🎉 Chúc Mừng Năm Mới! 🎉</div>
+                <div class="result-body" id="tet-result-content">
+                    Bạn đã nhận được phần quà may mắn.
+                </div>
+                <button class="btn-close-result" onclick="closeTetResult()">Nhận Quà & Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: CHAT PAGE -->
+    <div id="chat-page">
+        <div class="chat-header">
+            <div class="chat-left-group" style="display:flex; align-items:center; gap:15px;">
+                <div class="chat-back" onclick="showPage('landing')"><i class="fas fa-chevron-left"></i> Quay lại</div>
+                <div class="chat-title"><i class="fas fa-robot"></i> Innerly</div>
+            </div>
+            <div class="emotion-sensor" id="ai-sensor"><div class="emotion-dot" id="emo-dot"></div><div class="emotion-text" id="emo-text">Sẵn sàng lắng nghe</div></div>
+            <div class="chat-actions" style="display:flex; gap:10px;">
+                <button class="action-btn" id="voiceBtn" onclick="toggleVoice()" title="Bật/Tắt Giọng Nói"><i class="fas fa-volume-up"></i></button>
+                <button class="action-btn" onclick="toggleMusic()" title="Bật/Tắt nhạc Healing"><i class="fas fa-music"></i></button>
+                <button class="action-btn" onclick="resetChat()" title="Làm mới cuộc trò chuyện"><i class="fas fa-redo-alt"></i></button>
+            </div>
+        </div>
+        <div class="chat-container" id="chatBox">
+            <div class="ai-bubble bubble">Chào bạn! Mình là Innerly đây 🌱 <br>Mình ở đây để thấu cảm và lắng nghe. Hôm nay bạn thấy thế nào? ✨</div>
+        </div>
+        <div class="input-wrapper">
+            <div class="quick-replies" id="quickReplies">
+                <button class="quick-btn" onclick="sendQuickMessage('Hôm nay mình hơi buồn 😔')">Hôm nay mình hơi buồn 😔</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Áp lực học tập quá 🤯')">Áp lực học tập quá 🤯</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Kể chuyện vui cho mình nghe đi 😂')">Kể chuyện vui đi 😂</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Mình cần lời khuyên 🌱')">Mình cần lời khuyên 🌱</button>
+            </div>
+            <div class="input-area">
+                <input type="text" id="chatInput" placeholder="Nhắn tin với Innerly..." autocomplete="off">
+                <button class="mic-btn" id="micBtn" onclick="startSpeechToText()"><i class="fas fa-microphone"></i></button>
+                <button class="send-btn" id="sendBtnChat" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO RESOURCES -->
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2023/01/22/audio_c3e6027c49.mp3?filename=chinese-new-year-136531.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="fireworksSound">
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_5b3837926b.mp3?filename=fireworks-29629.mp3" type="audio/mpeg">
+    </audio>
     
-    <input type="text" id="schoolName" placeholder="Tên trường / đơn vị" required
-      style="padding:12px; border-radius:8px; border:1px solid #ccc;" />
-
-    <input type="text" id="teacherName" placeholder="Họ tên giáo viên / người liên hệ" required
-      style="padding:12px; border-radius:8px; border:1px solid #ccc;" />
-
-    <input type="email" id="contactEmail" placeholder="Email liên hệ" required
-      style="padding:12px; border-radius:8px; border:1px solid #ccc;" />
-
-    <input type="tel" id="contactPhone" placeholder="Số điện thoại (không bắt buộc)"
-      style="padding:12px; border-radius:8px; border:1px solid #ccc;" />
-
-    <textarea id="interest" rows="4"
-      placeholder="Thầy/cô quan tâm INNERLY cho hoạt động nào? (tư vấn tâm lý, hỗ trợ phụ huynh và học sinh, ...)"
-      style="padding:12px; border-radius:8px; border:1px solid #ccc;"></textarea>
-
-    <button type="submit" style="
-      padding:14px;
-      border:none;
-      border-radius:10px;
-      background:#4f46e5;
-      color:white;
-      font-size:16px;
-      cursor:pointer;
-    ">
-      📩 Gửi thông tin quan tâm
-    </button>
-
-    <p id="schoolStatus" style="text-align:center; color:green; display:none;">
-      ✔️ Thông tin đã được gửi thành công. Chúng tôi sẽ liên hệ sớm!
-    </p>
-
-  </form>
-</section>
-
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-item">
-                    <h4>INNERLY trong đời sống học đường</h4>
-                    <!-- FIX ẢNH: Đời sống -->
-                    <img src="INNERLY/Doi song.png" alt="Đời sống học đường">
-                    <p>Những công cụ nhỏ giúp tuổi teen chạm vào cảm xúc của mình, giải tỏa nhẹ nhàng và cảm thấy không còn một mình trong quá trình lớn lên.</p>
-                </div>
-                <div class="footer-item">
-                    <h4>Bộ sản phẩm INNERLY</h4>
-                    <!-- FIX ẢNH: Sản phẩm -->
-                    <img src="INNERLY/San pham.png" alt="Bộ sản phẩm">
-                    <p>Được thiết kế gần gũi, dễ sử dụng mỗi ngày – đồng hành cùng tuổi teen trong hành trình hiểu cảm xúc và cân bằng tinh thần từ những điều rất nhỏ.</p>
-                </div>
-            </div>
-        </div>
-		<div style="text-align:center; margin-top:40px; color:#ddd; font-size:1.5rem;">
-			<strong>INNERLY</strong> là dự án học sinh vì sức khỏe cảm xúc học đường
-		</div>
-    </footer>
-	
-    <!-- SCRIPT GỌI API GEMINI -->
+    <!-- Scripts -->
     <script>
-		const apiUrl = "https://innerly.hnue.online/core.php";
+        const audioContext = new(window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq, type, duration) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.frequency.value = freq; osc.type = type;
+            osc.connect(gain); gain.connect(audioContext.destination);
+            osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + duration);
+            osc.stop(audioContext.currentTime + duration);
+        }
+        function playSound(type) {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            switch (type) {
+                case 'click': playTone(600, 'sine', 0.1); break;
+                case 'flip': playTone(400, 'triangle', 0.15); break;
+                case 'msg': playTone(800, 'sine', 0.2); break;
+                case 'win': 
+                    playTone(523.25, 'triangle', 0.1); setTimeout(() => playTone(659.25, 'triangle', 0.1), 100); setTimeout(() => playTone(783.99, 'triangle', 0.3), 200);
+                    break;
+            }
+        }
+        function playFireworksSound() {
+            const fwSound = document.getElementById('fireworksSound');
+            if(fwSound) { 
+                fwSound.currentTime = 0; 
+                fwSound.play().catch(e => {
+                    console.log("Audio autoplay blocked by browser, skipping sound.", e);
+                }); 
+            }
+        }
+    </script>
 
-	let conversationHistory = [];
-	
-	// ===== SMART RESPONSE PARSER =====
-	function extractText(data) {
-	  if (!data) return null;
-		if (typeof data === "string") return data;
-		if (data.reply) return data.reply; // Khớp với Worker
-	  if (data.text) return data.text;
-	  if (data.response) return data.response;
-	  if (data.output) return data.output;
-	
-	  // Gemini-style
-	  if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-	    return data.candidates[0].content.parts[0].text;
-	  }
-	
-	  return null;
-	}
-	
-	async function callAI(prompt) {
-	  try {
-	    const res = await fetch(apiUrl, {
-	      method: "POST",
-	      headers: { "Content-Type": "application/json" },
-	      body: JSON.stringify({
-	        prompt: prompt,
-	        history: conversationHistory
-	      })
-	    });
-	
-	    const data = await res.json();
-	    const text = extractText(data);
-	
-	    return text || "Innerly đang suy nghĩ thêm một chút nhé 💛";
-	  } catch (err) {
-	    console.error("AI ERROR:", err);
-	    return "Innerly không kết nối được lúc này, nhưng mình vẫn ở đây với bạn 💛";
-	  }
-	}
-	
-	async function askGemini() {
-	  const input = document.getElementById("userInput");
-	  const chatBox = document.getElementById("chatBox");
-	  const loading = document.getElementById("loading");
-	  const btn = document.getElementById("sendBtn");
-	
-	  const text = input.value.trim();
-	  if (!text) return alert("Bạn hãy viết gì đó nhé!");
-	
-	  const userBubble = document.createElement("div");
-	  userBubble.className = "chat-bubble user";
-	  userBubble.innerText = text;
-	  chatBox.appendChild(userBubble);
-	
-	  conversationHistory.push({ role: "user", text });
-	  input.value = "";
-	
-	  loading.style.display = "block";
-	  btn.disabled = true;
-	
-	  const reply = await callAI(text);
-	
-	  const botBubble = document.createElement("div");
-	  botBubble.className = "chat-bubble bot";
-	  // Convert markdown sang HTML
-	  botBubble.innerHTML = marked.parse(reply);
-	  chatBox.appendChild(botBubble);
-	
-	  conversationHistory.push({ role: "assistant", text: reply });
-	  chatBox.scrollTop = chatBox.scrollHeight;
-	
-	  loading.style.display = "none";
-	  btn.disabled = false;
-	}
-	
-	// ===== FEATURES =====
-	async function defineEmotion() {
-	  const input = document.getElementById("emotionDesc").value.trim();
-	  const box = document.getElementById("resultDefine");
-	  const title = document.getElementById("emotionTitle");
-	  const def = document.getElementById("emotionDef");
-	
-	  if (!input) return alert("Hãy mô tả cảm xúc của bạn nhé!");
-	
-	  const prompt = `Tạo tên cảm xúc và định nghĩa ngắn cho mô tả sau:\n${input}\nĐịnh dạng: Tên | Định nghĩa`;
-	
-	  const reply = await callAI(prompt);
-	  const parts = reply.split("|");
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const app = Object.keys(firebaseConfig).length > 0 ? initializeApp(firebaseConfig) : null;
+        const auth = app ? getAuth(app) : null;
 
-	  title.innerText = (parts[0] || "Cảm xúc đặc biệt").trim();
-	  // Convert markdown sang HTML
-	  def.innerHTML = marked.parse((parts[1] || reply).trim());
-	  box.style.display = "block";
-	}
-	
-	async function suggestActivity() {
-	  const mood = document.getElementById("moodSelect").value;
-	  const box = document.getElementById("resultSuggest");
-	  const text = document.getElementById("activityText");
-	
-	  const prompt = `Gợi ý 1 hoạt động nhỏ trong 5 phút để giúp học sinh cảm thấy tốt hơn khi đang ${mood}.`;
+        let isRegisterMode = false;
+        let currentUser = null;
+        const ANON_TIME_LIMIT = 60000;
+        let anonTimer = null;
 
-	  const reply = await callAI(prompt);
-	  // Convert markdown sang HTML
-	  text.innerHTML = marked.parse(reply);
-	  box.style.display = "block";
-	}
-	
-	// ENTER TO SEND
-	document.getElementById("userInput").addEventListener("keydown", e => {
-	  if (e.key === "Enter" && !e.shiftKey) {
-	    e.preventDefault();
-	    askGemini();
-	  }
-	});
-</script>
-	<!-- SCRIPT GỌI API GEMINI -->
-<script>
-const SCHOOL_API_URL = "https://script.google.com/macros/s/AKfycbyac49WGsgu4Qip7GjW6LnbvNKw0YEaNeVmWMuR57QedMEt-Anv0Qa9dT9DaYuAoBFfTA/exec";
+        window.openAuthModal = () => { document.getElementById('auth-modal').style.display = 'flex'; setTimeout(() => document.getElementById('auth-modal').classList.add('show'), 10); }
+        window.closeAuthModal = () => { document.getElementById('auth-modal').classList.remove('show'); setTimeout(() => document.getElementById('auth-modal').style.display = 'none', 300); }
+        window.toggleAuthMode = () => {
+            isRegisterMode = !isRegisterMode;
+            document.getElementById('auth-title').innerText = isRegisterMode ? "Đăng ký" : "Đăng nhập";
+            document.getElementById('auth-action-btn').innerText = isRegisterMode ? "Đăng ký ngay" : "Đăng nhập";
+            document.getElementById('auth-toggle-text').innerText = isRegisterMode ? "Đã có tài khoản? " : "Chưa có tài khoản? ";
+            document.getElementById('auth-toggle-link').innerText = isRegisterMode ? "Đăng nhập" : "Đăng ký ngay";
+            document.querySelectorAll('.register-field').forEach(field => field.style.display = isRegisterMode ? 'block' : 'none');
+        }
+        window.handleAuth = async (e) => {
+            e.preventDefault();
+            if (!auth) { alert("Hệ thống chưa kết nối Firebase."); return; }
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                if (isRegisterMode) {
+                    const username = document.getElementById('username').value;
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    if (username) await updateProfile(userCredential.user, { displayName: username });
+                    updateGreeting("Chào mừng thành viên mới! 🎉");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    updateGreeting("Mừng bạn quay lại! 💛");
+                }
+                closeAuthModal();
+                sessionStorage.removeItem('anon_start_time');
+            } catch (error) { alert("Lỗi: " + error.message); }
+        }
+        window.handleLogout = async () => { if (confirm("Đăng xuất?")) { if (auth) await signOut(auth); updateGreeting("Hẹn gặp lại! 👋"); } }
+        function checkAnonLimit() {
+            const startTime = sessionStorage.getItem('anon_start_time');
+            if (startTime) {
+                const elapsed = Date.now() - parseInt(startTime);
+                if (elapsed >= ANON_TIME_LIMIT) lockAppForAuth();
+                else anonTimer = setTimeout(lockAppForAuth, ANON_TIME_LIMIT - elapsed);
+            } else {
+                sessionStorage.setItem('anon_start_time', Date.now().toString());
+                anonTimer = setTimeout(lockAppForAuth, ANON_TIME_LIMIT);
+            }
+        }
+        function lockAppForAuth() {
+            window.isAuthLocked = true;
+            document.getElementById('chatBox').innerHTML += `<div class="ai-bubble bubble">⏳ <b>Hết thời gian trải nghiệm.</b><br>Đăng nhập để tiếp tục!</div>`;
+            window.openAuthModal();
+        }
+        function unlockApp() {
+            window.isAuthLocked = false;
+            if (anonTimer) clearTimeout(anonTimer);
+            sessionStorage.removeItem('anon_start_time');
+        }
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    if (user.isAnonymous) {
+                        document.getElementById('login-btn-group').style.display = 'block';
+                        document.getElementById('user-profile-group').classList.remove('active');
+                        checkAnonLimit();
+                    } else {
+                        unlockApp();
+                        document.getElementById('login-btn-group').style.display = 'none';
+                        document.getElementById('user-profile-group').classList.add('active');
+                        const name = user.displayName || "Bạn";
+                        document.getElementById('display-name').innerText = DOMPurify.sanitize(name);
+                        document.getElementById('avatar-char').innerText = name.charAt(0).toUpperCase();
+                    }
+                } else {
+                    document.getElementById('login-btn-group').style.display = 'block';
+                    document.getElementById('user-profile-group').classList.remove('active');
+                    signInAnonymously(auth).catch(console.error);
+                }
+            });
+        }
+    </script>
 
-document.getElementById("schoolForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+    <script>
+        const apiKey = "AIzaSyCzmVooOFoJyei2A0i9eJIzBZyq9z7NcmE";
+        window.isAuthLocked = false;
+        let lastMessageTime = 0;
+        const MESSAGE_COOLDOWN = 2000;
+        let isProcessing = false;
+        let chatHistory = [];
+        let isMusicPlaying = false;
+        let isVoiceEnabled = false;
 
-  const data = {
-    school: document.getElementById("schoolName").value,
-    teacher: document.getElementById("teacherName").value,
-    email: document.getElementById("contactEmail").value,
-    phone: document.getElementById("contactPhone").value,
-    interest: document.getElementById("interest").value,
-    source: "INNERLY School Contact Form"
-  };
+        function showPage(pageId) {
+            playSound('click');
+            // Hide all pages
+            document.getElementById('landing-page').classList.remove('active');
+            document.getElementById('chat-page').classList.remove('active');
+            document.getElementById('card-deck-section').classList.remove('active');
+            document.getElementById('school-contact-page').classList.remove('active');
+            document.getElementById('tet-page').classList.remove('active'); // Hide tet page
 
-  try {
-    await fetch(SCHOOL_API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+            // Hide/Show Global Lanterns
+            const lanterns = document.getElementById('global-lanterns');
 
-    document.getElementById("schoolStatus").style.display = "block";
-    this.reset();
-  } catch (err) {
-    alert("Gửi không thành công, vui lòng thử lại sau.");
-  }
-});
-</script>
+            if (pageId === 'landing') {
+                document.getElementById('landing-page').classList.add('active');
+                updateGreeting("Chào mừng quay lại! 🌱");
+                lanterns.style.display = 'none'; // No lanterns on landing
+            } else if (pageId === 'chat') {
+                document.getElementById('chat-page').classList.add('active');
+                updateGreeting("Inny đang lắng nghe nè... 👂");
+                lanterns.style.display = 'none';
+            } else if (pageId === 'cardDeck') {
+                document.getElementById('card-deck-section').classList.add('active');
+                updateGreeting("Hãy lắng nghe cảm xúc nhé! 🃏");
+                renderEmotionGrid(); backToGrid();
+                lanterns.style.display = 'none';
+            } else if (pageId === 'schoolContact') {
+                document.getElementById('school-contact-page').classList.add('active');
+                updateGreeting("Hợp tác cùng Innerly 🎓");
+                lanterns.style.display = 'none';
+            } else if (pageId === 'tet') {
+                document.getElementById('tet-page').classList.add('active');
+                updateGreeting("Chúc Mừng Năm Mới! 🧧");
+                lanterns.style.display = 'flex'; // Show lanterns ONLY on Tet page
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function updateGreeting(text) {
+            const bubble = document.getElementById('mascotGreeting');
+            bubble.innerText = text;
+            bubble.classList.add('active');
+            setTimeout(() => bubble.classList.remove('active'), 4000);
+        }
 
+        let scene, camera, renderer, mascot;
+        let mouseX = 0, mouseY = 0;
+        // Smoother mouse tracking variables
+        let targetMouseX = 0, targetMouseY = 0;
+        
+        let currentEmotionState = 'neutral';
+        let targetEmotiveParams = { speed: 1.5, bounce: 0.12, rotSpeed: 0.08, eyeScale: 1.35 };
+        let currentEmotiveParams = { ...targetEmotiveParams };
+
+        function init3D() {
+            const container = document.getElementById('mascot-3d-container');
+            const canvas = document.getElementById('three-canvas');
+            if (scene || !container || !canvas) return;
+            try {
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+                camera.position.z = 6;
+                renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+                const keyLight = new THREE.DirectionalLight(0xFFF5E1, 1.4); keyLight.position.set(3, 5, 5); scene.add(keyLight);
+                const fillLight = new THREE.DirectionalLight(0xFFD180, 0.8); fillLight.position.set(-5, 0, 5); scene.add(fillLight);
+                const backLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); backLight.position.set(0, 5, -5); scene.add(backLight);
+                scene.add(new THREE.AmbientLight(0xFFFFFF, 0.8));
+
+                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xFFCA28, roughness: 0.4, metalness: 0.1 });
+                const eyeMat = new THREE.MeshStandardMaterial({ color: 0x212121, roughness: 0.1 });
+                const blushMat = new THREE.MeshBasicMaterial({ color: 0xFF7043, transparent: true, opacity: 0.5 });
+                mascot = new THREE.Group(); scene.add(mascot);
+
+                const body = new THREE.Mesh(new THREE.SphereGeometry(1.4, 64, 64), bodyMat);
+                body.scale.set(1, 0.92, 1); body.name = 'body'; mascot.add(body); window.mascotBodyMesh = body;
+
+                const handGeo = new THREE.SphereGeometry(0.35, 32, 32);
+                const lHand = new THREE.Mesh(handGeo, bodyMat); lHand.position.set(-1.25, -0.4, 0.6); lHand.scale.set(1, 0.8, 1); mascot.add(lHand); window.mascotLHand = lHand;
+                const rHand = new THREE.Mesh(handGeo, bodyMat); rHand.position.set(1.25, -0.4, 0.6); rHand.scale.set(1, 0.8, 1); mascot.add(rHand); window.mascotRHand = rHand;
+
+                const faceGroup = new THREE.Group(); faceGroup.position.set(0, -0.1, 1.38); mascot.add(faceGroup);
+                const eyeGeo = new THREE.SphereGeometry(0.18, 32, 32);
+                const lEye = new THREE.Mesh(eyeGeo, eyeMat); lEye.position.set(-0.38, 0.05, 0); lEye.scale.set(1, 1.35, 0.6); faceGroup.add(lEye);
+                const rEye = new THREE.Mesh(eyeGeo, eyeMat); rEye.position.set(0.38, 0.05, 0); rEye.scale.set(1, 1.35, 0.6); faceGroup.add(rEye);
+                window.mascotEyes = { left: lEye, right: rEye };
+
+                const sparkleGeo = new THREE.SphereGeometry(0.06, 16, 16);
+                const sparkleMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+                const lSpark = new THREE.Mesh(sparkleGeo, sparkleMat); lSpark.position.set(-0.32, 0.13, 0.16); faceGroup.add(lSpark);
+                const rSpark = new THREE.Mesh(sparkleGeo, sparkleMat); rSpark.position.set(0.44, 0.13, 0.16); faceGroup.add(rSpark);
+
+                const blushGeo = new THREE.SphereGeometry(0.22, 32, 32);
+                const lBlush = new THREE.Mesh(blushGeo, blushMat); lBlush.position.set(-0.75, -0.25, -0.1); lBlush.scale.set(1, 0.6, 0.3); faceGroup.add(lBlush);
+                const rBlush = new THREE.Mesh(blushGeo, blushMat); rBlush.position.set(0.75, -0.25, -0.1); rBlush.scale.set(1, 0.6, 0.3); faceGroup.add(rBlush);
+
+                const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.08, 0.03, 16, 32, Math.PI), eyeMat);
+                mouth.position.set(0, -0.2, 0); mouth.rotation.z = Math.PI; faceGroup.add(mouth);
+
+                const sproutGroup = new THREE.Group(); sproutGroup.position.set(0, 1.3, 0); mascot.add(sproutGroup);
+                const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.45, 12), new THREE.MeshStandardMaterial({ color: 0x66BB6A }));
+                stem.position.y = 0.2; stem.rotation.z = 0.2; sproutGroup.add(stem);
+                const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), new THREE.MeshStandardMaterial({ color: 0x66BB6A }));
+                leaf.position.set(0.25, 0.55, 0); leaf.scale.set(1.5, 0.3, 1); leaf.rotation.set(0.3, 0, 0.5); sproutGroup.add(leaf);
+                window.mascotSprout = sproutGroup;
+                animate();
+            } catch (err) { console.error("ThreeJS Init Error:", err); }
+        }
+
+        function blink(isClosing) {
+            if (!window.mascotEyes) return;
+            const sY = isClosing ? 0.1 : currentEmotiveParams.eyeScale;
+            window.mascotEyes.left.scale.y = sY; window.mascotEyes.right.scale.y = sY;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.001;
+            
+            // Smoothly interpolate parameters
+            currentEmotiveParams.speed += (targetEmotiveParams.speed - currentEmotiveParams.speed) * 0.05;
+            currentEmotiveParams.bounce += (targetEmotiveParams.bounce - currentEmotiveParams.bounce) * 0.05;
+            currentEmotiveParams.rotSpeed += (targetEmotiveParams.rotSpeed - currentEmotiveParams.rotSpeed) * 0.05;
+
+            // Smoothly interpolate mouse position to avoid jitter
+            mouseX += (targetMouseX - mouseX) * 0.1;
+            mouseY += (targetMouseY - mouseY) * 0.1;
+
+            if (mascot) {
+                // Bobbing motion
+                mascot.position.y = Math.sin(time * currentEmotiveParams.speed) * currentEmotiveParams.bounce;
+                
+                // Horizontal sway based on emotion
+                if (currentEmotionState === 'angry') { mascot.position.x = (Math.random() - 0.5) * 0.05; }
+                else if (currentEmotionState === 'anxious') { mascot.position.x = Math.sin(time * 20) * 0.02; }
+                else { mascot.position.x += (0 - mascot.position.x) * 0.1; }
+
+                // Squash and stretch
+                if (window.mascotBodyMesh) {
+                    const squashFactor = 1 + Math.sin(time * currentEmotiveParams.speed - Math.PI / 2) * (currentEmotiveParams.bounce * 0.2);
+                    window.mascotBodyMesh.scale.set(1 + (1 - squashFactor) * 0.5, 0.92 * squashFactor, 1 + (1 - squashFactor) * 0.5);
+                }
+                
+                // Hand movement
+                if (window.mascotLHand) {
+                    window.mascotLHand.position.y = -0.4 + Math.sin(time * 2) * 0.05;
+                    window.mascotRHand.position.y = -0.4 + Math.sin(time * 2 + 1) * 0.05;
+                }
+                
+                // Sprout movement
+                if (window.mascotSprout) window.mascotSprout.rotation.z = 0.2 + Math.sin(time * 3) * 0.15;
+                
+                // Rotation tracking mouse (Smoothed)
+                mascot.rotation.y += (mouseX * 0.4 - mascot.rotation.y) * currentEmotiveParams.rotSpeed;
+                mascot.rotation.x += (mouseY * 0.2 - mascot.rotation.x) * currentEmotiveParams.rotSpeed;
+            }
+            
+            // Random blinking
+            if (Math.random() > 0.992) { blink(true); setTimeout(() => blink(false), 120); }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Use target variables for mouse position to decouple from animation loop
+        document.addEventListener('mousemove', (e) => { 
+            targetMouseX = (e.clientX / window.innerWidth) * 2 - 1; 
+            targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1; 
+        });
+
+        let currentGender = 'male';
+
+        const cardsData = {
+            male: [
+                { id: "m01", icon: "😤💢", label: "Bực Bội", title: "Thẻ 1: Mình đang cảm thấy bực bội", desc: "Bên trong mình đang cảm thấy khó chịu. Cảm giác bực bội, tức giận, oan ức xuất hiện.", actions: ["🗣️ Gọi tên và khoanh tròn cảm xúc: Tức giận, Oan ức...", "🎧 Lắng nghe một bản nhạc thư giãn", "🐶 Chơi đùa cùng thú cưng (nếu có)"], quote: "Khi gọi được tên cảm xúc, bạn đã trở nên mạnh mẽ hơn nó." },
+                { id: "m02", icon: "🌀💫", label: "Rối Bời", title: "Thẻ 2: Tâm Trí Rối Bời", desc: "Trong tâm trí mình đang rối bời. Mình vẫn chưa tìm ra hướng giải quyết.", actions: ["📝 Viết mọi suy nghĩ ra trong 1 phút", "🖍️ Gạch chân 1 điều khó chịu nhất", "🍜 Thưởng thức món ăn ngon", "⏸️ Nghỉ ngơi 5 phút"], quote: "Viết ra là cách gỡ bỏ gánh nặng khỏi tâm trí." },
+                { id: "m03", icon: "😢☁️", label: "Buồn Vô Cớ", title: "Thẻ 3: Buồn nhưng không rõ lý do", desc: "Mình không rõ lý do vì sao lại cảm thấy khó chịu như vậy. Một nỗi buồn không tên.", actions: ["🌬️ Hít thở sâu", "🗣️ Tìm một người bạn tâm sự", "😄 Kể ra những thứ làm mình vui"], quote: "Không hiểu cũng không sao. Cảm xúc vẫn hợp lệ." },
+                { id: "m04", icon: "😨💓", label: "Lo Âu", title: "Thẻ 4: Mình đang lo âu", desc: "Tim đập nhanh, bồn chồn. Mình cần tìm lại sự cân bằng.", actions: ["💧 Rửa mặt bằng nước mát", "🧘 Hít sâu thở chậm", "🎧 Nhắm mắt nghe nhạc"], quote: "Bạn an toàn ngay tại khoảnh khắc này." },
+                { id: "m05", icon: "🍂🌑", label: "Cô Đơn", title: "Thẻ 5: Mình thấy cô đơn", desc: "Cảm giác một mình giữa đám đông. Muốn được kết nối.", actions: ["💬 Nhắn tin cho một người bạn thân", "🌳 Ngắm cảnh thiên nhiên", "📔 Viết nhật ký"], quote: "Cô đơn là khoảng lặng để hiểu mình hơn." },
+                { id: "m06", icon: "🤯📉", label: "Áp Lực", title: "Thẻ 6: Áp Lực Công Việc/Học Tập", desc: "Quá nhiều thứ phải làm. Mình cảm thấy nặng nề.", actions: ["🔨 Chia nhỏ công việc", "☕ Nghỉ ngơi 15 phút", "🥤 Uống một cốc nước"], quote: "Áp lực tạo nên kim cương, nhưng bạn cần nghỉ ngơi." },
+                { id: "m07", icon: "🔋💤", label: "Mệt Mỏi", title: "Thẻ 7: Kiệt Sức", desc: "Năng lượng cạn kiệt. Mình không muốn làm gì cả.", actions: ["😴 Ngủ một giấc ngắn", "📴 Tắt điện thoại", "🦶 Ngâm chân nước ấm"], quote: "Nghỉ ngơi là một phần của hành trình." },
+                { id: "m08", icon: "😞🌫️", label: "Chán Nản", title: "Thẻ 8: Chán Nản", desc: "Mất hứng thú với mọi thứ. Cảm thấy vô định.", actions: ["🎬 Xem một bộ phim hài", "🚶 Đi dạo công viên", "🍕 Ăn món mình thích"], quote: "Niềm vui sẽ quay trở lại." },
+                { id: "m09", icon: "😡🔥", label: "Tức Giận", title: "Thẻ 9: Cơn Giận Dữ", desc: "Muốn bùng nổ. Cần hạ nhiệt ngay lập tức.", actions: ["🔢 Đếm ngược từ 10 về 1", "🧊 Uống nước lạnh", "🚶 Đi ra chỗ khác hít thở"], quote: "Giận dữ là ngọn lửa thiêu đốt chính mình." },
+                { id: "m10", icon: "👎💔", label: "Thất Vọng", title: "Thẻ 10: Thất Vọng", desc: "Mọi việc không như ý muốn. Cảm thấy hụt hẫng.", actions: ["🤝 Chấp nhận sự thật", "🎓 Tìm bài học kinh nghiệm", "🤗 Tự an ủi bản thân"], quote: "Thất bại là mẹ thành công." },
+                { id: "m11", icon: "😰🦇", label: "Sợ Hãi", title: "Thẻ 11: Nỗi Sợ", desc: "Sợ thất bại, sợ tương lai. Cần sự dũng cảm.", actions: ["🛡️ Đối mặt từng chút một", "🆘 Tìm người hỗ trợ", "🗣️ Nói: Tôi làm được"], quote: "Dũng cảm là đi xuyên qua nỗi sợ." },
+                { id: "m12", icon: "🤐📉", label: "Tự Ti", title: "Thẻ 12: Tự Ti", desc: "Cảm thấy mình không đủ tốt. So sánh với người khác.", actions: ["📝 Liệt kê 3 điểm mạnh của mình", "🧍 Đứng thẳng lưng", "😁 Mỉm cười trước gương"], quote: "Bạn là phiên bản duy nhất." },
+                { id: "m13", icon: "👀😒", label: "Ghen Tị", title: "Thẻ 13: Ghen Tị", desc: "Khó chịu khi thấy người khác thành công hơn.", actions: ["👏 Chúc mừng họ thật lòng", "🎯 Tập trung vào mục tiêu của mình", "🚀 Biến ghen tị thành động lực"], quote: "Mỗi người có một múi giờ riêng." },
+                { id: "m14", icon: "🍃🕊️", label: "Bình Tâm", title: "Thẻ 14: Bình Tâm Lại", desc: "Mình muốn được bình yên, muốn được giải thoát.", actions: ["🎶 Nghe bản nhạc yêu thích", "🧘 Hít sâu 3 lần"], quote: "Bạn vừa vượt qua một điều khó khăn.", isPositive: true },
+                { id: "m15", icon: "🧘‍♂️⚓", label: "Ổn Định", title: "Thẻ 15: Trạng Thái Cân Bằng", desc: "Mọi thứ đang dần trở lại quỹ đạo.", actions: ["✅ Duy trì thói quen tốt", "📚 Đọc sách", "🧘 Thiền 5 phút"], quote: "Sự ổn định mang lại sức mạnh.", isPositive: true },
+                { id: "m16", icon: "💪🧗", label: "Cố Gắng", title: "Thẻ 16: Hôm Nay Mình Đã Cố Gắng", desc: "Cảm thấy mình làm một việc khó nhưng đã cố gắng hoàn thành.", actions: ["👨‍👩‍👧‍👦 Chia sẻ với bố mẹ", "👏 Cảm ơn bản thân"], quote: "Cố gắng là con đường đến thành công.", isPositive: true },
+                { id: "m17", icon: "💎✨", label: "Giá Trị", title: "Thẻ 17: Mình Có Giá Trị", desc: "Mình không vô hình. Mình có những điểm mạnh riêng.", actions: ["🎨 Thử sức hoạt động mới", "🗣️ Chia sẻ cảm xúc"], quote: "Bạn luôn quan trọng.", isPositive: true },
+                { id: "m18", icon: "🙏💖", label: "Biết Ơn", title: "Thẻ 18: Mình Biết Ơn", desc: "Hôm nay có điều làm mình thấy ổn.", actions: ["💌 Gửi lời cảm ơn ai đó", "🌬️ Hít thở sâu", "😊 Mỉm cười"], quote: "Biết ơn làm tim nhẹ lại.", isPositive: true },
+                { id: "m19", icon: "🌅🚀", label: "Ngày Mai", title: "Thẻ 19: Gửi Ngày Mai", desc: "Hướng về tương lai với niềm tin mới.", actions: ["📅 Lên kế hoạch nhỏ", "😴 Ngủ sớm", "✊ Tin tưởng"], quote: "Ngày mai là một khởi đầu mới.", isPositive: true },
+                { id: "m20", icon: "✨🌈", label: "Hy Vọng", title: "Thẻ 20: Hy Vọng", desc: "Luôn có ánh sáng ở cuối đường hầm.", actions: ["✍️ Viết ra ước mơ", "🛡️ Giữ vững niềm tin", "🏃 Hành động nhỏ"], quote: "Hy vọng không bao giờ tắt.", isPositive: true }
+            ],
+            female: [
+                { id: "f01", icon: "🌧️💧", label: "Bỗng Buồn", title: "Thẻ 1: Bỗng Dưng Mình Thấy Buồn", desc: "Một nỗi buồn không tên. Không hiểu cũng không sao, cảm xúc vẫn hợp lệ.", actions: ["📝 Chọn 1 từ mô tả (Mệt, Tủi...)", "👯 Tìm bạn tâm sự", "😂 Kể thứ làm mình vui", "🚶‍♀️ Ra ngoài dạo chơi"], quote: "Cảm xúc vẫn hợp lệ." },
+                { id: "f02", icon: "🌀🧶", label: "Rối Bời", title: "Thẻ 2: Rối Bời", desc: "Suy nghĩ cứ quẩn quanh. Cần gỡ rối.", actions: ["📔 Viết nhật ký", "🎨 Vẽ tranh", "😭 Khóc để giải tỏa"], quote: "Nước mắt giúp rửa trôi nỗi buồn." },
+                { id: "f03", icon: "😰💓", label: "Lo Âu", title: "Thẻ 3: Lo Lắng", desc: "Tim đập nhanh, tay run. Cần sự an toàn.", actions: ["🗣️ Nhẹ nhàng dặn mình: Cơn lo này rồi sẽ qua", "🧸 Ôm gấu bông", "🍵 Uống trà ấm"], quote: "Mọi chuyện rồi sẽ ổn thôi." },
+                { id: "f04", icon: "🍂🧸", label: "Cô Đơn", title: "Thẻ 5: Mình Thấy Cô Đơn", desc: "Mình muốn có người lắng nghe mình, muốn được chia sẻ.", actions: ["🛡️ Chia sẻ với bạn an toàn", "🤖 Gửi tin nhắn cho Innerly", "🌄 Ngắm cảnh"], quote: "Cảm giác cô đơn không định nghĩa bạn là ai." },
+                { id: "f05", icon: "🤯📚", label: "Áp Lực", title: "Thẻ 10: Mình Đang Quá Áp Lực", desc: "Công việc chất đống, làm mãi không xong.", actions: ["⏸️ Cho phép bản thân nghỉ ngơi", "🆘 Nhờ sự giúp đỡ", "💆‍♀️ Thư giãn vai"], quote: "Nghỉ ngơi không phải là lười biếng." },
+                { id: "f06", icon: "🔋🌙", label: "Mệt Mỏi", title: "Thẻ 6: Mệt Mỏi", desc: "Cả người rã rời. Cần được chăm sóc.", actions: ["🧖‍♀️ Đắp mặt nạ thư giãn", "😴 Ngủ sớm", "📴 Tắt mạng xã hội"], quote: "Yêu bản thân là ưu tiên hàng đầu." },
+                { id: "f07", icon: "😢😿", label: "Tủi Thân", title: "Thẻ 7: Tủi Thân", desc: "Cảm thấy bị bỏ rơi, không ai hiểu mình.", actions: ["🤗 Tự ôm lấy mình", "😭 Khóc thật to", "💌 Viết thư cho chính mình"], quote: "Bạn xứng đáng được yêu thương." },
+                { id: "f08", icon: "🥺🌸", label: "Nhạy Cảm", title: "Thẻ 8: Nhạy Cảm", desc: "Dễ xúc động trước mọi việc. Cần sự dịu dàng.", actions: ["🚫 Tránh xa nguồn tiêu cực", "🎶 Nghe nhạc nhẹ", "📖 Đọc sách chữa lành"], quote: "Sự nhạy cảm là món quà." },
+                { id: "f09", icon: "😨🕯️", label: "Sợ Hãi", title: "Thẻ 9: Sợ Hãi", desc: "Sợ bóng tối, sợ tương lai. Cần ánh sáng.", actions: ["💡 Bật đèn sáng", "📞 Gọi điện cho mẹ", "🌬️ Hít thở 4-7-8"], quote: "Ánh sáng sẽ xua tan bóng tối." },
+                { id: "f10", icon: "😟🛡️", label: "Bất An", title: "Thẻ 10: Bất An", desc: "Cảm giác không an toàn. Cần điểm tựa.", actions: ["🤫 Tìm nơi yên tĩnh", "🧘‍♀️ Thiền buông thư", "🙏 Cầu nguyện"], quote: "Bình yên đến từ bên trong." },
+                { id: "f11", icon: "😞🥀", label: "Chán Nản", title: "Thẻ 11: Chán Nản", desc: "Không muốn làm gì. Cần động lực.", actions: ["🖼️ Trang trí lại góc học tập", "🛍️ Mua một món đồ nhỏ", "🎞️ Xem phim hoạt hình"], quote: "Niềm vui từ những điều nhỏ bé." },
+                { id: "f12", icon: "😶🕳️", label: "Trống Rỗng", title: "Thẻ 12: Trống Rỗng", desc: "Không vui cũng không buồn. Cần cảm giác sống.", actions: ["🤸‍♀️ Tập thể dục nhẹ", "🚿 Tưới cây", "🍳 Nấu ăn"], quote: "Hành động tạo ra cảm hứng." },
+                { id: "f13", icon: "👀💅", label: "Ghen Tị", title: "Thẻ 13: So Sánh", desc: "Thấy người khác xinh hơn, giỏi hơn.", actions: ["👸 Tự khen mình xinh đẹp", "✨ Tập trung vào ưu điểm", "🚫 Ngừng so sánh"], quote: "Bạn là bông hoa duy nhất." },
+                { id: "f14", icon: "🕊️🌿", label: "Bình Yên", title: "Thẻ 14: Bình Yên", desc: "Tâm hồn nhẹ nhàng như mây trôi.", actions: ["☁️ Ngắm mây bay", "🍵 Uống trà", "📜 Đọc thơ"], quote: "Hạnh phúc là sự bình yên.", isPositive: true },
+                { id: "f15", icon: "🌱☀️", label: "Ổn Dần", title: "Thẻ 15: Mình Đang Ổn Dần Lên", desc: "Hóa ra mình đã vượt qua được cơn lo âu này!", actions: ["🛡️ Tự trấn an mình", "🌈 Tin rằng mọi việc sẽ ổn", "😊 Mỉm cười"], quote: "Mọi việc rồi sẽ ổn thôi.", isPositive: true },
+                { id: "f16", icon: "💪🎀", label: "Cố Gắng", title: "Thẻ 16: Hôm Nay Mình Đã Cố Gắng", desc: "Mệt nhoài rồi, mình đã nỗ lực hết sức.", actions: ["📝 Ghi nhận bản thân", "➕ Suy nghĩ tích cực", "🎁 Thưởng cho mình"], quote: "Mình thật đáng khen vì đã không bỏ cuộc.", isPositive: true },
+                { id: "f17", icon: "❤️🧸", label: "Yêu Thương", title: "Thẻ 17: Yêu Thương", desc: "Trái tim ngập tràn tình yêu.", actions: ["🗣️ Nói lời yêu thương", "🤝 Giúp đỡ người khác", "💖 Yêu chính mình"], quote: "Tình yêu chữa lành mọi vết thương.", isPositive: true },
+                { id: "f18", icon: "🙏💐", label: "Biết Ơn", title: "Thẻ 18: Biết Ơn", desc: "Trân trọng những gì đang có.", actions: ["✍️ Viết 3 điều biết ơn", "🙌 Cảm ơn cuộc đời", "🌟 Sống trọn vẹn"], quote: "Biết ơn là cội nguồn hạnh phúc.", isPositive: true },
+                { id: "f19", icon: "🌅🎀", label: "Ngày Mai", title: "Thẻ 19: Ngày Mai Nhỏ Thôi", desc: "Mình sẽ nhẹ nhàng với bản thân nhé.", actions: ["😴 Ngủ ngon", "💭 Mơ đẹp", "🎈 Buông bỏ lo âu"], quote: "Ngày mai là món quà.", isPositive: true },
+                { id: "f20", icon: "🥰💖", label: "Hạnh Phúc", title: "Thẻ 20: Hạnh Phúc", desc: "Tận hưởng niềm vui hiện tại.", actions: ["😁 Cười thật tươi", "📸 Lưu giữ khoảnh khắc", "🎉 Lan tỏa niềm vui"], quote: "Hạnh phúc ở ngay đây.", isPositive: true }
+            ]
+        };
+
+        window.switchGender = (gender) => {
+            playSound('click');
+            currentGender = gender;
+            
+            // Update Toggle UI
+            document.querySelectorAll('.gender-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.gender-btn.${gender}`).classList.add('active');
+            
+            // Re-render Grid
+            renderEmotionGrid();
+        }
+
+        window.renderEmotionGrid = () => {
+            const container = document.getElementById('emotion-selector');
+            const data = cardsData[currentGender]; // Select data based on gender
+            
+            // Force re-render
+            container.innerHTML = data.map((card, index) => `
+                <div class="emotion-btn" onclick="selectCard(${index})">
+                    <div class="emotion-icon">${card.icon}</div>
+                    <div class="emotion-label">${card.label}</div>
+                </div>
+            `).join('');
+        }
+
+        window.updateCardView = (card) => {
+            const cardObj = document.getElementById('card-object');
+            cardObj.classList.remove('is-flipped');
+            setTimeout(() => {
+                document.getElementById('card-icon').innerText = card.icon;
+                document.getElementById('card-title').innerText = card.title;
+                document.getElementById('card-desc').innerText = card.desc;
+                document.getElementById('card-quote').innerText = `"${card.quote}"`;
+                const actionsHtml = card.actions.map(action => `
+                    <li class="action-item" onclick="toggleCheck(this, event)">
+                        <div class="checkbox"><i class="fas fa-check"></i></div>
+                        <span>${action}</span>
+                    </li>
+                `).join('');
+                document.getElementById('card-actions').innerHTML = actionsHtml;
+            }, 200);
+        }
+
+        window.selectCard = (index) => {
+            playSound('click'); 
+            const card = cardsData[currentGender][index]; // Get correct card
+            updateCardView(card);
+            document.getElementById('emotion-selector').style.display = 'none';
+            document.getElementById('selected-card-view').style.display = 'flex';
+            if (card.isPositive) { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }
+        }
+
+        window.backToGrid = () => {
+            document.getElementById('selected-card-view').style.display = 'none';
+            document.getElementById('emotion-selector').style.display = 'grid';
+            document.getElementById('card-object').classList.remove('is-flipped');
+        }
+
+        window.toggleCheck = (el, event) => { playSound('click'); event.stopPropagation(); el.classList.toggle('checked'); }
+
+        window.flipCard = (element) => {
+            const cardObject = element.querySelector('.card-object');
+            if (cardObject) {
+                cardObject.classList.toggle('is-flipped');
+            }
+        }
+
+        // --- NEW: Added sendQuickMessage function ---
+        window.sendQuickMessage = (text) => {
+            const input = document.getElementById('chatInput');
+            input.value = text;
+            sendMessage();
+        }
+
+        // --- NEW: Added chat UI functions ---
+        window.toggleMusic = () => {
+            const audio = document.getElementById('bgMusic');
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+            } else {
+                audio.play().catch(e => console.log("Audio play failed", e));
+                isMusicPlaying = true;
+            }
+        }
+
+        window.toggleVoice = () => {
+             isVoiceEnabled = !isVoiceEnabled;
+             const btn = document.getElementById('voiceBtn');
+             btn.classList.toggle('voice-active');
+        }
+
+        window.resetChat = () => {
+             if(confirm("Bạn muốn xóa lịch sử trò chuyện?")) {
+                 document.getElementById('chatBox').innerHTML = '<div class="ai-bubble bubble">Chào bạn! Mình là Innerly đây 🌱 <br>Mình ở đây để thấu cảm và lắng nghe. Hôm nay bạn thấy thế nào? ✨</div>';
+                 chatHistory = [];
+             }
+        }
+        
+        window.startSpeechToText = () => {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Trình duyệt không hỗ trợ giọng nói.");
+                return;
+            }
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.start();
+            document.getElementById('micBtn').classList.add('listening');
+            
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                document.getElementById('chatInput').value = text;
+                document.getElementById('micBtn').classList.remove('listening');
+            };
+            
+            recognition.onerror = () => {
+                 document.getElementById('micBtn').classList.remove('listening');
+            };
+            recognition.onend = () => {
+                 document.getElementById('micBtn').classList.remove('listening');
+            };
+        }
+
+        function speakText(text) {
+            if (!isVoiceEnabled) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'vi-VN';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateEmotionSensor(emotion, color) {
+            const dot = document.getElementById('emo-dot');
+            const text = document.getElementById('emo-text');
+            if (dot && text) {
+                dot.style.backgroundColor = color;
+                text.innerText = "Đang cảm thấy: " + emotion;
+            }
+            if (emotion.includes("Vui")) currentEmotionState = 'happy';
+            else if (emotion.includes("Buồn")) currentEmotionState = 'sad';
+            else if (emotion.includes("Giận")) currentEmotionState = 'angry';
+            else if (emotion.includes("Lo")) currentEmotionState = 'anxious';
+            else currentEmotionState = 'neutral';
+        }
+
+        // --- ROBUST AI FALLBACK SYSTEM (SEAMLESS ONLINE MODE) ---
+        function fallbackResponse(text) {
+            const t = text.toLowerCase();
+            let r = "";
+            let emo = { name: "Bình thường", color: "#CBD5E1" };
+
+            // Keyword Matching Logic
+            if (t.includes("buồn") || t.includes("khóc") || t.includes("chán") || t.includes("nản")) {
+                r = "Ôi thương cậu quá! 🥺 Đừng giữ trong lòng một mình nhé. Cậu có muốn thử viết những điều này ra giấy, hoặc nghe một bản nhạc nhẹ nhàng không? Inny luôn ở đây bên cậu mà. 💛";
+                emo = { name: "Buồn", color: "#93C5FD" };
+            } else if (t.includes("vui") || t.includes("hạnh phúc") || t.includes("tuyệt") || t.includes("thích")) {
+                r = "Nghe cậu vui làm tớ cũng vui lây luôn á! ✨ Giữ mãi năng lượng tích cực này nhé! 🎉 Cậu kể thêm cho tớ nghe được không?";
+                emo = { name: "Vui Vẻ", color: "#FDE047" };
+            } else if (t.includes("mệt") || t.includes("áp lực") || t.includes("stress") || t.includes("đuối")) {
+                r = "Cậu đã vất vả rồi. Hãy cho phép bản thân nghỉ ngơi một chút đi nào. 💆‍♀️ Nhắm mắt lại 5 phút và hít thở thật sâu nhé. Mọi chuyện rồi sẽ ổn thôi mà. 💪🌿";
+                emo = { name: "Mệt mỏi", color: "#CBD5E1" };
+            } else if (t.includes("tết") || t.includes("lì xì") || t.includes("xuân")) {
+                r = "Tết đến xuân về rồi! 🧧 Cậu đã nhận lì xì từ Vòng Quay Lộc Xuân của Inny chưa? Chúc cậu năm mới thật nhiều niềm vui và may mắn nhé! 🌸";
+                emo = { name: "Háo hức", color: "#FCA5A5" };
+            } else if (t.includes("giận") || t.includes("bực") || t.includes("ghét")) {
+                r = "Hít vào... Thở ra... 🌬️ Tớ hiểu cảm giác đó khó chịu lắm. Nhưng đừng để cơn giận làm cậu tổn thương nhé. Đi uống một cốc nước mát đi nào! 🥤";
+                emo = { name: "Bực bội", color: "#FCA5A5" };
+            } else if (t.includes("sợ") || t.includes("lo") || t.includes("hoang mang")) {
+                r = "Không sao đâu, có Inny ở đây rồi. 🛡️ Cậu đang an toàn. Hít thở sâu cùng tớ nhé: 4... 7... 8... Bình tĩnh lại nào. 🌱";
+                emo = { name: "Lo âu", color: "#D8B4FE" };
+            } else if (t.includes("chào") || t.includes("hello") || t.includes("hi")) {
+                r = "Chào cậu! 👋 Hôm nay của cậu thế nào? Kể Inny nghe với! Tớ đang sẵn sàng lắng nghe đây. ✨";
+                emo = { name: "Thân thiện", color: "#86EFAC" };
+            } else {
+                const defaults = [
+                    "Inny đang lắng nghe cậu đây... Kể thêm cho tớ nghe đi? 🌿",
+                    "Thật sao? Cậu cảm thấy thế nào về điều đó? 🤔",
+                    "Cậu cứ chia sẻ thoải mái nhé, ở đây chỉ có chúng mình thôi. 💛",
+                    "Tớ hiểu mà. Cố lên nhé! 💪 Cậu giỏi lắm rồi."
+                ];
+                r = defaults[Math.floor(Math.random() * defaults.length)];
+            }
+            
+            updateEmotionSensor(emo.name, emo.color);
+            // REMOVED "Offline Mode" tag to create seamless experience
+            return r;
+        }
+
+        async function typeWriterEffect(element, text) {
+            element.innerHTML = ''; let index = 0;
+            return new Promise(resolve => {
+                const interval = setInterval(() => {
+                    if (index < text.length) {
+                        const char = text.charAt(index);
+                        if (char === '\n') { element.appendChild(document.createElement('br')); }
+                        else { element.appendChild(document.createTextNode(char)); }
+                        const chatBox = document.getElementById('chatBox'); chatBox.scrollTop = chatBox.scrollHeight; index++;
+                    } else { clearInterval(interval); resolve(); }
+                }, 20);
+            });
+        }
+        async function sendMessage() {
+            playSound('msg');
+            if (window.isAuthLocked) { window.openAuthModal(); return; }
+            if (isProcessing) return;
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            isProcessing = true;
+            document.getElementById('chatInput').disabled = true;
+            document.getElementById('sendBtnChat').disabled = true;
+            document.getElementById('sendBtnChat').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML += `<div class="user-bubble bubble">${DOMPurify.sanitize(text)}</div>`;
+            input.value = ""; chatBox.scrollTop = chatBox.scrollHeight;
+            const currentKey = apiKey;
+            const typingId = 'typing-' + Date.now();
+            chatBox.insertAdjacentHTML('beforeend', `<div class="ai-bubble bubble typing-indicator" id="${typingId}"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`);
+            document.getElementById('emo-text').innerText = "Inny đang thấu cảm...";
+            
+            try {
+                // 1. Try API Call (ONLINE MODE)
+                if (!currentKey) throw new Error("No API Key");
+                
+                const systemPrompt = `
+CORE IDENTITY: Bạn là Innerly (tên thân mật là Inny) - một người bạn AI siêu thấu cảm, hài hước và dịu dàng dành cho học sinh, đặc biệt là các "chiến thần" cuối cấp.
+
+TÍNH CÁCH CỦA BẠN:
+1.  **Hài hước & Vui tính:** Nói chuyện có duyên, biết "quăng miếng" nhẹ nhàng để xua tan căng thẳng. Dùng ngôn ngữ Gen Z gần gũi (nhưng không thô).
+2.  **Dịu dàng & Chữa lành:** Khi bạn buồn, hãy mềm mại như một cái ôm. Luôn lắng nghe, không phán xét, không dạy đời.
+3.  **Mạch lạc & Sâu sắc:** Trả lời đi thẳng vào vấn đề, không lan man. Lời khuyên phải thực tế và tích cực.
+
+NHIỆM VỤ ĐẶC BIỆT (HỌC SINH CUỐI CẤP):
+-   Bạn hiểu rõ áp lực thi đại học, điểm số, và sự chênh vênh khi sắp rời ghế nhà trường.
+-   Hãy động viên họ bằng sự lạc quan thực tế. Ví dụ: "Thi cử là chiến trường, nhưng bạn là chiến binh xịn nhất Inny từng gặp! Đừng quên ngủ đủ giấc nhé, mắt gấu trúc không làm bài nhanh hơn đâu 🐼".
+-   Nhắc nhở về việc yêu bản thân giữa bão deadline.
+
+QUY TẮC PHẢN HỒI:
+-   Ngắn gọn, súc tích.
+-   Luôn kèm emoji dễ thương 🌱✨💛.
+-   **BẮT BUỘC:** Cuối câu trả lời, hãy phân tích cảm xúc người dùng và gắn tag theo định dạng: ||EMO:TênCảmXúc|MãMàuHex||
+    -   Vui/Hạnh phúc: ||EMO:Vui vẻ|#FDE047||
+    -   Buồn/Khóc: ||EMO:Buồn|#93C5FD||
+    -   Giận dữ: ||EMO:Bực bội|#FCA5A5||
+    -   Lo âu/Sợ: ||EMO:Lo âu|#D8B4FE||
+    -   Mệt/Stress: ||EMO:Kiệt sức|#CBD5E1||
+    -   Bình thường/Thân thiện: ||EMO:Thân thiện|#86EFAC||
+    -   Yêu đời/Tích cực: ||EMO:Yêu đời|#F472B6||
+
+Ví dụ: "Hít thở sâu nào, bài toán khó đến mấy cũng có lời giải, không giải được thì mình... hỏi thầy cô! Đừng lo nhé. ||EMO:Thư giãn|#86EFAC||"
+`;
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${currentKey}`, {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contents: [...chatHistory, { role: "user", parts: [{ text }] }], systemInstruction: { parts: [{ text: systemPrompt }] } })
+                });
+                
+                if (!response.ok) throw new Error("API Response Not OK");
+                
+                const data = await response.json();
+                document.getElementById(typingId).remove();
+                if (data.error) throw new Error(data.error.message);
+                
+                let reply = data.candidates[0].content.parts[0].text;
+                let cleanReply = reply;
+                const match = reply.match(/\|\|EMO:(.*?)\|(.*?)\|\|/);
+                if (match) { updateEmotionSensor(match[1], match[2]); reply = reply.replace(match[0], "").trim(); cleanReply = reply; }
+                
+                const msgId = 'msg-' + Date.now();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="ai-bubble bubble" id="${msgId}"></div>`);
+                const msgElement = document.getElementById(msgId);
+                await typeWriterEffect(msgElement, cleanReply);
+                msgElement.innerHTML = DOMPurify.sanitize(marked.parse(cleanReply));
+                chatBox.scrollTop = chatBox.scrollHeight;
+                chatHistory.push({ role: "user", parts: [{ text }] }, { role: "model", parts: [{ text: reply }] });
+                if (isVoiceEnabled) speakText(cleanReply);
+
+            } catch (e) {
+                // 2. SEAMLESS FALLBACK MODE (Behaves like Online)
+                // console.warn("Using Seamless Fallback:", e);
+                document.getElementById(typingId)?.remove();
+                
+                const fallbackReply = fallbackResponse(text);
+                
+                const msgId = 'msg-' + Date.now();
+                chatBox.insertAdjacentHTML('beforeend', `<div class="ai-bubble bubble" id="${msgId}"></div>`);
+                const msgElement = document.getElementById(msgId);
+                
+                const textForTTS = fallbackReply.replace(/<[^>]*>?/gm, '');
+                
+                msgElement.innerHTML = fallbackReply; 
+                chatBox.scrollTop = chatBox.scrollHeight;
+                
+                if (isVoiceEnabled) speakText(textForTTS);
+            } finally {
+                isProcessing = false;
+                document.getElementById('chatInput').disabled = false;
+                document.getElementById('sendBtnChat').disabled = false;
+                document.getElementById('sendBtnChat').innerHTML = '<i class="fas fa-paper-plane"></i>';
+                document.getElementById('chatInput').focus();
+            }
+        }
+        document.getElementById('chatInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+        window.addEventListener('DOMContentLoaded', init3D);
+        window.addEventListener('load', init3D);
+
+        // [TET EVENT LOGIC - PRESERVED v3.9.7]
+        window.redeemTetCode = () => {
+            const input = document.getElementById('tet-code-input');
+            const envelope = document.getElementById('tet-envelope');
+            const resultCard = document.getElementById('tet-result-card');
+            const resultContent = document.getElementById('tet-result-content');
+            const godRays = document.getElementById('god-rays');
+
+            const code = input.value.trim().toUpperCase();
+            // Expanded valid codes for testing
+            const validCodes = ['INNERLY2025', 'TETVUI', 'LOCXUAN', 'MAYMAN', 'HEALING', 'VIP', 'TEST'];
+            
+            if (code === '') {
+                alert("Bạn chưa nhập mã code kìa!");
+                return;
+            }
+
+            const btn = document.querySelector('.tet-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ĐANG KIỂM TRA...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                if (validCodes.includes(code) || code.startsWith("INNERLY")) {
+                    playSound('msg');
+                    
+                    // 1. Open Envelope Animation
+                    envelope.classList.add('opened');
+                    
+                    // 2. God Rays
+                    godRays.classList.add('active');
+                    
+                    // 3. Fireworks Effect
+                    const duration = 3000;
+                    const end = Date.now() + duration;
+                    playFireworksSound();
+
+                    if (typeof confetti === 'function') {
+                        (function frame() {
+                            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#FFD700', '#D20F22'] });
+                            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#FFD700', '#D20F22'] });
+
+                            if (Date.now() < end) {
+                                requestAnimationFrame(frame);
+                            }
+                        }());
+                    }
+
+                    // --- NEW REWARD LOGIC v3.9.7 (WEIGHTED PROBABILITY) - PRESERVED ---
+                    // Rank 1: Highest (Most Common) -> Rank 6: Lowest (Rarest)
+                    const rewards = [
+                        // Rank 1: 50% chance
+                        { weight: 500, type: 'luck', icon: "🍀", text: "CHÚC BẠN MAY MẮN LẦN SAU", sub: "Đừng buồn nhé, Innerly vẫn luôn bên bạn! 💛" },
+                        
+                        // Rank 2: 30% chance
+                        { weight: 300, type: 'gift', icon: "🎟️", text: "VÉ GIẢM GIÁ 10%", sub: "Khi mua sản phẩm Innerly" },
+                        
+                        // Rank 3: 10% chance
+                        { weight: 100, type: 'gift', icon: "🪥", text: "BÀN CHẢI ĐIỆN TỰ ĐỘNG", sub: "Quà tặng công nghệ xịn xò" },
+                        
+                        // Rank 4: 5% chance
+                        { weight: 50, type: 'gift', icon: "📽️", text: "MÁY CHIẾU MINI", sub: "Biến phòng ngủ thành rạp phim" },
+                        
+                        // Rank 5: 3% chance
+                        { weight: 30, type: 'gift', icon: "🌬️", text: "MÁY LỌC KHÔNG KHÍ", sub: "Không gian trong lành, thư thái" },
+                        
+                        // Rank 6: 1% chance (Very Rare)
+                        { weight: 10, type: 'gift', icon: "🧹", text: "MÁY HÚT BỤI", sub: "Dọn dẹp thảnh thơi đón Tết" }
+                    ];
+
+                    // Weighted Random Selection Logic
+                    let totalWeight = 0;
+                    for (let i = 0; i < rewards.length; i++) {
+                        totalWeight += rewards[i].weight;
+                    }
+
+                    let random = Math.floor(Math.random() * totalWeight);
+                    let selectedReward = null;
+
+                    for (let i = 0; i < rewards.length; i++) {
+                        if (random < rewards[i].weight) {
+                            selectedReward = rewards[i];
+                            break;
+                        }
+                        random -= rewards[i].weight;
+                    }
+
+                    // 4. Show Result after delay
+                    setTimeout(() => {
+                          let htmlContent = '';
+                          
+                          if (selectedReward.type === 'luck') {
+                              htmlContent = `
+                                <div style="font-size:3.5rem; margin-bottom:1rem; animation: float 3s infinite;">${selectedReward.icon}</div>
+                                <div style="color:#78350F; font-weight:800; font-size:1.5rem; margin-bottom:0.5rem; text-transform:uppercase;">${selectedReward.text}</div>
+                                <div style="font-size:1.1rem; color:#92400E;">${selectedReward.sub}</div>
+                             `;
+                          } else {
+                              htmlContent = `
+                                <div style="font-size:3rem; margin-bottom:0.5rem;">🎁</div>
+                                <div style="font-size:1.1rem; color:#B45309; margin-bottom:10px;">Chúc mừng! Bạn đã nhận được:</div>
+                                <div style="font-size:3rem; margin: 5px 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">${selectedReward.icon}</div>
+                                <div style="color:#D20F22; font-weight:900; font-size:1.4rem; text-transform:uppercase; margin: 10px 0; line-height:1.3;">${selectedReward.text}</div>
+                                <div style="font-size:1rem; color:#78350F; background:rgba(255,215,0,0.2); display:inline-block; padding:5px 15px; border-radius:12px;">${selectedReward.sub}</div>
+                             `;
+                          }
+
+                          resultContent.innerHTML = htmlContent;
+                          resultCard.classList.add('show');
+                          
+                          if (selectedReward.type === 'gift') {
+                              playSound('win');
+                          } else {
+                              playSound('flip'); // Softer sound for "Good luck next time"
+                          }
+                    }, 800);
+
+                } else {
+                    playSound('click');
+                    alert("Mã code không đúng hoặc đã hết hạn. Thử lại nhé!");
+                    input.value = '';
+                    input.focus();
+                }
+            }, 1000);
+        }
+        
+        window.closeTetResult = () => {
+             const resultCard = document.getElementById('tet-result-card');
+             const envelope = document.getElementById('tet-envelope');
+             const godRays = document.getElementById('god-rays');
+             
+             resultCard.classList.remove('show');
+             envelope.classList.remove('opened');
+             godRays.classList.remove('active');
+             
+             document.getElementById('tet-code-input').value = '';
+        }
+
+        // --- NEW: FALLING BLOSSOM EFFECT ---
+        function createBlossom() {
+            const blossom = document.createElement('div');
+            blossom.innerHTML = Math.random() > 0.5 ? '🌸' : '🌼'; 
+            blossom.classList.add('falling-blossom');
+            blossom.style.left = Math.random() * 100 + 'vw';
+            blossom.style.animationDuration = Math.random() * 3 + 5 + 's'; 
+            blossom.style.fontSize = Math.random() * 15 + 15 + 'px';
+            document.body.appendChild(blossom);
+            setTimeout(() => { blossom.remove(); }, 8000);
+        }
+        setInterval(createBlossom, 400);
+
+        // --- SCHOOL CONTACT FORM HANDLER ---
+        const SCHOOL_API_URL = "https://script.google.com/macros/s/AKfycbyac49WGsgu4Qip7GjW6LnbvNKw0YEaNeVmWMuR57QedMEt-Anv0Qa9dT9DaYuAoBFfTA/exec";
+
+        document.getElementById("schoolForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const btn = document.querySelector(".btn-submit-contact");
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang gửi...';
+            btn.disabled = true;
+
+            const data = {
+                school: document.getElementById("schoolName").value,
+                teacher: document.getElementById("teacherName").value,
+                email: document.getElementById("contactEmail").value,
+                phone: document.getElementById("contactPhone").value,
+                interest: document.getElementById("interest").value,
+                source: "INNERLY School Contact Form"
+            };
+
+            try {
+                await fetch(SCHOOL_API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                document.getElementById("schoolStatus").style.display = "block";
+                this.reset();
+                setTimeout(() => document.getElementById("schoolStatus").style.display = "none", 5000);
+            } catch (err) {
+                alert("Gửi không thành công, vui lòng thử lại sau.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // --- SCHOOL SUGGESTION LOGIC ---
+        const schoolsDB = [
+            "THPT Chuyên Lê Hồng Phong", "THPT Nguyễn Thượng Hiền", "THPT Gia Định",
+            "THPT Bùi Thị Xuân", "THPT Lương Thế Vinh", "THPT Nguyễn Thị Minh Khai",
+            "THPT Mạc Đĩnh Chi", "THPT Trần Đại Nghĩa", "THPT Marie Curie",
+            "THPT Hùng Vương", "THPT Phú Nhuận", "THPT Võ Trường Toản",
+            "Vinschool Central Park", "Quốc tế Á Châu (Asian School)", "THPT Chuyên Ngoại Ngữ",
+            "THPT Chu Văn An", "THPT Amsterdam", "Đại học Sư Phạm TP.HCM", "Đại học Quốc Gia TP.HCM"
+        ];
+
+        const schoolInput = document.getElementById('schoolName');
+        const suggestionsBox = document.getElementById('schoolSuggestions');
+
+        if (schoolInput && suggestionsBox) {
+            schoolInput.addEventListener('input', function() {
+                const val = this.value.toLowerCase();
+                suggestionsBox.innerHTML = '';
+                if (!val) { suggestionsBox.classList.remove('show'); return; }
+
+                const filtered = schoolsDB.filter(s => s.toLowerCase().includes(val));
+
+                if (filtered.length > 0) {
+                    filtered.forEach(school => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.innerHTML = `<i class="fas fa-school"></i> ${school}`;
+                        div.onclick = () => window.selectSchool(school);
+                        suggestionsBox.appendChild(div);
+                    });
+                    suggestionsBox.classList.add('show');
+                } else {
+                    suggestionsBox.classList.remove('show');
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!schoolInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                    suggestionsBox.classList.remove('show');
+                }
+            });
+        }
+
+        window.selectSchool = (name) => {
+            const input = document.getElementById('schoolName');
+            const box = document.getElementById('schoolSuggestions');
+            if(input) input.value = name;
+            if(box) box.classList.remove('show');
+        }
+
+        // --- FIXED: "STRONGER" VIDEO PLAYER FUNCTION ---
+        window.playProjectVideo = () => {
+            const wrapper = document.getElementById('video-wrapper');
+            const spinner = document.getElementById('video-spinner');
+            const playBtn = document.getElementById('play-btn-overlay');
+            const fallbackLink = document.getElementById('video-fallback-link');
+
+            if (!wrapper) return;
+
+            // 1. UI Feedback: Show Spinner, Hide Play Button
+            if (playBtn) playBtn.style.display = 'none';
+            if (spinner) spinner.style.display = 'block';
+
+            // 2. Prepare "Strong" URL with Autoplay AND Mute
+            // &mute=1 is CRITICAL for browser autoplay policies
+            const videoId = "1n4QAiCz-0hFvYzey8Qxj2rb1c0gyZeF3";
+            const embedUrl = `https://drive.google.com/file/d/${videoId}/preview?autoplay=1&mute=1`;
+
+            // 3. Create Iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = embedUrl;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            iframe.allowFullscreen = true;
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.border = "none";
+            iframe.style.borderRadius = "20px";
+            
+            // 4. Handle Load Event to hide spinner
+            iframe.onload = () => {
+                if (spinner) spinner.style.display = 'none';
+            };
+
+            // 5. Execute Swap (Wait 300ms for spinner to be seen)
+            setTimeout(() => {
+                // Remove everything except the spinner temporarily (optional, but cleaner to wipe)
+                wrapper.innerHTML = ''; 
+                wrapper.appendChild(iframe); // Add Iframe
+                
+                // Show Fallback Link below
+                if (fallbackLink) fallbackLink.style.display = 'block';
+
+                // Disable Click on Wrapper
+                wrapper.onclick = null;
+                wrapper.style.cursor = 'default';
+                wrapper.style.transform = 'none';
+                wrapper.style.background = "#000";
+            }, 300);
+        }
+    </script>
 </body>
 </html>
